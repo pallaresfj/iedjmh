@@ -56,11 +56,32 @@ class PostResource extends Resource
         ];
     }
 
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        $user = auth()->user();
+
+        if ($user !== null && method_exists($user, 'hasRole') && $user->hasRole('colaborador')) {
+            $query->where('status', '!=', 'published');
+        }
+
+        return $query;
+    }
+
     public static function getRecordRouteBindingEloquentQuery(): Builder
     {
-        return parent::getRecordRouteBindingEloquentQuery()
+        $query = parent::getRecordRouteBindingEloquentQuery()
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
+
+        $user = auth()->user();
+
+        if ($user !== null && method_exists($user, 'hasRole') && $user->hasRole('colaborador')) {
+            $query->where('status', '!=', 'published');
+        }
+
+        return $query;
     }
 }

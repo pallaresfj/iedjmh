@@ -12,6 +12,8 @@ use Filament\Schemas\Schema;
 
 class EventForm
 {
+    private const PUBLISH_ROLES = ['super_admin', 'soporte', 'administrador', 'editor'];
+
     public static function configure(Schema $schema): Schema
     {
         return $schema
@@ -58,16 +60,24 @@ class EventForm
                     ->maxLength(255),
                 Select::make('status')
                     ->label('Estado')
-                    ->options([
-                        'draft' => 'Borrador',
-                        'published' => 'Publicado',
-                        'archived' => 'Archivado',
-                    ])
+                    ->options(function (): array {
+                        $options = [
+                            'draft' => 'Borrador',
+                            'archived' => 'Archivado',
+                        ];
+
+                        if (static::canPublish()) {
+                            $options['published'] = 'Publicado';
+                        }
+
+                        return $options;
+                    })
                     ->required()
                     ->default('draft')
                     ->native(false),
                 DateTimePicker::make('published_at')
                     ->label('Publicado en')
+                    ->visible(fn (): bool => static::canPublish())
                     ->seconds(false),
                 TextInput::make('sort_order')
                     ->label('Orden')
@@ -76,5 +86,14 @@ class EventForm
                     ->default(0)
                     ->minValue(0),
             ]);
+    }
+
+    private static function canPublish(): bool
+    {
+        $user = auth()->user();
+
+        return $user !== null
+            && method_exists($user, 'hasAnyRole')
+            && $user->hasAnyRole(self::PUBLISH_ROLES);
     }
 }

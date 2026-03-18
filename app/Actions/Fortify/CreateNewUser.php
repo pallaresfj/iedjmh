@@ -24,13 +24,11 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $this->passwordRules(),
         ])->validate();
 
-        $shouldGrantAdmin = ! User::query()->where('is_admin', true)->exists();
-
         return User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => $input['password'],
-            'is_admin' => $shouldGrantAdmin,
+            'is_admin' => false,
         ]);
     }
 }
