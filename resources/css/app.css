@@ -64,3 +64,37 @@ select:focus[data-flux-control] {
 /* \[:where(&)\]:size-4 {
     @apply size-4;
 } */
+
+@theme {
+    --color-ied-primary: #2e7d32;
+    --color-ied-primary-dark: #1b5e20;
+    --color-ied-primary-light: #66bb6a;
+    --color-ied-accent: #f57c00;
+    --color-ied-gray-900: #263238;
+    --color-ied-gray-700: #4c5a61;
+    --color-ied-gray-600: #5f6f77;
+    --color-ied-gray-200: #dfe5e8;
+    --color-ied-gray-100: #f5f7fa;
+}
+
+@layer base {
+    .public-site {
+        font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+        color: var(--color-ied-gray-900);
+        background-color: var(--color-ied-gray-100);
+    }
+
+    .public-heading {
+        font-family: 'Montserrat', ui-sans-serif, system-ui, sans-serif;
+    }
+}
+
+@layer components {
+    .public-container {
+        @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+    }
+
+    .public-surface {
+        @apply rounded-2xl border border-ied-gray-200 bg-white shadow-sm;
+    }
+}

@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2e7f31",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#141e15",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom Dropdown Hover Logic */
+        .group:hover > .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .dropdown-menu {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<div class="bg-slate-900 text-white px-4 md:px-20 lg:px-40 py-1 flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">flag</span>
+<span class="text-[10px] font-bold uppercase tracking-widest">GOV.CO</span>
+</div>
+<div class="flex items-center gap-6">
+<button aria-label="Accesibilidad" class="flex items-center gap-1 text-[11px] hover:underline">
+<span class="material-symbols-outlined text-sm">accessibility_new</span>
+                Accesibilidad
+            </button>
+<button aria-label="Contraste" class="flex items-center gap-1 text-[11px] hover:underline">
+<span class="material-symbols-outlined text-sm">contrast</span>
+                Contraste
+            </button>
+<div class="flex items-center gap-2 text-[11px] font-bold border-l border-slate-700 pl-4">
+<span>A-</span>
+<span>A</span>
+<span>A+</span>
+</div>
+</div>
+</div>
+<header class="bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-800 px-4 md:px-20 lg:px-40 py-4">
+<div class="max-w-[1200px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-4">
+<div class="size-12 bg-primary flex items-center justify-center rounded-lg text-white">
+<span class="material-symbols-outlined text-3xl">agriculture</span>
+</div>
+<div>
+<h1 class="text-xl font-black leading-none tracking-tight text-primary">IED JOSÉ MARÍA HERRERA</h1>
+<p class="text-[10px] font-medium text-slate-500 uppercase tracking-widest">Institución Educativa Departamental Agropecuaria</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 text-xs font-bold border-2 border-primary/20 text-primary rounded-lg hover:bg-primary/10 transition-colors">SIEE</button>
+<button class="px-4 py-2 text-xs font-bold border-2 border-primary/20 text-primary rounded-lg hover:bg-primary/10 transition-colors">Aula Virtual</button>
+<button class="px-6 py-2 text-xs font-bold bg-primary text-white rounded-lg hover:shadow-lg hover:shadow-primary/30 transition-all">Matrículas</button>
+</div>
+</div>
+</header>
+<nav class="bg-white dark:bg-background-dark border-b border-slate-100 dark:border-slate-800 hidden lg:block sticky top-0 z-50">
+<div class="max-w-[1200px] mx-auto px-4 lg:px-40">
+<ul class="flex items-center justify-between gap-2 overflow-x-visible whitespace-nowrap">
+<!-- Nuestra Institución -->
+<li class="group relative">
+<a class="flex items-center gap-1 py-4 text-sm font-semibold text-slate-700 dark:text-slate-200 border-b-2 border-transparent group-hover:border-primary group-hover:text-primary transition-all cursor-pointer">
+                        Nuestra Institución
+                        <span class="material-symbols-outlined text-sm">expand_more</span>
+</a>
+<ul class="dropdown-menu absolute left-0 top-full min-w-[220px] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-b-xl shadow-xl z-50 overflow-hidden">
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-[14px] text-slate-600 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">history</span> Historia
+                            </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-[14px] text-slate-600 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">shield</span> Símbolos
+                            </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-[14px] text-slate-600 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">domain</span> Sedes
+                            </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-[14px] text-slate-600 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-colors border-t border-slate-50 dark:border-slate-800" href="#">
+<span class="material-symbols-outlined text-xl">potted_plant</span> Granja Experimental
+                            </a>
+</li>
+</ul>
+</li>
+<!-- Gestión Académica -->
+<li class="group relative">
+<a class="flex items-center gap-1 py-4 text-sm font-semibold text-slate-700 dark:text-slate-200 border-b-2 border-transparent group-hover:border-primary group-hover:text-primary transition-all cursor-pointer">
+                        Gestión Académica
+                        <span class="material-symbols-outlined text-sm">expand_more</span>
+</a>
+<ul class="dropdown-menu absolute left-0 top-full min-w-[220px] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-b-xl shadow-xl z-50 overflow-hidden">
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-[14px] text-slate-600 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">menu_book</span> PEI
+                            </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-[14px] text-slate-600 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">rule</span> Manual Convivencia
+                            </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-[14px] text-slate-600 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">calendar_month</span> Calendario
+                            </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-[14px] text-slate-600 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">school</span> Oferta Técnica
+                            </a>
+</li>
+</ul>
+</li>
+<!-- Trámites y Servicios -->
+<li class="group relative">
+<a class="flex items-center gap-1 py-4 text-sm font-semibold text-slate-700 dark:text-slate-200 border-b-2 border-transparent group-hover:border-primary group-hover:text-primary transition-all cursor-pointer">
+                        Trámites y Servicios
+                        <span class="material-symbols-outlined text-sm">expand_more</span>
+</a>
+<ul class="dropdown-menu absolute left-0 top-full min-w-[220px] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-b-xl shadow-xl z-50 overflow-hidden">
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-[14px] text-slate-600 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">how_to_reg</span> Matrículas
+                            </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-[14px] text-slate-600 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">card_membership</span> Certificados
+                            </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-[14px] text-slate-600 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">restaurant</span> PAE
+                            </a>
+</li>
+</ul>
+</li>
+<!-- Transparencia -->
+<li class="group relative">
+<a class="flex items-center gap-1 py-4 text-sm font-semibold text-slate-700 dark:text-slate-200 border-b-2 border-transparent group-hover:border-primary group-hover:text-primary transition-all cursor-pointer">
+                        Transparencia
+                        <span class="material-symbols-outlined text-sm">expand_more</span>
+</a>
+<ul class="dropdown-menu absolute left-0 top-full min-w-[240px] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-b-xl shadow-xl z-50 overflow-hidden">
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-[14px] text-slate-600 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">info</span> Información de la entidad
+                            </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-[14px] text-slate-600 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">gavel</span> Normatividad
+                            </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-[14px] text-slate-600 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">work</span> Contratación
+                            </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-[14px] text-slate-600 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">query_stats</span> Planeación
+                            </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-[14px] text-slate-600 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">assignment</span> Trámites
+                            </a>
+</li>
+</ul>
+</li>
+<!-- Atención al Ciudadano -->
+<li class="group relative">
+<a class="flex items-center gap-1 py-4 text-sm font-semibold text-slate-700 dark:text-slate-200 border-b-2 border-transparent group-hover:border-primary group-hover:text-primary transition-all cursor-pointer">
+                        Atención al Ciudadano
+                        <span class="material-symbols-outlined text-sm">expand_more</span>
+</a>
+<ul class="dropdown-menu absolute right-0 top-full min-w-[220px] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-b-xl shadow-xl z-50 overflow-hidden">
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-[14px] text-slate-600 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">forum</span> PQRSF
+                            </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-[14px] text-slate-600 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">contact_support</span> Contacto
+                            </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-[14px] text-slate-600 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">support_agent</span> Canales de Atención
+                            </a>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+<main class="flex-grow">
+<section class="relative h-[600px] w-full bg-slate-900 flex items-center overflow-hidden">
+<div class="absolute inset-0 opacity-60">
+<img class="w-full h-full object-cover" data-alt="Beautiful green agricultural field at sunrise" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMUNlu1vZSYgs1mJ8XI2JBGdEGv7h77-FKsinYr5EjYaApSudFf0jhOBzLc6yoEXKGCF-tewz8MJIFovX4aKHbA0O3FnBStuhctqyV0oVkBdASloF8K2rO8VVM18nBjgTP2zwD60uTY7U6Vw-bB3w4vymqId0y98mtqnopTqtBAvch6WRWhfF7lV9eqtrHoQxcCTLHXNxBGP1xnxW6D-Hw4cLmuICL4qmBewmK1UqmRBf9D7Wau-xa_o7aSt4rGKkayqhXd0Sj8bxl"/>
+</div>
+<div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/40 to-transparent"></div>
+<div class="relative z-10 max-w-[1200px] mx-auto px-6 md:px-20 lg:px-40 w-full">
+<div class="max-w-2xl">
+<span class="inline-block px-3 py-1 bg-primary/20 backdrop-blur-md border border-primary/30 text-white text-xs font-bold rounded-full mb-6 uppercase tracking-wider">Inscripciones Abiertas 2025</span>
+<h2 class="text-4xl md:text-6xl font-black text-white leading-[1.1] mb-6">Formando líderes para el agro y la vida</h2>
+<p class="text-lg text-slate-200 mb-10 max-w-lg leading-relaxed">Educación de calidad con enfoque técnico agropecuario para el desarrollo sostenible de nuestra región.</p>
+<button class="bg-primary text-white px-8 py-4 rounded-xl font-bold text-lg hover:scale-105 hover:shadow-xl hover:shadow-primary/30 transition-all flex items-center gap-3">
+                        Conoce nuestras matrículas 2025
+                        <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+<section class="relative z-20 -mt-20 max-w-[1200px] mx-auto px-6 lg:px-40 pb-20">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 hover:-translate-y-2 transition-transform cursor-pointer group/card">
+<div class="size-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center mb-4 group-hover/card:bg-primary group-hover/card:text-white transition-colors">
+<span class="material-symbols-outlined text-2xl">grade</span>
+</div>
+<h3 class="font-bold text-slate-900 dark:text-white mb-2">Consultar Notas</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Accede al boletín académico y seguimiento del estudiante.</p>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 hover:-translate-y-2 transition-transform cursor-pointer group/card">
+<div class="size-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center mb-4 group-hover/card:bg-primary group-hover/card:text-white transition-colors">
+<span class="material-symbols-outlined text-2xl">library_books</span>
+</div>
+<h3 class="font-bold text-slate-900 dark:text-white mb-2">Tareas y Guías</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Material de apoyo y actividades para trabajo en casa.</p>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 hover:-translate-y-2 transition-transform cursor-pointer group/card">
+<div class="size-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center mb-4 group-hover/card:bg-primary group-hover/card:text-white transition-colors">
+<span class="material-symbols-outlined text-2xl">app_registration</span>
+</div>
+<h3 class="font-bold text-slate-900 dark:text-white mb-2">Matrícula</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Proceso paso a paso para estudiantes nuevos y antiguos.</p>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 hover:-translate-y-2 transition-transform cursor-pointer group/card">
+<div class="size-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center mb-4 group-hover/card:bg-primary group-hover/card:text-white transition-colors">
+<span class="material-symbols-outlined text-2xl">forum</span>
+</div>
+<h3 class="font-bold text-slate-900 dark:text-white mb-2">Portal PQRSF</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Peticiones, quejas, reclamos y sugerencias ciudadanas.</p>
+</div>
+</div>
+</section>
+<section class="max-w-[1200px] mx-auto px-6 lg:px-40 py-16">
+<div class="flex items-end justify-between mb-10">
+<div>
+<h2 class="text-3xl font-black text-slate-900 dark:text-white">Muro de Actualidad</h2>
+<div class="h-1 w-20 bg-primary mt-2"></div>
+</div>
+<button class="text-primary font-bold flex items-center gap-1 hover:underline">
+                    Ver todas las noticias
+                    <span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="flex flex-col gap-4">
+<div class="aspect-video rounded-xl overflow-hidden relative">
+<img class="w-full h-full object-cover" data-alt="Close up of growing vegetables" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAA6PZ6wLaG30mRe_OOce73zoeXaZ8gXw7rrSofLFMd4m5s2H___8aVCIiTj137lMWCIwYF4fkk6SGve5f6BtE1a9dnxskXu-NeRrQVCHd_FIycLSKbl3fOpWRQiPrhQG3-YCcGInDmBbm6vlIS6xitPt4ZnZQE5BQs4Nlb6Hw-AS2HqcVtaYHJL-zyvnXLWZCYNScZUyVap4XXdlyLaRaJTCQO3yrd0-0hrJWYIvk-wEwMgumuSGRMxOfXsALhsYHoX9HpFOg7kKI0"/>
+<span class="absolute top-4 left-4 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded">AGRO</span>
+</div>
+<h4 class="font-bold text-lg leading-tight hover:text-primary transition-colors cursor-pointer">Nueva cosecha en la Granja Experimental: Resultados del proyecto de piscicultura</h4>
+<p class="text-sm text-slate-500 line-clamp-2">Nuestros estudiantes de grado 11 han finalizado con éxito la primera fase del proyecto productivo 2024.</p>
+<a class="text-primary text-sm font-bold flex items-center gap-1" href="#">Leer más <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
+</div>
+<div class="flex flex-col gap-4">
+<div class="aspect-video rounded-xl overflow-hidden relative">
+<img class="w-full h-full object-cover" data-alt="Students studying in a classroom" src="https://lh3.googleusercontent.com/aida-public/AB6AXuABUOLDoda-HJpC2tHiwP-BrAJojb-62tRmzckHt_F0QT_2uuJ7vrmIeCs00mmVgSBE2iqhflIl2EBbU6nEaiZdejqY6zoMge86MvxHDs11lelN0WU_wSEQsu72tBJr146dfX-GBCSe0nche217_g-khOv8VkiPBHBIH7LjhV-mmtGhPbxaYloV5y_7R6b8Lcxd2HJPNE6d1FFEtfGUN_qBtfF6pbfL4j12vOrWAMgMP4izycJKWEV_-gHUN4J2dJ0Rl6ERpvNO5SjB"/>
+<span class="absolute top-4 left-4 bg-blue-600 text-white text-[10px] font-bold px-2 py-1 rounded">ACADEMIA</span>
+</div>
+<h4 class="font-bold text-lg leading-tight hover:text-primary transition-colors cursor-pointer">Pruebas Saber 11: Nuestra institución sube en el ranking departamental</h4>
+<p class="text-sm text-slate-500 line-clamp-2">Felicitamos a la promoción 2024 por los excelentes resultados obtenidos en las recientes pruebas nacionales.</p>
+<a class="text-primary text-sm font-bold flex items-center gap-1" href="#">Leer más <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
+</div>
+<div class="flex flex-col gap-4">
+<div class="aspect-video rounded-xl overflow-hidden relative">
+<img class="w-full h-full object-cover" data-alt="Group of students smiling together" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDD5dwJU3UvqE6sOTkTbHbOSlWfBrG5AhIrAgfN4HvLtUPsD4nLw66vKOx6Ke8C1GABj04JJZ69Knb5z_vhRb0GrCXSU6FMyyb-pJVPL4xrcOgCGIfq0-ksiujJ1xpZcActSrMHHSinxo9InUldiYdEl7cE4PyhdkyOI7iCjlZi2eb4oUOocEsZNyoZRZPJ4uNV0foet5hnuaP1Cpa_BVOVZMv16zJmHZWaIloVzyqvKL2ArI6ByFr1BRqNsoW9ucFq6I5wtn-a9aG_"/>
+<span class="absolute top-4 left-4 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded">INSTITUCIONAL</span>
+</div>
+<h4 class="font-bold text-lg leading-tight hover:text-primary transition-colors cursor-pointer">Inauguración de las nuevas aulas de informática y laboratorios de física</h4>
+<p class="text-sm text-slate-500 line-clamp-2">Gracias a la gestión de la rectoría y el apoyo departamental, hoy contamos con espacios modernos.</p>
+<a class="text-primary text-sm font-bold flex items-center gap-1" href="#">Leer más <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
+</div>
+</div>
+</section>
+<section class="bg-primary/5 py-20">
+<div class="max-w-[1200px] mx-auto px-6 lg:px-40">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<div class="space-y-8">
+<div>
+<h2 class="text-4xl font-black text-slate-900 dark:text-white">Granja Experimental</h2>
+<p class="text-primary font-bold mt-2">Corazón de nuestra formación técnica</p>
+</div>
+<p class="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">
+                            Contamos con más de 23 hectáreas dedicadas a la formación práctica. Nuestros estudiantes interactúan con procesos reales de <strong>piscicultura, ganadería tecnificada y cultivos hidropónicos</strong>, preparándose para los retos del sector agropecuario moderno.
+                        </p>
+<div class="grid grid-cols-2 gap-6">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-lg">set_meal</span>
+<div>
+<h5 class="font-bold text-sm">Piscicultura</h5>
+<p class="text-xs text-slate-500">Producción de tilapia y cachama.</p>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-lg">grass</span>
+<div>
+<h5 class="font-bold text-sm">Ganadería</h5>
+<p class="text-xs text-slate-500">Manejo bovino y porcino.</p>
+</div>
+</div>
+</div>
+<button class="bg-primary text-white px-8 py-4 rounded-xl font-bold hover:shadow-lg transition-all">Conoce nuestra granja</button>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-4">
+<img class="w-full aspect-[4/5] object-cover rounded-2xl shadow-lg" data-alt="Student working in a farm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBp5Jf5GiM_ORrSUAg9AHZcRDIPObAgv8VB2zTDvbKbakIKmZb9CeCRUOQIsvvWcMC2LDJPSjKdhLyBy2dhjzlCBPL6Q1DWg8CPhKeFH5a00y5q-4t-nhgI0igs62ok1Z7FSogCLbtJEvq6WFjCXbjdyPk0g16xdt_X12g5RlHsVjXC4j0lXkE3rsEfedsoLEJt9k4AjGEy84dVjEdTu0mcYxptkS8fh7FFkomGrXZ9iq77kRRM6b1huAy2jcCRoz-bE2D1wHzxlaQk"/>
+<img class="w-full aspect-square object-cover rounded-2xl shadow-lg" data-alt="Group of fish in a tank" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBI98FibxKjA9PEzq3JTDeHU3RDuo2wTAYbWM6lUGZq6j-0_NVChu_uTaug0fn2g56rJjt-Bzcyet-GDDm7dlzkbEXzP6vEK7HIyZh5ba-0dPW_Df2d1O1D0kBmNRTVjpGYgpR0qQbtLujgyJKmZVukUk5FT91cVL6nJEYQ9RmDdKoc3k3I59aATmuQiERcZ8SvqF5EneIL3ID_aWPzpjkuQkKGcQLzTTY8ts4Qo-gbgULJgkmHtHuEJOZZ1_P8RBMH19TKbCw8Ry1I"/>
+</div>
+<div class="space-y-4 pt-8">
+<img class="w-full aspect-square object-cover rounded-2xl shadow-lg" data-alt="Cows in a field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2AE3dssA5MxblPmghgKjccU4POrISqUBD0l4ecum5faMYCbX507FfQkOQ9tre8794L_tG3rOM2IMn-KWa9kwK3UnaSkWbnwa-dfwSBOGTyrrfMlaGwBnvcTLC_Vd-TrnU1DLL5O504cTaHilbfL7W_hOBc1t8mv1ERYI3GG1mkaMa3Z3XfwLPlf2jQpbVnOLNr_jstFQahmNT8Q677_M9KO2FIyJ8tqzXpD4PLznCjPKU-fV2RsuGzX8jBYXLIBzr1dUWwGIw-11h"/>
+<img class="w-full aspect-[4/5] object-cover rounded-2xl shadow-lg" data-alt="Crops growing in rows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXg3sEfFCgxTRrLYjV_HsUEdNxuO-pMzf7mnleN79imtpbwSYMDoDPVXaOewPEZet9FrdExaH6CYlrwI9w68I9kRRR6f9k8jSZJQHL1hX-lQMFEaFM4-ZWldJAT6xrHdQW5MEFQFlnznIAMevdtuTeZucTQpMd5EV0o0HqtCjJHqGXuHy1kpuOa6-BfGAQNkVP_MHIZGw0_MnRlxx2Y214kYGhwdrzoYxWepgxAGaCvlhQlxhu3s6C1IYQjIoGlV0YHdzEODldtk9y"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="max-w-[1200px] mx-auto px-6 lg:px-40 py-20">
+<div class="flex items-center gap-4 mb-12">
+<span class="material-symbols-outlined text-3xl text-primary">event</span>
+<h2 class="text-3xl font-black text-slate-900 dark:text-white">Próximos Eventos</h2>
+</div>
+<div class="flex flex-col gap-6">
+<div class="flex items-center gap-6 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-primary/30 hover:bg-white dark:hover:bg-slate-900 transition-all">
+<div class="flex flex-col items-center justify-center size-24 bg-primary text-white rounded-xl flex-shrink-0">
+<span class="text-4xl font-black leading-none">24</span>
+<span class="text-xs font-bold uppercase tracking-widest">Oct</span>
+</div>
+<div class="flex-grow">
+<h4 class="text-xl font-bold text-slate-900 dark:text-white mb-1">Día del Campesino Institucional</h4>
+<p class="text-slate-500 text-sm flex items-center gap-4">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span> 08:00 AM - 04:00 PM</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">location_on</span> Sede Principal - Granja</span>
+</p>
+</div>
+<button class="material-symbols-outlined text-slate-300 hover:text-primary transition-colors">calendar_add_on</button>
+</div>
+<div class="flex items-center gap-6 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-primary/30 hover:bg-white dark:hover:bg-slate-900 transition-all">
+<div class="flex flex-col items-center justify-center size-24 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl flex-shrink-0 border-2 border-slate-200 dark:border-slate-700">
+<span class="text-4xl font-black leading-none">15</span>
+<span class="text-xs font-bold uppercase tracking-widest">Nov</span>
+</div>
+<div class="flex-grow">
+<h4 class="text-xl font-bold text-slate-900 dark:text-white mb-1">Feria Tecnológica y del Emprendimiento</h4>
+<p class="text-slate-500 text-sm flex items-center gap-4">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span> 09:00 AM - 02:00 PM</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">location_on</span> Polideportivo Institucional</span>
+</p>
+</div>
+<button class="material-symbols-outlined text-slate-300 hover:text-primary transition-colors">calendar_add_on</button>
+</div>
+<div class="flex items-center gap-6 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-primary/30 hover:bg-white dark:hover:bg-slate-900 transition-all">
+<div class="flex flex-col items-center justify-center size-24 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl flex-shrink-0 border-2 border-slate-200 dark:border-slate-700">
+<span class="text-4xl font-black leading-none">05</span>
+<span class="text-xs font-bold uppercase tracking-widest">Dic</span>
+</div>
+<div class="flex-grow">
+<h4 class="text-xl font-bold text-slate-900 dark:text-white mb-1">Ceremonia de Graduación 2024</h4>
+<p class="text-slate-500 text-sm flex items-center gap-4">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span> 04:00 PM</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">location_on</span> Centro de Eventos Municipal</span>
+</p>
+</div>
+<button class="material-symbols-outlined text-slate-300 hover:text-primary transition-colors">calendar_add_on</button>
+</div>
+</div>
+</section>
+</main>
+<footer class="bg-background-dark text-slate-300 pt-20 pb-10 border-t border-white/5">
+<div class="max-w-[1200px] mx-auto px-6 lg:px-40 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
+<div class="space-y-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-3xl text-primary">agriculture</span>
+<h3 class="text-xl font-black text-white">IED J.M.H.</h3>
+</div>
+<p class="text-sm leading-relaxed">Institución Educativa Departamental Agropecuaria de Pivijay, Magdalena. Formando líderes desde 1974.</p>
+<div class="flex gap-4">
+<div class="size-10 bg-white/5 rounded-lg flex items-center justify-center hover:bg-primary transition-colors cursor-pointer text-white">
+<span class="material-symbols-outlined">social_leaderboard</span>
+</div>
+<div class="size-10 bg-white/5 rounded-lg flex items-center justify-center hover:bg-primary transition-colors cursor-pointer text-white">
+<span class="material-symbols-outlined">photo_camera</span>
+</div>
+</div>
+</div>
+<div class="space-y-6">
+<h4 class="text-sm font-black text-white uppercase tracking-widest">Contacto</h4>
+<ul class="space-y-4 text-sm">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary">location_on</span>
+<span>Calle 7 28A 38, Pivijay,<br/>Magdalena, Colombia</span>
+</li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">call</span>
+<span>350-344-1910</span>
+</li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">mail</span>
+<span>contacto@iedjmh.edu.co</span>
+</li>
+</ul>
+</div>
+<div class="space-y-6">
+<h4 class="text-sm font-black text-white uppercase tracking-widest">Legal</h4>
+<ul class="space-y-3 text-sm">
+<li><a class="hover:text-primary transition-colors" href="#">Política de Privacidad</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Tratamiento de Datos</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Manual de Convivencia</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Directorio Institucional</a></li>
+</ul>
+</div>
+<div class="space-y-6">
+<h4 class="text-sm font-black text-white uppercase tracking-widest">Aliados</h4>
+<div class="flex flex-wrap gap-4 items-center">
+<div class="h-10 px-4 bg-white/10 rounded flex items-center justify-center grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer">
+<span class="text-[10px] font-bold text-white">MinEducación</span>
+</div>
+<div class="h-10 px-4 bg-white/10 rounded flex items-center justify-center grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer">
+<span class="text-[10px] font-bold text-white">Gobernación</span>
+</div>
+<div class="h-10 px-4 bg-white/10 rounded flex items-center justify-center grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer">
+<span class="text-[10px] font-bold text-white">Alcaldía Pivijay</span>
+</div>
+</div>
+</div>
+</div>
+<div class="border-t border-white/5 pt-10 px-6 lg:px-40 text-center text-xs text-slate-500">
+<p>© 2024 Institución Educativa Departamental Agropecuaria José María Herrera. Todos los derechos reservados.</p>
+<p class="mt-2">Desarrollado para el fortalecimiento de la educación pública rural.</p>
+</div>
+</footer>
+</div>
+</body></html>

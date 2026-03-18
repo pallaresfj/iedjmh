@@ -1,0 +1,286 @@
+<?php
+
+namespace App\Http\Controllers\Public;
+
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\Public\Concerns\ResolvesPublicContent;
+use App\Models\Banner;
+use App\Models\Event;
+use App\Models\Post;
+use App\Models\Project;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
+
+class HomeController extends Controller
+{
+    use ResolvesPublicContent;
+
+    public function __invoke(): View
+    {
+        return view('public.home', [
+            'hero' => $this->resolveHero(),
+            'quickLinks' => $this->resolveQuickLinks(),
+            'newsItems' => $this->resolveNews(),
+            'featuredProject' => $this->resolveFeaturedProject(),
+            'upcomingEvents' => $this->resolveUpcomingEvents(),
+        ]);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function resolveHero(): array
+    {
+        $fallback = [
+            'eyebrow' => 'IED Agropecuaria Jose Maria Herrera',
+            'title' => 'Formando lideres para el agro y la vida',
+            'description' => 'Educacion de calidad con enfoque tecnico agropecuario para el desarrollo sostenible de nuestra comunidad.',
+            'cta_label' => 'Conoce nuestra matricula 2026',
+            'cta_url' => route('atencion.index'),
+            'image_url' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuDMUNlu1vZSYgs1mJ8XI2JBGdEGv7h77-FKsinYr5EjYaApSudFf0jhOBzLc6yoEXKGCF-tewz8MJIFovX4aKHbA0O3FnBStuhctqyV0oVkBdASloF8K2rO8VVM18nBjgTP2zwD60uTY7U6Vw-bB3w4vymqId0y98mtqnopTqtBAvch6WRWhfF7lV9eqtrHoQxcCTLHXNxBGP1xnxW6D-Hw4cLmuICL4qmBewmK1UqmRBf9D7Wau-xa_o7aSt4rGKkayqhXd0Sj8bxl',
+        ];
+
+        if (! $this->canQueryTable('banners')) {
+            return $fallback;
+        }
+
+        /** @var Banner|null $banner */
+        $banner = Banner::query()
+            ->where('status', 'published')
+            ->where(function ($query): void {
+                $query->whereNull('starts_at')->orWhere('starts_at', '<=', now());
+            })
+            ->where(function ($query): void {
+                $query->whereNull('ends_at')->orWhere('ends_at', '>=', now());
+            })
+            ->orderBy('sort_order')
+            ->latest('id')
+            ->first();
+
+        if (! $banner) {
+            return $fallback;
+        }
+
+        return [
+            'eyebrow' => $banner->subtitle ?: $fallback['eyebrow'],
+            'title' => $banner->title ?: $fallback['title'],
+            'description' => $banner->description ?: $fallback['description'],
+            'cta_label' => $banner->cta_label ?: $fallback['cta_label'],
+            'cta_url' => $banner->cta_url ?: $fallback['cta_url'],
+            'image_url' => $this->resolveMediaUrl($banner->image_path) ?: $fallback['image_url'],
+        ];
+    }
+
+    /**
+     * @return array<int, array<string, string>>
+     */
+    private function resolveQuickLinks(): array
+    {
+        return [
+            [
+                'title' => 'Consultar notas',
+                'description' => 'Ingreso estudiantes y familias',
+                'route' => route('zona-academica.index'),
+                'icon' => 'grade',
+            ],
+            [
+                'title' => 'Tareas y guias',
+                'description' => 'Actividades y recursos de aula',
+                'route' => route('academico.index'),
+                'icon' => 'library_books',
+            ],
+            [
+                'title' => 'Matricula',
+                'description' => 'Proceso y requisitos institucionales',
+                'route' => route('atencion.index'),
+                'icon' => 'app_registration',
+            ],
+            [
+                'title' => 'Portal PQRS',
+                'description' => 'Atencion y participacion ciudadana',
+                'route' => route('atencion.pqrs'),
+                'icon' => 'forum',
+            ],
+        ];
+    }
+
+    /**
+     * @return Collection<int, array<string, mixed>>
+     */
+    private function resolveNews(): Collection
+    {
+        $fallbackImages = [
+            'https://lh3.googleusercontent.com/aida-public/AB6AXuAA6PZ6wLaG30mRe_OOce73zoeXaZ8gXw7rrSofLFMd4m5s2H___8aVCIiTj137lMWCIwYF4fkk6SGve5f6BtE1a9dnxskXu-NeRrQVCHd_FIycLSKbl3fOpWRQiPrhQG3-YCcGInDmBbm6vlIS6xitPt4ZnZQE5BQs4Nlb6Hw-AS2HqcVtaYHJL-zyvnXLWZCYNScZUyVap4XXdlyLaRaJTCQO3yrd0-0hrJWYIvk-wEwMgumuSGRMxOfXsALhsYHoX9HpFOg7kKI0',
+            'https://lh3.googleusercontent.com/aida-public/AB6AXuABUOLDoda-HJpC2tHiwP-BrAJojb-62tRmzckHt_F0QT_2uuJ7vrmIeCs00mmVgSBE2iqhflIl2EBbU6nEaiZdejqY6zoMge86MvxHDs11lelN0WU_wSEQsu72tBJr146dfX-GBCSe0nche217_g-khOv8VkiPBHBIH7LjhV-mmtGhPbxaYloV5y_7R6b8Lcxd2HJPNE6d1FFEtfGUN_qBtfF6pbfL4j12vOrWAMgMP4izycJKWEV_-gHUN4J2dJ0Rl6ERpvNO5SjB',
+            'https://lh3.googleusercontent.com/aida-public/AB6AXuDD5dwJU3UvqE6sOTkTbHbOSlWfBrG5AhIrAgfN4HvLtUPsD4nLw66vKOx6Ke8C1GABj04JJZ69Knb5z_vhRb0GrCXSU6FMyyb-pJVPL4xrcOgCGIfq0-ksiujJ1xpZcActSrMHHSinxo9InUldiYdEl7cE4PyhdkyOI7iCjlZi2eb4oUOocEsZNyoZRZPJ4uNV0foet5hnuaP1Cpa_BVOVZMv16zJmHZWaIloVzyqvKL2ArI6ByFr1BRqNsoW9ucFq6I5wtn-a9aG_',
+        ];
+
+        $fallbackBadges = ['AGRO', 'ACADEMIA', 'INSTITUCIONAL'];
+
+        if ($this->canQueryTable('posts')) {
+            $news = Post::query()
+                ->where('status', 'published')
+                ->orderByDesc('published_at')
+                ->limit(3)
+                ->get()
+                ->values()
+                ->map(function (Post $post, int $index) use ($fallbackImages, $fallbackBadges): array {
+                    return [
+                        'title' => $post->title,
+                        'excerpt' => $post->excerpt ?: Str::limit(strip_tags((string) $post->content), 120),
+                        'date' => optional($post->published_at)->translatedFormat('d M Y') ?? 'Publicacion institucional',
+                        'image_url' => $this->resolveMediaUrl($post->cover_image_path) ?: ($fallbackImages[$index] ?? null),
+                        'badge' => $fallbackBadges[$index] ?? 'COMUNIDAD',
+                        'url' => route('comunidad.index'),
+                    ];
+                });
+
+            if ($news->isNotEmpty()) {
+                return $news;
+            }
+        }
+
+        return collect([
+            [
+                'title' => 'Nueva cosecha en la Granja Experimental: resultados destacados',
+                'excerpt' => 'Estudiantes y docentes compartieron logros del semestre en procesos de cultivo sostenible.',
+                'date' => 'Comunidad educativa',
+                'image_url' => $fallbackImages[0],
+                'badge' => $fallbackBadges[0],
+                'url' => route('comunidad.index'),
+            ],
+            [
+                'title' => 'Prueba Saber 11: estrategia institucional para el fortalecimiento academico',
+                'excerpt' => 'Se presento una ruta de acompanamiento para estudiantes de los grados superiores.',
+                'date' => 'Area academica',
+                'image_url' => $fallbackImages[1],
+                'badge' => $fallbackBadges[1],
+                'url' => route('academico.index'),
+            ],
+            [
+                'title' => 'Inscripciones de nuevos ingresos 2026 ya estan abiertas',
+                'excerpt' => 'La institucion habilito cronograma, requisitos y canales de orientacion para familias.',
+                'date' => 'Secretaria academica',
+                'image_url' => $fallbackImages[2],
+                'badge' => $fallbackBadges[2],
+                'url' => route('atencion.index'),
+            ],
+        ]);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function resolveFeaturedProject(): array
+    {
+        $fallback = [
+            'title' => 'Granja Experimental',
+            'subtitle' => 'Conoce de cerca nuestro enfoque tecnico agropecuario.',
+            'description' => 'Espacio de aprendizaje practico para fortalecer competencias en produccion sostenible, trabajo colaborativo y emprendimiento rural.',
+            'highlights' => [
+                ['icon' => 'set_meal', 'label' => 'Piscicultura y produccion sostenible'],
+                ['icon' => 'grass', 'label' => 'Ganaderia y manejo de cultivos'],
+                ['icon' => 'science', 'label' => 'Laboratorios de campo'],
+                ['icon' => 'school', 'label' => 'Formacion para el trabajo'],
+            ],
+            'cta_label' => 'Conoce nuestros proyectos',
+            'cta_url' => route('proyectos.index'),
+            'gallery' => [
+                'https://lh3.googleusercontent.com/aida-public/AB6AXuBp5Jf5GiM_ORrSUAg9AHZcRDIPObAgv8VB2zTDvbKbakIKmZb9CeCRUOQIsvvWcMC2LDJPSjKdhLyBy2dhjzlCBPL6Q1DWg8CPhKeFH5a00y5q-4t-nhgI0igs62ok1Z7FSogCLbtJEvq6WFjCXbjdyPk0g16xdt_X12g5RlHsVjXC4j0lXkE3rsEfedsoLEJt9k4AjGEy84dVjEdTu0mcYxptkS8fh7FFkomGrXZ9iq77kRRM6b1huAy2jcCRoz-bE2D1wHzxlaQk',
+                'https://lh3.googleusercontent.com/aida-public/AB6AXuBI98FibxKjA9PEzq3JTDeHU3RDuo2wTAYbWM6lUGZq6j-0_NVChu_uTaug0fn2g56rJjt-Bzcyet-GDDm7dlzkbEXzP6vEK7HIyZh5ba-0dPW_Df2d1O1D0kBmNRTVjpGYgpR0qQbtLujgyJKmZVukUk5FT91cVL6nJEYQ9RmDdKoc3k3I59aATmuQiERcZ8SvqF5EneIL3ID_aWPzpjkuQkKGcQLzTTY8ts4Qo-gbgULJgkmHtHuEJOZZ1_P8RBMH19TKbCw8Ry1I',
+                'https://lh3.googleusercontent.com/aida-public/AB6AXuB2AE3dssA5MxblPmghgKjccU4POrISqUBD0l4ecum5faMYCbX507FfQkOQ9tre8794L_tG3rOM2IMn-KWa9kwK3UnaSkWbnwa-dfwSBOGTyrrfMlaGwBnvcTLC_Vd-TrnU1DLL5O504cTaHilbfL7W_hOBc1t8mv1ERYI3GG1mkaMa3Z3XfwLPlf2jQpbVnOLNr_jstFQahmNT8Q677_M9KO2FIyJ8tqzXpD4PLznCjPKU-fV2RsuGzX8jBYXLIBzr1dUWwGIw-11h',
+                'https://lh3.googleusercontent.com/aida-public/AB6AXuBXg3sEfFCgxTRrLYjV_HsUEdNxuO-pMzf7mnleN79imtpbwSYMDoDPVXaOewPEZet9FrdExaH6CYlrwI9w68I9kRRR6f9k8jSZJQHL1hX-lQMFEaFM4-ZWldJAT6xrHdQW5MEFQFlnznIAMevdtuTeZucTQpMd5EV0o0HqtCjJHqGXuHy1kpuOa6-BfGAQNkVP_MHIZGw0_MnRlxx2Y214kYGhwdrzoYxWepgxAGaCvlhQlxhu3s6C1IYQjIoGlV0YHdzEODldtk9y',
+            ],
+        ];
+
+        if (! $this->canQueryTable('projects')) {
+            return $fallback;
+        }
+
+        /** @var Project|null $project */
+        $project = Project::query()
+            ->where('status', 'published')
+            ->orderByDesc('is_featured')
+            ->orderBy('sort_order')
+            ->latest('published_at')
+            ->first();
+
+        if (! $project) {
+            return $fallback;
+        }
+
+        return [
+            'title' => $project->title ?: $fallback['title'],
+            'subtitle' => $project->summary ?: $fallback['subtitle'],
+            'description' => $project->description
+                ? Str::limit(strip_tags((string) $project->description), 220)
+                : $fallback['description'],
+            'highlights' => $fallback['highlights'],
+            'cta_label' => $fallback['cta_label'],
+            'cta_url' => route('proyectos.index'),
+            'gallery' => [
+                $this->resolveMediaUrl($project->cover_image_path) ?: $fallback['gallery'][0],
+                $this->resolveMediaUrl($project->seo_image_path) ?: $fallback['gallery'][1],
+                $fallback['gallery'][2],
+                $fallback['gallery'][3],
+            ],
+        ];
+    }
+
+    /**
+     * @return Collection<int, array<string, mixed>>
+     */
+    private function resolveUpcomingEvents(): Collection
+    {
+        if ($this->canQueryTable('events')) {
+            $events = Event::query()
+                ->where('status', 'published')
+                ->whereNotNull('starts_at')
+                ->where('starts_at', '>=', now()->startOfDay())
+                ->orderBy('starts_at')
+                ->limit(3)
+                ->get()
+                ->map(function (Event $event): array {
+                    return [
+                        'day' => $event->starts_at->format('d'),
+                        'month' => Str::upper($event->starts_at->translatedFormat('M')),
+                        'title' => $event->title,
+                        'meta' => trim(collect([
+                            $event->starts_at->format('h:i A'),
+                            $event->location,
+                        ])->filter()->join(' • ')),
+                        'url' => route('comunidad.index'),
+                    ];
+                });
+
+            if ($events->isNotEmpty()) {
+                return $events;
+            }
+        }
+
+        return collect([
+            [
+                'day' => '24',
+                'month' => 'ABR',
+                'title' => 'Dia del Campesino Institucional',
+                'meta' => '08:00 AM • Granja escolar',
+                'url' => route('comunidad.index'),
+            ],
+            [
+                'day' => '15',
+                'month' => 'MAY',
+                'title' => 'Feria Tecnologica y de Emprendimiento',
+                'meta' => '09:30 AM • Coliseo institucional',
+                'url' => route('proyectos.index'),
+            ],
+            [
+                'day' => '05',
+                'month' => 'JUN',
+                'title' => 'Ceremonia de Graduacion 2026',
+                'meta' => '06:00 PM • Patio de honor',
+                'url' => route('comunidad.index'),
+            ],
+        ]);
+    }
+}

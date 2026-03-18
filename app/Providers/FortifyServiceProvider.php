@@ -68,5 +68,16 @@ class FortifyServiceProvider extends ServiceProvider
 
             return Limit::perMinute(5)->by($throttleKey);
         });
+
+        RateLimiter::for('pqrs', function (Request $request) {
+            $email = Str::lower((string) $request->input('applicant_email'));
+            $subject = Str::lower((string) $request->input('subject'));
+            $identifier = $request->ip().'|'.$email.'|'.$subject;
+
+            return [
+                Limit::perMinute(5)->by($request->ip()),
+                Limit::perHour(20)->by(Str::transliterate($identifier)),
+            ];
+        });
     }
 }

@@ -1,0 +1,63 @@
+@import 'tailwindcss';
+
+@source '../views/public/**/*.blade.php';
+@source '../views/components/public/**/*.blade.php';
+@source '../views/layouts/public/**/*.blade.php';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+
+@theme {
+    --color-ied-primary: #2e7d32;
+    --color-ied-primary-dark: #1b5e20;
+    --color-ied-primary-light: #66bb6a;
+    --color-ied-accent: #f57c00;
+    --color-ied-gray-900: #263238;
+    --color-ied-gray-700: #4c5a61;
+    --color-ied-gray-600: #5f6f77;
+    --color-ied-gray-200: #dfe5e8;
+    --color-ied-gray-100: #f5f7fa;
+}
+
+@layer base {
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
+    }
+
+    .public-site {
+        font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+        color: var(--color-ied-gray-900);
+        background-color: var(--color-ied-gray-100);
+    }
+
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+        font-size: 1.25rem;
+        line-height: 1;
+    }
+
+    .public-heading {
+        font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+        letter-spacing: -0.015em;
+    }
+}
+
+@layer components {
+    .public-container {
+        @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+    }
+
+    .public-shell {
+        @apply mx-auto w-full max-w-[1200px];
+    }
+
+    .public-content-shell {
+        @apply mx-auto w-full max-w-[1040px];
+    }
+
+    .public-surface {
+        @apply rounded-2xl border border-ied-gray-200 bg-white shadow-sm;
+    }
+}
