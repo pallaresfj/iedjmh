@@ -3,7 +3,11 @@
 ])
 
 @php($wrapperTag = ! empty($item['url']) ? 'a' : 'article')
-@php($wrapperAttrs = ! empty($item['url']) ? ['href' => $item['url'], 'target' => '_blank', 'rel' => 'noopener noreferrer'] : [])
+@php($opensInNewTab = (bool) ($item['open_in_new_tab'] ?? false))
+@php($wrapperAttrs = ! empty($item['url']) ? ['href' => $item['url']] : [])
+@if (! empty($item['url']) && $opensInNewTab)
+    @php($wrapperAttrs = array_merge($wrapperAttrs, ['target' => '_blank', 'rel' => 'noopener noreferrer']))
+@endif
 
 <{{ $wrapperTag }} {{ $attributes->merge($wrapperAttrs)->class('group flex items-start gap-4 rounded-2xl px-1 py-4 transition hover:bg-ied-gray-100/70 sm:gap-5') }}>
     <div class="grid min-w-14 place-items-center rounded-xl bg-ied-primary px-2 py-2 text-white shadow-sm">

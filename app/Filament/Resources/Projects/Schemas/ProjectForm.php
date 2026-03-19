@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Projects\Schemas;
 
 use App\Models\Project;
+use Closure;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
@@ -10,7 +11,10 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Str;
 
 class ProjectForm
 {
@@ -22,6 +26,8 @@ class ProjectForm
                 TextInput::make('title')
                     ->label('Titulo')
                     ->required()
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(fn (Get $get, Set $set, ?string $old, ?string $state) => static::syncSlug($get, $set, $old, $state))
                     ->maxLength(255),
                 TextInput::make('slug')
                     ->required()
@@ -73,6 +79,74 @@ class ProjectForm
                     ->image()
                     ->directory('projects')
                     ->columnSpanFull(),
+                TextInput::make('external_url')
+                    ->label('URL de referencia')
+                    ->placeholder('https://dominio.com/recurso o /storage/documentos/archivo.pdf')
+                    ->helperText('Acepta URL externa (http/https) o ruta interna que inicie con "/".')
+                    ->maxLength(2048)
+                    ->rule(static function (): Closure {
+                        return function (string $attribute, mixed $value, Closure $fail): void {
+                            if ($value === null || $value === '') {
+                                return;
+                            }
+
+                            if (! is_string($value) || ! static::isValidReferenceUrl(trim($value))) {
+                                $fail('La URL debe ser absoluta (http/https) o una ruta interna iniciando con "/".');
+                            }
+                        };
+                    })
+                    ->columnSpanFull(),
+                FileUpload::make('gallery_image_paths')
+                    ->label('Galeria de imagenes')
+                    ->helperText('Maximo 5 imagenes en total, incluyendo la portada.')
+                    ->image()
+                    ->multiple()
+                    ->reorderable()
+                    ->directory('projects/gallery')
+                    ->maxFiles(fn (Get $get): int => filled($get('cover_image_path')) ? 4 : 5)
+                    ->rule(fn (Get $get): Closure => function (string $attribute, mixed $value, Closure $fail) use ($get): void {
+                        if (! is_array($value)) {
+                            return;
+                        }
+
+                        $filesCount = count(array_filter($value, fn (mixed $path): bool => is_string($path) && trim($path) !== ''));
+                        $maxFiles = filled($get('cover_image_path')) ? 4 : 5;
+
+                        if ($filesCount > $maxFiles) {
+                            $fail('La galeria supera el limite permitido para el proyecto.');
+                        }
+                    })
+                    ->columnSpanFull(),
             ]);
+    }
+
+    private static function syncSlug(Get $get, Set $set, ?string $old, ?string $state): void
+    {
+        $currentSlug = (string) ($get('slug') ?? '');
+
+        if ($currentSlug !== Str::slug((string) $old)) {
+            return;
+        }
+
+        $set('slug', Str::slug((string) $state));
+    }
+
+    private static function isValidReferenceUrl(string $value): bool
+    {
+        if ($value === '') {
+            return true;
+        }
+
+        if (Str::startsWith($value, '/')) {
+            return true;
+        }
+
+        if (! filter_var($value, FILTER_VALIDATE_URL)) {
+            return false;
+        }
+
+        $scheme = strtolower((string) parse_url($value, PHP_URL_SCHEME));
+
+        return in_array($scheme, ['http', 'https'], true);
     }
 }

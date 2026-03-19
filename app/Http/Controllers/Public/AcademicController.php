@@ -320,7 +320,8 @@ class AcademicController extends Controller
                             $event->starts_at->format('h:i A'),
                             $event->location,
                         ])->filter()->join(' - ')),
-                        'url' => $event->registration_url,
+                        'url' => route('eventos.show', ['slug' => $event->slug]),
+                        'open_in_new_tab' => false,
                     ];
                 });
 

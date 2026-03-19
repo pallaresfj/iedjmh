@@ -21,6 +21,8 @@ class Project extends Model
         'ends_on',
         'is_featured',
         'cover_image_path',
+        'external_url',
+        'gallery_image_paths',
         'status',
         'published_at',
         'sort_order',
@@ -38,6 +40,7 @@ class Project extends Model
             'ends_on' => 'date',
             'published_at' => 'datetime',
             'is_featured' => 'boolean',
+            'gallery_image_paths' => 'array',
         ];
     }
 

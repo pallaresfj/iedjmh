@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Public\Concerns;
 use App\Models\Page;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Throwable;
 
@@ -75,6 +76,43 @@ trait ResolvesPublicContent
             return $path;
         }
 
-        return '/storage/'.ltrim($path, '/');
+        $normalizedPath = ltrim($path, '/');
+        $publicCandidates = array_values(array_unique(array_filter([
+            Str::startsWith($normalizedPath, 'public/')
+                ? Str::after($normalizedPath, 'public/')
+                : $normalizedPath,
+        ])));
+        $localCandidates = array_values(array_unique(array_filter([
+            $normalizedPath,
+            Str::startsWith($normalizedPath, 'public/')
+                ? Str::after($normalizedPath, 'public/')
+                : null,
+        ])));
+
+        if (Str::startsWith($normalizedPath, 'storage/')) {
+            return '/'.$normalizedPath;
+        }
+
+        try {
+            foreach ($publicCandidates as $candidate) {
+                if (Storage::disk('public')->exists($candidate)) {
+                    return Storage::disk('public')->url($candidate);
+                }
+            }
+        } catch (Throwable) {
+            // Ignore disk errors and continue with fallback strategy.
+        }
+
+        try {
+            foreach ($localCandidates as $candidate) {
+                if (Storage::disk('local')->exists($candidate)) {
+                    return Storage::disk('local')->temporaryUrl($candidate, now()->addMinutes(30));
+                }
+            }
+        } catch (Throwable) {
+            // Ignore disk errors and continue with fallback strategy.
+        }
+
+        return '/storage/'.$normalizedPath;
     }
 }

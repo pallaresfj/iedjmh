@@ -15,7 +15,6 @@ class Procedure extends Model
         'name',
         'slug',
         'summary',
-        'description',
         'requirements',
         'response_time',
         'cost',

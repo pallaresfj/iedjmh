@@ -8,6 +8,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
+use Filament\Support\Enums\IconSize;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
@@ -56,8 +57,14 @@ class DocumentsTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
-                EditAction::make(),
-                DeleteAction::make(),
+                EditAction::make()
+                    ->iconButton()
+                    ->tooltip('Editar')
+                    ->iconSize(IconSize::Large),
+                DeleteAction::make()
+                    ->iconButton()
+                    ->tooltip('Eliminar')
+                    ->iconSize(IconSize::Large),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

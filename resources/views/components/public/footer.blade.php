@@ -69,8 +69,12 @@
             </div>
         </div>
 
-        <div class="public-shell pt-6 text-[11px] text-slate-500">
+        <div class="public-shell flex flex-col gap-3 pt-6 text-[11px] text-slate-500 sm:flex-row sm:items-center sm:justify-between">
             <p>&copy; {{ now()->year }} {{ config('institution.name') }}. Sitio institucional oficial.</p>
+            <a href="{{ url('/admin') }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-slate-400 transition hover:text-white">
+                <span class="material-symbols-outlined !text-[14px]" aria-hidden="true">shield_person</span>
+                Acceso administrativo
+            </a>
         </div>
     </div>
 </footer>

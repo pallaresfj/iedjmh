@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\Public\AcademicController;
 use App\Http\Controllers\Public\CitizenAttentionController;
+use App\Http\Controllers\Public\EventController;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\InstitutionController;
+use App\Http\Controllers\Public\ProjectController;
 use App\Http\Controllers\Public\SectionController;
 use App\Http\Controllers\Public\TransparencyController;
 use Illuminate\Support\Facades\Route;
@@ -34,7 +36,8 @@ Route::prefix('academico')->group(function () {
 });
 
 Route::prefix('proyectos')->group(function () {
-    Route::get('/', SectionController::class)->defaults('section', 'proyectos')->name('proyectos.index');
+    Route::get('/', [ProjectController::class, 'index'])->name('proyectos.index');
+    Route::get('/{slug}', [ProjectController::class, 'show'])->name('proyectos.show');
 });
 
 Route::prefix('comunidad')->group(function () {
@@ -45,6 +48,10 @@ Route::prefix('transparencia')->group(function () {
     Route::get('/', [TransparencyController::class, 'index'])->name('transparencia.index');
     Route::get('/documentos', [TransparencyController::class, 'documents'])->name('transparencia.documentos');
     Route::get('/documentos/{slug}', [TransparencyController::class, 'showDocument'])->name('transparencia.documento');
+});
+
+Route::prefix('eventos')->group(function () {
+    Route::get('/{slug}', [EventController::class, 'show'])->name('eventos.show');
 });
 
 Route::prefix('atencion-ciudadano')->group(function () {

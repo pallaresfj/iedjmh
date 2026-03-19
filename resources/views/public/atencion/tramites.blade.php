@@ -16,14 +16,14 @@
             @endif
 
             <section class="public-surface p-5 sm:p-6">
-                <form action="{{ route('atencion.tramites') }}" method="GET" class="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                <form action="{{ route('atencion.tramites') }}" method="GET" class="grid gap-3 md:grid-cols-2 xl:grid-cols-4" data-auto-filter-form data-auto-filter-target="#procedures-results">
                     <label class="xl:col-span-2">
                         <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Buscar</span>
                         <input
                             type="text"
                             name="q"
                             value="{{ $filters['q'] }}"
-                            placeholder="Nombre o descripcion del tramite"
+                            placeholder="Nombre, resumen o requisitos del tramite"
                             class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
                         >
                     </label>
@@ -56,17 +56,19 @@
                     </label>
 
                     <div class="md:col-span-2 xl:col-span-4 flex items-end gap-2">
-                        <button type="submit" class="inline-flex items-center rounded-full bg-ied-primary px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-ied-primary-dark">
-                            Aplicar filtros
-                        </button>
-                        <a href="{{ route('atencion.tramites') }}" class="inline-flex items-center rounded-full border border-ied-gray-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-ied-gray-700 transition hover:border-ied-gray-400 hover:text-ied-gray-900">
+                        <noscript>
+                            <button type="submit" class="inline-flex items-center rounded-full bg-ied-primary px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-ied-primary-dark">
+                                Aplicar filtros
+                            </button>
+                        </noscript>
+                        <a href="{{ route('atencion.tramites') }}" data-auto-filter-clear class="inline-flex items-center rounded-full border border-ied-gray-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-ied-gray-700 transition hover:border-ied-gray-400 hover:text-ied-gray-900">
                             Limpiar
                         </a>
                     </div>
                 </form>
             </section>
 
-            <section class="space-y-4">
+            <section id="procedures-results" class="space-y-4">
                 @if ($items->count() === 0)
                     <div class="rounded-xl border border-dashed border-ied-gray-200 bg-ied-gray-100 p-4 text-sm text-ied-gray-700">
                         No se encontraron tramites con los filtros aplicados.

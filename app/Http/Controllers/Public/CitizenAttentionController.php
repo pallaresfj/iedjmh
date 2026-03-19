@@ -167,7 +167,6 @@ class CitizenAttentionController extends Controller
                     $searchQuery
                         ->where('name', 'like', $search)
                         ->orWhere('summary', 'like', $search)
-                        ->orWhere('description', 'like', $search)
                         ->orWhere('requirements', 'like', $search);
                 });
             }
@@ -184,7 +183,7 @@ class CitizenAttentionController extends Controller
                 ->through(fn (Procedure $procedure): array => [
                     'name' => $procedure->name,
                     'slug' => $procedure->slug,
-                    'summary' => $procedure->summary ?: Str::limit(strip_tags((string) $procedure->description), 180),
+                    'summary' => $procedure->summary,
                     'requirements' => $procedure->requirements,
                     'response_time' => $procedure->response_time,
                     'cost' => $procedure->cost,

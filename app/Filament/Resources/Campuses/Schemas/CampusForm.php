@@ -7,7 +7,10 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Str;
 
 class CampusForm
 {
@@ -19,6 +22,8 @@ class CampusForm
                 TextInput::make('name')
                     ->label('Nombre')
                     ->required()
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(fn (Get $get, Set $set, ?string $old, ?string $state) => static::syncSlug($get, $set, $old, $state))
                     ->maxLength(255),
                 TextInput::make('slug')
                     ->required()
@@ -65,5 +70,16 @@ class CampusForm
                     ->default(0)
                     ->minValue(0),
             ]);
+    }
+
+    private static function syncSlug(Get $get, Set $set, ?string $old, ?string $state): void
+    {
+        $currentSlug = (string) ($get('slug') ?? '');
+
+        if ($currentSlug !== Str::slug((string) $old)) {
+            return;
+        }
+
+        $set('slug', Str::slug((string) $state));
     }
 }
