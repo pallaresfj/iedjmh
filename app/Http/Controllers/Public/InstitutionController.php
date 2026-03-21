@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Public\Concerns\ResolvesPublicContent;
 use App\Models\Campus;
 use App\Models\Page;
+use App\Support\PageMenuCatalog;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
@@ -16,14 +17,25 @@ class InstitutionController extends Controller
     public function index(): View
     {
         $definitions = $this->pageDefinitions();
+        $bindings = collect($definitions)->pluck('menu_binding')->filter()->all();
+        $publishedPagesByBinding = $this->publishedPagesByMenuBinding($bindings);
         $slugs = collect($definitions)->pluck('slug')->prepend('institucion')->all();
-        $publishedPages = $this->publishedPagesBySlug($slugs);
-        $landingPage = $publishedPages->get('institucion');
+        $publishedPagesBySlug = $this->publishedPagesBySlug($slugs);
+        $landingPage = $publishedPagesBySlug->get('institucion');
 
         $cards = collect($definitions)
-            ->map(function (array $definition) use ($publishedPages): array {
+            ->map(function (array $definition) use ($publishedPagesByBinding, $publishedPagesBySlug): array {
                 /** @var Page|null $cmsPage */
-                $cmsPage = $publishedPages->get($definition['slug']);
+                $cmsPage = null;
+                $menuBinding = $definition['menu_binding'] ?? null;
+
+                if (filled($menuBinding)) {
+                    $cmsPage = $publishedPagesByBinding->get($menuBinding);
+                }
+
+                if (! $cmsPage) {
+                    $cmsPage = $publishedPagesBySlug->get($definition['slug']);
+                }
 
                 return [
                     'title' => $cmsPage?->title ?: $definition['title'],
@@ -36,6 +48,7 @@ class InstitutionController extends Controller
         return view('public.institucion.index', [
             'title' => $landingPage?->title ?: 'Institucion',
             'lead' => $landingPage?->summary ?: 'Conoce nuestra historia, lineamientos institucionales, equipo de trabajo y servicios para la comunidad.',
+            'banner' => $this->resolvePageBanner($landingPage),
             'institutionPages' => $this->navigationItems($definitions),
             'cards' => $cards,
         ]);
@@ -47,12 +60,13 @@ class InstitutionController extends Controller
         abort_unless(array_key_exists($pageKey, $definitions), 404);
 
         $definition = $definitions[$pageKey];
-        $cmsPage = $this->publishedPageBySlug($definition['slug']);
+        $cmsPage = $this->publishedPageByBindingOrSlug($definition['menu_binding'] ?? null, $definition['slug']);
 
         return view('public.institucion.page', [
             'pageKey' => $pageKey,
             'title' => $cmsPage?->title ?: $definition['title'],
             'lead' => $cmsPage?->summary ?: $definition['summary'],
+            'banner' => $this->resolvePageBanner($cmsPage),
             'blocks' => $this->resolveBlocks($cmsPage, $definition),
             'campuses' => $pageKey === 'sedes' ? $this->resolveCampuses() : collect(),
             'institutionPages' => $this->navigationItems($definitions),
@@ -67,8 +81,9 @@ class InstitutionController extends Controller
         return [
             'historia' => [
                 'title' => 'Historia',
-                'route' => 'institucion.historia',
-                'slug' => 'institucion-historia',
+                'route' => PageMenuCatalog::routeFor('institucion.historia') ?: 'institucion.historia',
+                'slug' => PageMenuCatalog::slugFor('institucion.historia') ?: 'institucion-historia',
+                'menu_binding' => 'institucion.historia',
                 'summary' => 'Trayectoria institucional al servicio de la educacion en Pivijay, Magdalena.',
                 'blocks' => [
                     [
@@ -79,8 +94,9 @@ class InstitutionController extends Controller
             ],
             'mision-vision' => [
                 'title' => 'Mision y Vision',
-                'route' => 'institucion.mision-vision',
-                'slug' => 'institucion-mision-vision',
+                'route' => PageMenuCatalog::routeFor('institucion.mision-vision') ?: 'institucion.mision-vision',
+                'slug' => PageMenuCatalog::slugFor('institucion.mision-vision') ?: 'institucion-mision-vision',
+                'menu_binding' => 'institucion.mision-vision',
                 'summary' => 'Direccion estrategica que orienta el desarrollo academico e institucional.',
                 'blocks' => [
                     [
@@ -95,8 +111,9 @@ class InstitutionController extends Controller
             ],
             'simbolos' => [
                 'title' => 'Simbolos Institucionales',
-                'route' => 'institucion.simbolos',
-                'slug' => 'institucion-simbolos',
+                'route' => PageMenuCatalog::routeFor('institucion.simbolos') ?: 'institucion.simbolos',
+                'slug' => PageMenuCatalog::slugFor('institucion.simbolos') ?: 'institucion-simbolos',
+                'menu_binding' => 'institucion.simbolos',
                 'summary' => 'Elementos de identidad que representan nuestros principios institucionales.',
                 'blocks' => [
                     [
@@ -107,8 +124,9 @@ class InstitutionController extends Controller
             ],
             'equipo-directivo' => [
                 'title' => 'Equipo Directivo',
-                'route' => 'institucion.equipo-directivo',
-                'slug' => 'institucion-equipo-directivo',
+                'route' => PageMenuCatalog::routeFor('institucion.equipo-directivo') ?: 'institucion.equipo-directivo',
+                'slug' => PageMenuCatalog::slugFor('institucion.equipo-directivo') ?: 'institucion-equipo-directivo',
+                'menu_binding' => 'institucion.equipo-directivo',
                 'summary' => 'Equipo responsable de la gestion academica, administrativa y de convivencia.',
                 'blocks' => [
                     [
@@ -121,6 +139,7 @@ class InstitutionController extends Controller
                 'title' => 'Sedes',
                 'route' => 'institucion.sedes',
                 'slug' => 'institucion-sedes',
+                'menu_binding' => null,
                 'summary' => 'Informacion de nuestras sedes y puntos de atencion.',
                 'blocks' => [
                     [
@@ -133,6 +152,7 @@ class InstitutionController extends Controller
                 'title' => 'PEI',
                 'route' => 'institucion.pei',
                 'slug' => 'institucion-pei',
+                'menu_binding' => null,
                 'summary' => 'Proyecto Educativo Institucional y lineamientos pedagogicos.',
                 'blocks' => [
                     [
@@ -145,6 +165,7 @@ class InstitutionController extends Controller
                 'title' => 'Manual de Convivencia',
                 'route' => 'institucion.manual-convivencia',
                 'slug' => 'institucion-manual-convivencia',
+                'menu_binding' => null,
                 'summary' => 'Normas y acuerdos para la convivencia escolar y la formacion ciudadana.',
                 'blocks' => [
                     [
@@ -157,6 +178,7 @@ class InstitutionController extends Controller
                 'title' => 'Directorio Institucional',
                 'route' => 'institucion.directorio',
                 'slug' => 'institucion-directorio',
+                'menu_binding' => null,
                 'summary' => 'Canales de contacto institucional para comunidad y ciudadanos.',
                 'blocks' => [
                     [
@@ -194,11 +216,16 @@ class InstitutionController extends Controller
                 [
                     'title' => null,
                     'body' => $cmsPage->content,
+                    'is_html' => true,
                 ],
             ]);
         }
 
-        return collect($definition['blocks']);
+        return collect($definition['blocks'])
+            ->map(fn (array $block): array => [
+                ...$block,
+                'is_html' => false,
+            ]);
     }
 
     /**

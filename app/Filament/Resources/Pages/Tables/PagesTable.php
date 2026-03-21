@@ -19,7 +19,7 @@ class PagesTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->defaultSort('sort_order')
+            ->defaultSort('updated_at', 'desc')
             ->columns([
                 TextColumn::make('title')
                     ->label('Titulo')
@@ -28,17 +28,13 @@ class PagesTable
                 TextColumn::make('slug')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('menu_binding')
+                    ->label('Vinculo menu')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('status')
                     ->label('Estado')
                     ->badge(),
-                TextColumn::make('published_at')
-                    ->label('Publicado')
-                    ->dateTime()
-                    ->sortable(),
-                TextColumn::make('sort_order')
-                    ->label('Orden')
-                    ->numeric()
-                    ->sortable(),
                 TextColumn::make('updated_at')
                     ->label('Actualizado')
                     ->since()

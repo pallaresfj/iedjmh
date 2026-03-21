@@ -3,7 +3,7 @@
 @section('title', $title)
 
 @section('content')
-    <x-public.internal-page :title="$title" :lead="$description" :section-key="$sectionKey">
+    <x-public.internal-page :title="$title" :lead="$description" :banner="$banner" :section-key="$sectionKey">
         <div class="space-y-4">
             <p class="text-base leading-relaxed text-ied-gray-700">
                 Esta seccion ya cuenta con la estructura visual institucional y queda lista para integrar contenidos

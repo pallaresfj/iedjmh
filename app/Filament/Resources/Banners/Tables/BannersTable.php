@@ -13,6 +13,8 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Schema as DbSchema;
+use Throwable;
 
 class BannersTable
 {
@@ -25,6 +27,11 @@ class BannersTable
                     ->label('Titulo')
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('page.title')
+                    ->label('Pagina')
+                    ->placeholder('Home / sin pagina')
+                    ->visible(fn (): bool => static::hasPageIdColumn())
+                    ->toggleable(),
                 TextColumn::make('status')
                     ->label('Estado')
                     ->badge(),
@@ -68,5 +75,14 @@ class BannersTable
                     RestoreBulkAction::make(),
                 ]),
             ]);
+    }
+
+    private static function hasPageIdColumn(): bool
+    {
+        try {
+            return DbSchema::hasColumn('banners', 'page_id');
+        } catch (Throwable) {
+            return false;
+        }
     }
 }

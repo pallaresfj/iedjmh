@@ -70,7 +70,7 @@ test('project detail page renders published project and hides draft project', fu
         ->assertNotFound();
 });
 
-test('projects filters by search category and featured status', function () {
+test('projects filters by search and category', function () {
     $sostenibilidad = Category::query()->create([
         'name' => 'Sostenibilidad',
         'slug' => 'sostenibilidad',
@@ -113,10 +113,6 @@ test('projects filters by search category and featured status', function () {
         ->assertSee($featuredProject->title)
         ->assertDontSee($regularProject->title);
 
-    $this->get(route('proyectos.index', ['featured' => '1']))
-        ->assertOk()
-        ->assertSee($featuredProject->title)
-        ->assertDontSee($regularProject->title);
 });
 
 test('projects page renders accessible image urls stored on local disk', function () {
@@ -184,7 +180,8 @@ test('project detail uses gallery image as primary when cover is missing', funct
     $this->get(route('proyectos.show', ['slug' => $project->slug]))
         ->assertOk()
         ->assertSee('src="/imagenes/proyectos/alterna.jpg"', false)
-        ->assertSee('data-project-gallery-active-image', false);
+        ->assertSee('data-project-gallery-thumbnail', false)
+        ->assertSee('data-project-gallery-modal', false);
 });
 
 test('project model persists gallery_image_paths as array', function () {
@@ -207,4 +204,87 @@ test('project model persists gallery_image_paths as array', function () {
             'projects/gallery/imagen-1.jpg',
             'projects/gallery/imagen-2.jpg',
         ]);
+});
+
+test('only one published featured project remains active', function () {
+    $first = Project::query()->create([
+        'title' => 'Proyecto primero',
+        'slug' => 'proyecto-primero',
+        'status' => 'published',
+        'is_featured' => true,
+        'published_at' => now()->subDay(),
+    ]);
+
+    $second = Project::query()->create([
+        'title' => 'Proyecto segundo',
+        'slug' => 'proyecto-segundo',
+        'status' => 'published',
+        'is_featured' => true,
+        'published_at' => now(),
+    ]);
+
+    $first->refresh();
+    $second->refresh();
+
+    expect($first->is_featured)->toBeFalse()
+        ->and($second->is_featured)->toBeTrue();
+});
+
+test('single project is automatically featured', function () {
+    $project = Project::query()->create([
+        'title' => 'Proyecto unico',
+        'slug' => 'proyecto-unico',
+        'status' => 'published',
+        'is_featured' => false,
+        'published_at' => now(),
+    ]);
+
+    $project->refresh();
+
+    expect($project->is_featured)->toBeTrue();
+});
+
+test('project detail renders html description content', function () {
+    $project = Project::query()->create([
+        'title' => 'Proyecto con html',
+        'slug' => 'proyecto-con-html',
+        'status' => 'published',
+        'description' => '<p>Descripcion con <strong>HTML</strong> renderizado.</p>',
+        'published_at' => now(),
+    ]);
+
+    $this->get(route('proyectos.show', ['slug' => $project->slug]))
+        ->assertOk()
+        ->assertSee('<strong>HTML</strong>', false);
+});
+
+test('home featured project uses project gallery images and dynamic content', function () {
+    Project::query()->create([
+        'title' => 'Proyecto Ambiental 2027',
+        'slug' => 'proyecto-ambiental-2027',
+        'summary' => 'Subtitulo de proyecto ambiental.',
+        'description' => '<p>Descripcion extensa del proyecto para fortalecer procesos ambientales institucionales con estudiantes y familias.</p>',
+        'status' => 'published',
+        'is_featured' => true,
+        'published_at' => now(),
+        'cover_image_path' => '/imagenes/proyectos/portada-no-usar.jpg',
+        'gallery_image_paths' => [
+            '/imagenes/proyectos/galeria-1.jpg',
+            '/imagenes/proyectos/galeria-2.jpg',
+            '/imagenes/proyectos/galeria-3.jpg',
+            '/imagenes/proyectos/galeria-4.jpg',
+        ],
+    ]);
+
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertSee('Proyecto Ambiental 2027')
+        ->assertSee('Subtitulo de proyecto ambiental.')
+        ->assertSee('Descripcion extensa del proyecto para fortalecer procesos ambientales institucionales')
+        ->assertSee('/imagenes/proyectos/galeria-1.jpg', false)
+        ->assertSee('/imagenes/proyectos/galeria-2.jpg', false)
+        ->assertSee('/imagenes/proyectos/galeria-3.jpg', false)
+        ->assertSee('/imagenes/proyectos/galeria-4.jpg', false)
+        ->assertDontSee('/imagenes/proyectos/portada-no-usar.jpg', false)
+        ->assertSee(route('proyectos.index'), false);
 });

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('slug')->nullable()->unique();
+            $table->foreignId('page_id')->nullable()->constrained('pages')->nullOnDelete();
             $table->string('subtitle')->nullable();
             $table->text('description')->nullable();
             $table->string('image_path')->nullable();

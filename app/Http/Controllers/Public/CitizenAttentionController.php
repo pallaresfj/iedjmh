@@ -29,6 +29,7 @@ class CitizenAttentionController extends Controller
         return view('public.atencion.index', [
             'title' => $page?->title ?: 'Atencion al Ciudadano',
             'lead' => $page?->summary ?: 'Canales institucionales de contacto, PQRS, tramites, participacion y orientacion ciudadana.',
+            'banner' => $this->resolvePageBanner($page),
             'content' => $page?->content,
             'attentionPages' => $this->attentionPages(),
             'procedureCategories' => $categories,
@@ -43,6 +44,7 @@ class CitizenAttentionController extends Controller
         return view('public.atencion.contacto', [
             'title' => $page?->title ?: 'Contactenos',
             'lead' => $page?->summary ?: 'Consulta nuestros canales de atencion institucional y horarios de servicio.',
+            'banner' => $this->resolvePageBanner($page),
             'content' => $page?->content,
             'attentionPages' => $this->attentionPages(),
             'contact' => [
@@ -62,6 +64,7 @@ class CitizenAttentionController extends Controller
         return view('public.atencion.pqrs', [
             'title' => $page?->title ?: 'PQRS',
             'lead' => $page?->summary ?: 'Radica peticiones, quejas, reclamos, sugerencias o felicitaciones.',
+            'banner' => $this->resolvePageBanner($page),
             'content' => $page?->content,
             'attentionPages' => $this->attentionPages(),
             'typeOptions' => [
@@ -201,6 +204,7 @@ class CitizenAttentionController extends Controller
         return view('public.atencion.tramites', [
             'title' => $page?->title ?: 'Tramites y Servicios',
             'lead' => $page?->summary ?: 'Consulta requisitos, costos, canales y tiempos de respuesta de tramites institucionales.',
+            'banner' => $this->resolvePageBanner($page),
             'content' => $page?->content,
             'attentionPages' => $this->attentionPages(),
             'categories' => $categories,
@@ -267,6 +271,7 @@ class CitizenAttentionController extends Controller
         return view('public.atencion.faq', [
             'title' => $page?->title ?: 'Preguntas Frecuentes',
             'lead' => $page?->summary ?: 'Respuestas rapidas a consultas comunes de estudiantes, familias y ciudadanos.',
+            'banner' => $this->resolvePageBanner($page),
             'content' => $page?->content,
             'attentionPages' => $this->attentionPages(),
             'categories' => $categories,
@@ -282,6 +287,7 @@ class CitizenAttentionController extends Controller
         return view('public.atencion.mapa-sitio', [
             'title' => $page?->title ?: 'Mapa del Sitio',
             'lead' => $page?->summary ?: 'Estructura de navegacion del portal institucional para consulta rapida.',
+            'banner' => $this->resolvePageBanner($page),
             'content' => $page?->content,
             'attentionPages' => $this->attentionPages(),
             'sitemap' => $this->sitemapSections(),
@@ -295,6 +301,7 @@ class CitizenAttentionController extends Controller
         return view('public.atencion.participacion', [
             'title' => $page?->title ?: 'Participacion',
             'lead' => $page?->summary ?: 'Canales de participacion ciudadana y mecanismos de interlocucion con la institucion.',
+            'banner' => $this->resolvePageBanner($page),
             'content' => $page?->content,
             'attentionPages' => $this->attentionPages(),
         ]);
@@ -431,13 +438,12 @@ class CitizenAttentionController extends Controller
                     ['label' => 'Sistema de Evaluacion', 'route' => 'academico.sistema-evaluacion'],
                     ['label' => 'Proyectos Pedagogicos', 'route' => 'academico.proyectos-pedagogicos'],
                     ['label' => 'Calendario Academico', 'route' => 'academico.calendario-academico'],
-                    ['label' => 'Zona Academica', 'route' => 'academico.zona-academica'],
                 ],
             ],
             [
-                'title' => 'Comunidad y Transparencia',
+                'title' => 'Noticias y Transparencia',
                 'items' => [
-                    ['label' => 'Comunidad', 'route' => 'comunidad.index'],
+                    ['label' => 'Noticias', 'route' => 'noticias.index'],
                     ['label' => 'Transparencia', 'route' => 'transparencia.index'],
                     ['label' => 'Documentos de Transparencia', 'route' => 'transparencia.documentos'],
                 ],

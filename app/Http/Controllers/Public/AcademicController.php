@@ -8,6 +8,8 @@ use App\Models\Document;
 use App\Models\Event;
 use App\Models\Page;
 use App\Models\Project;
+use App\Support\PageMenuCatalog;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -19,14 +21,25 @@ class AcademicController extends Controller
     public function index(): View
     {
         $definitions = $this->pageDefinitions();
+        $bindings = collect($definitions)->pluck('menu_binding')->filter()->all();
+        $publishedPagesByBinding = $this->publishedPagesByMenuBinding($bindings);
         $slugs = collect($definitions)->pluck('slug')->prepend('academico')->all();
-        $publishedPages = $this->publishedPagesBySlug($slugs);
-        $landingPage = $publishedPages->get('academico');
+        $publishedPagesBySlug = $this->publishedPagesBySlug($slugs);
+        $landingPage = $publishedPagesBySlug->get('academico');
 
         $cards = collect($definitions)
-            ->map(function (array $definition) use ($publishedPages): array {
+            ->map(function (array $definition) use ($publishedPagesByBinding, $publishedPagesBySlug): array {
                 /** @var Page|null $cmsPage */
-                $cmsPage = $publishedPages->get($definition['slug']);
+                $cmsPage = null;
+                $menuBinding = $definition['menu_binding'] ?? null;
+
+                if (filled($menuBinding)) {
+                    $cmsPage = $publishedPagesByBinding->get($menuBinding);
+                }
+
+                if (! $cmsPage) {
+                    $cmsPage = $publishedPagesBySlug->get($definition['slug']);
+                }
 
                 return [
                     'title' => $cmsPage?->title ?: $definition['title'],
@@ -39,28 +52,42 @@ class AcademicController extends Controller
         return view('public.academico.index', [
             'title' => $landingPage?->title ?: 'Academico',
             'lead' => $landingPage?->summary ?: 'Informacion curricular, recursos pedagogicos y servicios academicos para estudiantes y familias.',
+            'banner' => $this->resolvePageBanner($landingPage),
             'academicPages' => $this->navigationItems($definitions),
             'cards' => $cards,
         ]);
     }
 
-    public function page(string $pageKey): View
+    public function page(Request $request, string $pageKey): View
     {
         $definitions = $this->pageDefinitions();
         abort_unless(array_key_exists($pageKey, $definitions), 404);
 
         $definition = $definitions[$pageKey];
-        $cmsPage = $this->publishedPageBySlug($definition['slug']);
+        $cmsPage = $this->publishedPageByBindingOrSlug($definition['menu_binding'] ?? null, $definition['slug']);
+        $calendar = $pageKey === 'calendario-academico'
+            ? $this->resolveAcademicCalendar($request)
+            : [
+                'events' => collect(),
+                'months' => collect(),
+                'filters' => [
+                    'q' => '',
+                    'month' => '',
+                ],
+            ];
 
         return view('public.academico.page', [
             'pageKey' => $pageKey,
             'title' => $cmsPage?->title ?: $definition['title'],
             'lead' => $cmsPage?->summary ?: $definition['summary'],
+            'banner' => $this->resolvePageBanner($cmsPage),
             'blocks' => $this->resolveBlocks($cmsPage, $definition),
             'academicPages' => $this->navigationItems($definitions),
             'plans' => $pageKey === 'planes-area' ? $this->resolveAreaPlans() : collect(),
             'projects' => $pageKey === 'proyectos-pedagogicos' ? $this->resolvePedagogicalProjects() : collect(),
-            'calendarEvents' => $pageKey === 'calendario-academico' ? $this->resolveAcademicCalendar() : collect(),
+            'calendarEvents' => $calendar['events'],
+            'calendarMonths' => $calendar['months'],
+            'calendarFilters' => $calendar['filters'],
         ]);
     }
 
@@ -72,8 +99,9 @@ class AcademicController extends Controller
         return [
             'niveles-educativos' => [
                 'title' => 'Niveles Educativos',
-                'route' => 'academico.niveles-educativos',
-                'slug' => 'academico-niveles-educativos',
+                'route' => PageMenuCatalog::routeFor('academico.niveles-educativos') ?: 'academico.niveles-educativos',
+                'slug' => PageMenuCatalog::slugFor('academico.niveles-educativos') ?: 'academico-niveles-educativos',
+                'menu_binding' => 'academico.niveles-educativos',
                 'summary' => 'Oferta educativa desde preescolar hasta media con enfoque integral.',
                 'blocks' => [
                     [
@@ -84,8 +112,9 @@ class AcademicController extends Controller
             ],
             'modalidad-agropecuaria' => [
                 'title' => 'Modalidad Agropecuaria',
-                'route' => 'academico.modalidad-agropecuaria',
-                'slug' => 'academico-modalidad-agropecuaria',
+                'route' => PageMenuCatalog::routeFor('academico.modalidad-agropecuaria') ?: 'academico.modalidad-agropecuaria',
+                'slug' => PageMenuCatalog::slugFor('academico.modalidad-agropecuaria') ?: 'academico-modalidad-agropecuaria',
+                'menu_binding' => 'academico.modalidad-agropecuaria',
                 'summary' => 'Formacion tecnica articulada con el contexto rural y productivo del territorio.',
                 'blocks' => [
                     [
@@ -96,8 +125,9 @@ class AcademicController extends Controller
             ],
             'planes-area' => [
                 'title' => 'Planes de Area',
-                'route' => 'academico.planes-area',
-                'slug' => 'academico-planes-area',
+                'route' => PageMenuCatalog::routeFor('academico.planes-area') ?: 'academico.planes-area',
+                'slug' => PageMenuCatalog::slugFor('academico.planes-area') ?: 'academico-planes-area',
+                'menu_binding' => 'academico.planes-area',
                 'summary' => 'Consulta de planes curriculares, mallas y orientaciones por area.',
                 'blocks' => [
                     [
@@ -108,8 +138,9 @@ class AcademicController extends Controller
             ],
             'sistema-evaluacion' => [
                 'title' => 'Sistema de Evaluacion',
-                'route' => 'academico.sistema-evaluacion',
-                'slug' => 'academico-sistema-evaluacion',
+                'route' => PageMenuCatalog::routeFor('academico.sistema-evaluacion') ?: 'academico.sistema-evaluacion',
+                'slug' => PageMenuCatalog::slugFor('academico.sistema-evaluacion') ?: 'academico-sistema-evaluacion',
+                'menu_binding' => 'academico.sistema-evaluacion',
                 'summary' => 'Criterios y procesos para valorar el aprendizaje y acompanamiento estudiantil.',
                 'blocks' => [
                     [
@@ -122,6 +153,7 @@ class AcademicController extends Controller
                 'title' => 'Proyectos Pedagogicos',
                 'route' => 'academico.proyectos-pedagogicos',
                 'slug' => 'academico-proyectos-pedagogicos',
+                'menu_binding' => null,
                 'summary' => 'Iniciativas de aula y de institucion para fortalecer aprendizaje significativo.',
                 'blocks' => [
                     [
@@ -134,25 +166,9 @@ class AcademicController extends Controller
                 'title' => 'Calendario Academico',
                 'route' => 'academico.calendario-academico',
                 'slug' => 'academico-calendario-academico',
+                'menu_binding' => null,
                 'summary' => 'Fechas institucionales relevantes, periodos academicos y actividades programadas.',
-                'blocks' => [
-                    [
-                        'title' => 'Agenda institucional',
-                        'body' => 'Consulta eventos y actividades academicas en orden cronologico para la planeacion escolar.',
-                    ],
-                ],
-            ],
-            'zona-academica' => [
-                'title' => 'Acceso a Zona Academica',
-                'route' => 'academico.zona-academica',
-                'slug' => 'academico-zona-academica',
-                'summary' => 'Punto de acceso a plataformas institucionales de seguimiento academico.',
-                'blocks' => [
-                    [
-                        'title' => 'Plataformas y servicios',
-                        'body' => 'Desde este espacio puedes ingresar a los servicios de consulta academica y acompanamiento estudiantil.',
-                    ],
-                ],
+                'blocks' => [],
             ],
         ];
     }
@@ -183,11 +199,16 @@ class AcademicController extends Controller
                 [
                     'title' => null,
                     'body' => $cmsPage->content,
+                    'is_html' => true,
                 ],
             ]);
         }
 
-        return collect($definition['blocks']);
+        return collect($definition['blocks'])
+            ->map(fn (array $block): array => [
+                ...$block,
+                'is_html' => false,
+            ]);
     }
 
     /**
@@ -296,18 +317,60 @@ class AcademicController extends Controller
     /**
      * @return Collection<int, array<string, string|null>>
      */
-    private function resolveAcademicCalendar(): Collection
+    /**
+     * @return array{
+     *     events: Collection<int, array<string, string|null|bool>>,
+     *     months: Collection<int, array{value: string, label: string}>,
+     *     filters: array{q: string, month: string}
+     * }
+     */
+    private function resolveAcademicCalendar(Request $request): array
     {
+        $filters = [
+            'q' => trim((string) $request->query('q', '')),
+            'month' => trim((string) $request->query('month', '')),
+        ];
+
+        if (preg_match('/^\d{4}\-(0[1-9]|1[0-2])$/', $filters['month']) !== 1) {
+            $filters['month'] = '';
+        }
+
         if ($this->canQueryTable('events')) {
-            $events = Event::query()
+            $baseQuery = Event::query()
                 ->where('status', 'published')
                 ->whereNotNull('starts_at')
-                ->where(function ($query): void {
-                    $query->whereHas('categories', function ($categoryQuery): void {
-                        $categoryQuery->whereIn('slug', ['calendario-academico', 'academico-calendario-academico']);
-                    })->orWhereDoesntHave('categories');
+                ->where('starts_at', '>=', now()->startOfDay());
+
+            $months = (clone $baseQuery)
+                ->orderBy('starts_at')
+                ->get(['starts_at'])
+                ->map(function (Event $event): array {
+                    return [
+                        'value' => $event->starts_at->format('Y-m'),
+                        'label' => Str::title($event->starts_at->translatedFormat('F Y')),
+                    ];
                 })
-                ->where('starts_at', '>=', now()->startOfDay())
+                ->unique('value')
+                ->values();
+
+            $events = $baseQuery
+                ->when($filters['q'] !== '', function ($query) use ($filters): void {
+                    $searchTerm = '%'.$filters['q'].'%';
+
+                    $query->where(function ($searchQuery) use ($searchTerm): void {
+                        $searchQuery
+                            ->where('title', 'like', $searchTerm)
+                            ->orWhere('summary', 'like', $searchTerm)
+                            ->orWhere('description', 'like', $searchTerm)
+                            ->orWhere('location', 'like', $searchTerm);
+                    });
+                })
+                ->when($filters['month'] !== '', function ($query) use ($filters): void {
+                    [$year, $month] = explode('-', $filters['month']);
+                    $query
+                        ->whereYear('starts_at', (int) $year)
+                        ->whereMonth('starts_at', (int) $month);
+                })
                 ->orderBy('starts_at')
                 ->limit(12)
                 ->get()
@@ -326,33 +389,49 @@ class AcademicController extends Controller
                 });
 
             if ($events->isNotEmpty()) {
-                return $events;
+                return [
+                    'events' => $events,
+                    'months' => $months,
+                    'filters' => $filters,
+                ];
+            }
+
+            if ($filters['q'] !== '' || $filters['month'] !== '') {
+                return [
+                    'events' => collect(),
+                    'months' => $months,
+                    'filters' => $filters,
+                ];
             }
         }
 
-        return collect([
-            [
-                'day' => '02',
-                'month' => 'ABR',
-                'title' => 'Inicio de periodo academico',
-                'meta' => '07:00 AM - Sede principal',
-                'url' => null,
-            ],
-            [
-                'day' => '18',
-                'month' => 'MAY',
-                'title' => 'Corte evaluativo intermedio',
-                'meta' => 'Jornada academica',
-                'url' => null,
-            ],
-            [
-                'day' => '10',
-                'month' => 'JUN',
-                'title' => 'Entrega de informes de desempeno',
-                'meta' => 'Atencion a familias',
-                'url' => null,
-            ],
-        ]);
+        return [
+            'events' => collect([
+                [
+                    'day' => '02',
+                    'month' => 'ABR',
+                    'title' => 'Inicio de periodo academico',
+                    'meta' => '07:00 AM - Sede principal',
+                    'url' => null,
+                ],
+                [
+                    'day' => '18',
+                    'month' => 'MAY',
+                    'title' => 'Corte evaluativo intermedio',
+                    'meta' => 'Jornada academica',
+                    'url' => null,
+                ],
+                [
+                    'day' => '10',
+                    'month' => 'JUN',
+                    'title' => 'Entrega de informes de desempeno',
+                    'meta' => 'Atencion a familias',
+                    'url' => null,
+                ],
+            ]),
+            'months' => collect(),
+            'filters' => $filters,
+        ];
     }
 
     private function resolveDocumentUrl(Document $document): ?string

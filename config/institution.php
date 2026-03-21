@@ -47,14 +47,6 @@ return [
                 ],
             ],
             [
-                'label' => 'Proyectos',
-                'route' => 'proyectos.index',
-            ],
-            [
-                'label' => 'Comunidad',
-                'route' => 'comunidad.index',
-            ],
-            [
                 'label' => 'Transparencia',
                 'route' => 'transparencia.index',
                 'children' => [
@@ -72,7 +64,14 @@ return [
                     ['label' => 'Preguntas frecuentes', 'route' => 'atencion.faq', 'icon' => 'help'],
                 ],
             ],
-            ['label' => 'Zona Academica', 'route' => 'zona-academica.index'],
+            [
+                'label' => 'Proyectos',
+                'route' => 'proyectos.index',
+            ],
+            [
+                'label' => 'Noticias',
+                'route' => 'noticias.index',
+            ],
         ],
         'footer' => [
             ['label' => 'PQRS', 'route' => 'atencion.pqrs'],
@@ -96,9 +95,9 @@ return [
             'title' => 'Proyectos',
             'description' => 'Iniciativas institucionales de impacto pedagogico, ambiental y comunitario.',
         ],
-        'comunidad' => [
-            'title' => 'Comunidad',
-            'description' => 'Noticias, eventos y contenidos de interes para estudiantes, familias y egresados.',
+        'noticias' => [
+            'title' => 'Noticias',
+            'description' => 'Novedades institucionales de interes para estudiantes, familias, egresados y comunidad educativa.',
         ],
         'transparencia' => [
             'title' => 'Transparencia',
@@ -107,10 +106,6 @@ return [
         'atencion' => [
             'title' => 'Atencion al Ciudadano',
             'description' => 'Canales de contacto, PQRS, tramites y orientacion a la ciudadania.',
-        ],
-        'zona-academica' => [
-            'title' => 'Zona Academica',
-            'description' => 'Acceso centralizado a plataformas academicas, seguimiento y servicios digitales.',
         ],
     ],
 ];

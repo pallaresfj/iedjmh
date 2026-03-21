@@ -3,7 +3,7 @@
 @section('title', $title)
 
 @section('content')
-    <x-public.internal-page :title="$title" :lead="$lead" section-key="institucion">
+    <x-public.internal-page :title="$title" :lead="$lead" :banner="$banner" section-key="institucion">
         <x-slot:sidebar>
             <x-public.institucion.sidebar :pages="$institutionPages" />
 
@@ -24,9 +24,15 @@
                     @if (! empty($block['title']))
                         <h2 class="public-heading text-xl font-semibold text-ied-gray-900">{{ $block['title'] }}</h2>
                     @endif
-                    <div class="text-sm leading-relaxed text-ied-gray-700 sm:text-base">
-                        {!! nl2br(e($block['body'])) !!}
-                    </div>
+                    @if (! empty($block['is_html']))
+                        <div class="public-rich-content text-sm leading-relaxed text-ied-gray-700 sm:text-base">
+                            {!! $block['body'] !!}
+                        </div>
+                    @else
+                        <div class="text-sm leading-relaxed text-ied-gray-700 sm:text-base">
+                            {!! nl2br(e($block['body'])) !!}
+                        </div>
+                    @endif
                 </section>
             @endforeach
 

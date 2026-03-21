@@ -1,6 +1,7 @@
 @php($email = config('institution.email'))
 @php($phone = config('institution.phone'))
 @php($govLabel = config('institution.govbar.label', 'GOV.CO'))
+@php($location = \App\Support\PublicSettings::get('location', collect([config('institution.city'), config('institution.department')])->filter()->join(', ')))
 
 <div class="bg-slate-900 text-white">
     <div class="public-container py-1.5">
@@ -11,7 +12,9 @@
             </p>
 
             <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-white/85">
-                <span>{{ config('institution.city') }}, {{ config('institution.department') }}</span>
+                @if (filled($location))
+                    <span>{{ $location }}</span>
+                @endif
                 @if ($email)
                     <a href="mailto:{{ $email }}" class="transition hover:text-white focus-visible:text-white">
                         {{ $email }}

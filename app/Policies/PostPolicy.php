@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use Illuminate\Foundation\Auth\User as AuthUser;
 use App\Models\Post;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Foundation\Auth\User as AuthUser;
 
 class PostPolicy
 {
     use HandlesAuthorization;
-    
+
     public function viewAny(AuthUser $authUser): bool
     {
         return $authUser->can('ViewAny:Post');
@@ -19,8 +19,7 @@ class PostPolicy
 
     public function view(AuthUser $authUser, Post $post): bool
     {
-        return $authUser->can('View:Post')
-            && $this->canAccessPostRecord($authUser, $post);
+        return $authUser->can('View:Post');
     }
 
     public function create(AuthUser $authUser): bool
@@ -30,26 +29,22 @@ class PostPolicy
 
     public function update(AuthUser $authUser, Post $post): bool
     {
-        return $authUser->can('Update:Post')
-            && $this->canAccessPostRecord($authUser, $post);
+        return $authUser->can('Update:Post');
     }
 
     public function delete(AuthUser $authUser, Post $post): bool
     {
-        return $authUser->can('Delete:Post')
-            && $this->canAccessPostRecord($authUser, $post);
+        return $authUser->can('Delete:Post');
     }
 
     public function restore(AuthUser $authUser, Post $post): bool
     {
-        return $authUser->can('Restore:Post')
-            && $this->canAccessPostRecord($authUser, $post);
+        return $authUser->can('Restore:Post');
     }
 
     public function forceDelete(AuthUser $authUser, Post $post): bool
     {
-        return $authUser->can('ForceDelete:Post')
-            && $this->canAccessPostRecord($authUser, $post);
+        return $authUser->can('ForceDelete:Post');
     }
 
     public function forceDeleteAny(AuthUser $authUser): bool
@@ -64,27 +59,11 @@ class PostPolicy
 
     public function replicate(AuthUser $authUser, Post $post): bool
     {
-        return $authUser->can('Replicate:Post')
-            && $this->canAccessPostRecord($authUser, $post);
+        return $authUser->can('Replicate:Post');
     }
 
     public function reorder(AuthUser $authUser): bool
     {
         return $authUser->can('Reorder:Post');
     }
-
-    private function canAccessPostRecord(AuthUser $authUser, Post $post): bool
-    {
-        if (! $this->isCollaborator($authUser)) {
-            return true;
-        }
-
-        return $post->status !== 'published';
-    }
-
-    private function isCollaborator(AuthUser $authUser): bool
-    {
-        return method_exists($authUser, 'hasRole') && $authUser->hasRole('colaborador');
-    }
-
 }

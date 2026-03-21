@@ -3,7 +3,7 @@
 @section('title', $title)
 
 @section('content')
-    <x-public.internal-page :title="$title" :lead="$lead" section-key="academico">
+    <x-public.internal-page :title="$title" :lead="$lead" :banner="$banner" section-key="academico">
         <x-slot:sidebar>
             <x-public.academico.sidebar :pages="$academicPages" />
 
@@ -24,9 +24,15 @@
                     @if (! empty($block['title']))
                         <h2 class="public-heading text-xl font-semibold text-ied-gray-900">{{ $block['title'] }}</h2>
                     @endif
-                    <div class="text-sm leading-relaxed text-ied-gray-700 sm:text-base">
-                        {!! nl2br(e($block['body'])) !!}
-                    </div>
+                    @if (! empty($block['is_html']))
+                        <div class="public-rich-content text-sm leading-relaxed text-ied-gray-700 sm:text-base">
+                            {!! $block['body'] !!}
+                        </div>
+                    @else
+                        <div class="text-sm leading-relaxed text-ied-gray-700 sm:text-base">
+                            {!! nl2br(e($block['body'])) !!}
+                        </div>
+                    @endif
                 </section>
             @endforeach
 
@@ -54,28 +60,61 @@
 
             @if ($pageKey === 'calendario-academico')
                 <section class="space-y-4 border-t border-ied-gray-200 pt-6">
-                    <h2 class="public-heading text-xl font-semibold text-ied-gray-900">Agenda academica</h2>
-                    <div class="divide-y divide-ied-gray-200">
-                        @foreach ($calendarEvents as $item)
-                            <x-public.academico.calendar-item :item="$item" />
-                        @endforeach
+                    <section class="public-surface p-5 sm:p-6">
+                        <form action="{{ route('academico.calendario-academico') }}" method="GET" class="grid gap-3 md:grid-cols-2 xl:grid-cols-3" data-auto-filter-form data-auto-filter-target="#academic-calendar-results">
+                            <label class="xl:col-span-2">
+                                <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Cajon de busqueda</span>
+                                <input
+                                    type="text"
+                                    name="q"
+                                    value="{{ $calendarFilters['q'] }}"
+                                    placeholder="Buscar por evento, descripcion o lugar"
+                                    class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
+                                >
+                            </label>
+
+                            <label>
+                                <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Filtro por fecha</span>
+                                <select
+                                    name="month"
+                                    class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
+                                >
+                                    <option value="">Todos los meses</option>
+                                    @foreach ($calendarMonths as $month)
+                                        <option value="{{ $month['value'] }}" @selected($calendarFilters['month'] === $month['value'])>{{ $month['label'] }}</option>
+                                    @endforeach
+                                </select>
+                            </label>
+
+                            <div class="flex items-end gap-2 md:col-span-2 xl:col-span-3">
+                                <noscript>
+                                    <button type="submit" class="inline-flex items-center rounded-full bg-ied-primary px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-ied-primary-dark">
+                                        Aplicar filtros
+                                    </button>
+                                </noscript>
+                                <a href="{{ route('academico.calendario-academico') }}" data-auto-filter-clear class="inline-flex items-center rounded-full border border-ied-gray-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-ied-gray-700 transition hover:border-ied-gray-400 hover:text-ied-gray-900">
+                                    Limpiar
+                                </a>
+                            </div>
+                        </form>
+                    </section>
+
+                    <div id="academic-calendar-results">
+                        @if ($calendarEvents->isEmpty())
+                            <div class="rounded-xl border border-dashed border-ied-gray-200 bg-ied-gray-100 p-4 text-sm text-ied-gray-700">
+                                No se encontraron eventos con los filtros aplicados.
+                            </div>
+                        @else
+                            <div class="divide-y divide-ied-gray-200">
+                                @foreach ($calendarEvents as $item)
+                                    <x-public.academico.calendar-item :item="$item" />
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
                 </section>
             @endif
 
-            @if ($pageKey === 'zona-academica')
-                <section class="border-t border-ied-gray-200 pt-6">
-                    <div class="public-surface p-5 sm:p-6">
-                        <p class="text-sm leading-relaxed text-ied-gray-700 sm:text-base">
-                            Accede al portal academico institucional para consulta de informacion estudiantil, seguimiento
-                            de desempeno y servicios para familias y estudiantes.
-                        </p>
-                        <a href="{{ route('zona-academica.index') }}" class="mt-4 inline-flex items-center rounded-full bg-ied-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-ied-primary-dark">
-                            Ir a Zona Academica
-                        </a>
-                    </div>
-                </section>
-            @endif
         </div>
     </x-public.internal-page>
 @endsection

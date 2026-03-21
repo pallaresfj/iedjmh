@@ -3,7 +3,7 @@
 @section('title', $title)
 
 @section('content')
-    <x-public.internal-page :title="$title" :lead="$lead" section-key="academico">
+    <x-public.internal-page :title="$title" :lead="$lead" :banner="$banner" section-key="academico">
         <x-slot:sidebar>
             <x-public.academico.sidebar :pages="$academicPages" />
 
@@ -11,8 +11,8 @@
                 <p class="public-heading text-sm font-semibold uppercase tracking-wide text-ied-gray-900">Accesos</p>
                 <ul class="mt-3 space-y-2 text-sm text-ied-gray-700">
                     <li>
-                        <a href="{{ route('zona-academica.index') }}" class="text-ied-primary-dark hover:text-ied-primary">
-                            Zona Academica
+                        <a href="{{ route('academico.calendario-academico') }}" class="text-ied-primary-dark hover:text-ied-primary">
+                            Calendario Academico
                         </a>
                     </li>
                     <li>

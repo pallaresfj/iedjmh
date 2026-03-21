@@ -3,6 +3,7 @@
 @php($email = config('institution.email'))
 @php($phone = config('institution.phone'))
 @php($allies = config('institution.allies', []))
+@php($institutionName = \App\Support\PublicSettings::get('institution_name', config('institution.name')))
 
 <footer class="mt-14 border-t border-white/5 bg-[#102117] text-slate-200">
     <div class="public-container pt-14 pb-8">
@@ -10,11 +11,11 @@
             <div class="space-y-5">
                 <div class="flex items-center gap-3">
                     <span class="material-symbols-outlined text-ied-primary-light !text-[28px]" aria-hidden="true">agriculture</span>
-                    <p class="public-heading text-lg font-bold text-white">{{ config('institution.short_name') }}</p>
+                    <p class="public-heading text-lg font-bold text-white">{{ $institutionName }}</p>
                 </div>
 
                 <p class="text-sm leading-relaxed text-slate-300">
-                    {{ config('institution.name') }}. Formando lideres para el agro y la vida.
+                    {{ $institutionName }}. Formando lideres para el agro y la vida.
                 </p>
 
                 <ul class="space-y-2 text-sm text-slate-300">
@@ -70,7 +71,7 @@
         </div>
 
         <div class="public-shell flex flex-col gap-3 pt-6 text-[11px] text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-            <p>&copy; {{ now()->year }} {{ config('institution.name') }}. Sitio institucional oficial.</p>
+            <p>&copy; {{ now()->year }} {{ $institutionName }}. Sitio institucional oficial.</p>
             <a href="{{ url('/admin') }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-slate-400 transition hover:text-white">
                 <span class="material-symbols-outlined !text-[14px]" aria-hidden="true">shield_person</span>
                 Acceso administrativo

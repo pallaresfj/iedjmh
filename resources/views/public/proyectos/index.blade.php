@@ -3,7 +3,7 @@
 @section('title', $title)
 
 @section('content')
-    <x-public.internal-page :title="$title" :lead="$lead" section-key="proyectos">
+    <x-public.internal-page :title="$title" :lead="$lead" :banner="$banner" section-key="proyectos">
         <x-slot:sidebar>
             <div class="public-surface p-4 sm:p-5">
                 <p class="public-heading text-sm font-semibold uppercase tracking-wide text-ied-gray-900">Navegacion</p>
@@ -30,7 +30,7 @@
             @endif
 
             <section class="public-surface p-5 sm:p-6">
-                <form action="{{ route('proyectos.index') }}" method="GET" class="grid gap-3 md:grid-cols-2 xl:grid-cols-5" data-auto-filter-form data-auto-filter-target="#projects-results">
+                <form action="{{ route('proyectos.index') }}" method="GET" class="grid gap-3 md:grid-cols-2 xl:grid-cols-4" data-auto-filter-form data-auto-filter-target="#projects-results">
                     <label class="xl:col-span-2">
                         <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Buscar</span>
                         <input
@@ -58,18 +58,6 @@
                     </label>
 
                     <label>
-                        <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Destacado</span>
-                        <select
-                            name="featured"
-                            class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
-                        >
-                            <option value="">Todos</option>
-                            <option value="1" @selected($filters['featured'] === '1')>Solo destacados</option>
-                            <option value="0" @selected($filters['featured'] === '0')>No destacados</option>
-                        </select>
-                    </label>
-
-                    <label>
                         <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Orden</span>
                         <select
                             name="sort"
@@ -81,7 +69,7 @@
                         </select>
                     </label>
 
-                    <div class="flex items-end gap-2 md:col-span-2 xl:col-span-5">
+                    <div class="flex items-end gap-2 md:col-span-2 xl:col-span-4">
                         <noscript>
                             <button type="submit" class="inline-flex items-center rounded-full bg-ied-primary px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-ied-primary-dark">
                                 Aplicar filtros

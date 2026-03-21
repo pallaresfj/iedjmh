@@ -3,7 +3,7 @@
 @section('title', $title)
 
 @section('content')
-    <x-public.internal-page :title="$title" :lead="$lead" section-key="transparencia">
+    <x-public.internal-page :title="$title" :lead="$lead" :banner="$banner" section-key="transparencia">
         <x-slot:sidebar>
             <x-public.transparencia.sidebar :categories="$categories" :active-category="$filters['category']" />
         </x-slot:sidebar>

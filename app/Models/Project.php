@@ -12,6 +12,31 @@ class Project extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected static function booted(): void
+    {
+        static::saving(function (Project $project): void {
+            $otherProjectsExist = static::query()
+                ->when($project->exists, fn ($query) => $query->whereKeyNot($project->getKey()))
+                ->exists();
+
+            if (! $otherProjectsExist) {
+                $project->is_featured = true;
+            }
+        });
+
+        static::saved(function (Project $project): void {
+            if (! $project->is_featured || $project->status !== 'published') {
+                return;
+            }
+
+            static::query()
+                ->whereKeyNot($project->getKey())
+                ->where('status', 'published')
+                ->where('is_featured', true)
+                ->update(['is_featured' => false]);
+        });
+    }
+
     protected $fillable = [
         'title',
         'slug',

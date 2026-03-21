@@ -7,6 +7,7 @@ use Closure;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -42,11 +43,27 @@ class ProjectForm
                     ->columnSpanFull(),
                 Textarea::make('summary')
                     ->label('Resumen')
+                    ->placeholder('Una o dos frases cortas')
                     ->rows(3)
                     ->columnSpanFull(),
-                Textarea::make('description')
+                RichEditor::make('description')
                     ->label('Descripcion')
-                    ->rows(8)
+                    ->placeholder('Describe el proyecto, sus objetivos, acciones y resultados esperados.')
+                    ->toolbarButtons([
+                        'bold',
+                        'italic',
+                        'underline',
+                        'strike',
+                        'h2',
+                        'h3',
+                        'bulletList',
+                        'orderedList',
+                        'blockquote',
+                        'link',
+                        'undo',
+                        'redo',
+                    ])
+                    ->fileAttachmentsDirectory('projects/editor')
                     ->columnSpanFull(),
                 DatePicker::make('starts_on')
                     ->label('Fecha de inicio'),

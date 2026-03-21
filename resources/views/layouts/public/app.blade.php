@@ -9,13 +9,17 @@
         @php($canonicalUrl = $canonicalUrl !== '' ? $canonicalUrl : url()->current())
         @php($metaImage = trim($__env->yieldContent('meta_image')))
         @php($metaImage = $metaImage !== '' ? $metaImage : url(config('institution.seo.default_image')))
+        @php($institutionName = \App\Support\PublicSettings::get('institution_name', config('institution.name')))
+        @php($settingsLogoPath = \App\Support\PublicSettings::get('logo_path'))
+        @php($settingsLogoUrl = \App\Support\PublicSettings::mediaUrl($settingsLogoPath))
+        @php($faviconIsSvg = is_string($settingsLogoPath) && \Illuminate\Support\Str::endsWith(strtolower($settingsLogoPath), '.svg'))
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="description" content="{{ $metaDescription }}" />
         <link rel="canonical" href="{{ $canonicalUrl }}" />
 
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="{{ config('institution.name') }}" />
+        <meta property="og:site_name" content="{{ $institutionName }}" />
         <meta property="og:title" content="{{ $pageTitle !== '' ? $pageTitle.' - '.config('app.name') : config('app.name') }}" />
         <meta property="og:description" content="{{ $metaDescription }}" />
         <meta property="og:url" content="{{ $canonicalUrl }}" />
@@ -28,9 +32,14 @@
 
         <title>{{ $pageTitle !== '' ? $pageTitle.' - '.config('app.name') : config('app.name') }}</title>
 
-        <link rel="icon" href="/favicon.ico" sizes="any">
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        @if ($settingsLogoUrl)
+            <link rel="icon" href="{{ $settingsLogoUrl }}" @if ($faviconIsSvg) type="image/svg+xml" @endif sizes="any">
+            <link rel="apple-touch-icon" href="{{ $faviconIsSvg ? '/apple-touch-icon.png' : $settingsLogoUrl }}">
+        @else
+            <link rel="icon" href="/favicon.ico" sizes="any">
+            <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+            <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        @endif
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

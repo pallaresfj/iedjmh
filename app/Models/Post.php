@@ -22,9 +22,6 @@ class Post extends Model
         'sort_order',
         'is_featured',
         'cover_image_path',
-        'seo_title',
-        'seo_description',
-        'seo_image_path',
         'created_by',
         'updated_by',
     ];

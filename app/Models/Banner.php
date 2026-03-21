@@ -14,6 +14,7 @@ class Banner extends Model
     protected $fillable = [
         'title',
         'slug',
+        'page_id',
         'subtitle',
         'description',
         'image_path',
@@ -44,5 +45,10 @@ class Banner extends Model
     public function updater(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function page(): BelongsTo
+    {
+        return $this->belongsTo(Page::class);
     }
 }

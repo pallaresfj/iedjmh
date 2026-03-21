@@ -17,13 +17,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('summary')->nullable();
             $table->longText('content')->nullable();
-            $table->string('template')->nullable();
             $table->string('status')->default('draft')->index();
-            $table->timestamp('published_at')->nullable()->index();
-            $table->unsignedInteger('sort_order')->default(0)->index();
-            $table->string('seo_title')->nullable();
-            $table->text('seo_description')->nullable();
-            $table->string('seo_image_path')->nullable();
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();

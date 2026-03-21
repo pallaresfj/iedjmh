@@ -5,8 +5,8 @@ use App\Http\Controllers\Public\CitizenAttentionController;
 use App\Http\Controllers\Public\EventController;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\InstitutionController;
+use App\Http\Controllers\Public\NewsController;
 use App\Http\Controllers\Public\ProjectController;
-use App\Http\Controllers\Public\SectionController;
 use App\Http\Controllers\Public\TransparencyController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,7 +32,6 @@ Route::prefix('academico')->group(function () {
     Route::get('/sistema-evaluacion', [AcademicController::class, 'page'])->defaults('pageKey', 'sistema-evaluacion')->name('academico.sistema-evaluacion');
     Route::get('/proyectos-pedagogicos', [AcademicController::class, 'page'])->defaults('pageKey', 'proyectos-pedagogicos')->name('academico.proyectos-pedagogicos');
     Route::get('/calendario-academico', [AcademicController::class, 'page'])->defaults('pageKey', 'calendario-academico')->name('academico.calendario-academico');
-    Route::get('/zona-academica', [AcademicController::class, 'page'])->defaults('pageKey', 'zona-academica')->name('academico.zona-academica');
 });
 
 Route::prefix('proyectos')->group(function () {
@@ -40,8 +39,9 @@ Route::prefix('proyectos')->group(function () {
     Route::get('/{slug}', [ProjectController::class, 'show'])->name('proyectos.show');
 });
 
-Route::prefix('comunidad')->group(function () {
-    Route::get('/', SectionController::class)->defaults('section', 'comunidad')->name('comunidad.index');
+Route::prefix('noticias')->group(function () {
+    Route::get('/', [NewsController::class, 'index'])->name('noticias.index');
+    Route::get('/{slug}', [NewsController::class, 'show'])->name('noticias.show');
 });
 
 Route::prefix('transparencia')->group(function () {
@@ -65,8 +65,4 @@ Route::prefix('atencion-ciudadano')->group(function () {
     Route::get('/preguntas-frecuentes', [CitizenAttentionController::class, 'faqs'])->name('atencion.faq');
     Route::get('/mapa-sitio', [CitizenAttentionController::class, 'sitemap'])->name('atencion.mapa-sitio');
     Route::get('/participacion', [CitizenAttentionController::class, 'participation'])->name('atencion.participacion');
-});
-
-Route::prefix('zona-academica')->group(function () {
-    Route::get('/', SectionController::class)->defaults('section', 'zona-academica')->name('zona-academica.index');
 });

@@ -3,15 +3,19 @@
 namespace App\Filament\Resources\Banners\Schemas;
 
 use App\Models\Banner;
+use App\Models\Page;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Schema as DbSchema;
 use Illuminate\Support\Str;
+use Throwable;
 
 class BannerForm
 {
@@ -29,6 +33,25 @@ class BannerForm
                 TextInput::make('slug')
                     ->unique(Banner::class, 'slug', ignoreRecord: true)
                     ->maxLength(255),
+                Select::make('page_id')
+                    ->label('Pagina vinculada')
+                    ->relationship(
+                        name: 'page',
+                        titleAttribute: 'title',
+                        modifyQueryUsing: fn ($query) => $query->orderBy('title'),
+                    )
+                    ->getOptionLabelFromRecordUsing(fn (Page $record): string => "{$record->title} ({$record->slug})")
+                    ->searchable(['title', 'slug'])
+                    ->preload()
+                    ->native(false)
+                    ->visible(fn (): bool => static::hasPageIdColumn())
+                    ->dehydrated(fn (): bool => static::hasPageIdColumn())
+                    ->helperText('Opcional. Si se define, el banner se mostrara en la parte superior de esa pagina institucional.'),
+                Placeholder::make('page_binding_notice')
+                    ->label('Pagina vinculada')
+                    ->content('La columna banners.page_id no existe en la base de datos. Ejecuta: php artisan migrate')
+                    ->visible(fn (): bool => ! static::hasPageIdColumn())
+                    ->columnSpanFull(),
                 TextInput::make('subtitle')
                     ->label('Subtitulo')
                     ->maxLength(255)
@@ -39,6 +62,7 @@ class BannerForm
                     ->columnSpanFull(),
                 FileUpload::make('image_path')
                     ->label('Imagen')
+                    ->helperText('Recomendado: 1600 x 900 px (minimo 1200 x 675). Mantener el contenido importante centrado para evitar recortes.')
                     ->image()
                     ->directory('banners')
                     ->columnSpanFull(),
@@ -92,5 +116,14 @@ class BannerForm
         }
 
         $set('slug', Str::slug((string) $state));
+    }
+
+    private static function hasPageIdColumn(): bool
+    {
+        try {
+            return DbSchema::hasColumn('banners', 'page_id');
+        } catch (Throwable) {
+            return false;
+        }
     }
 }

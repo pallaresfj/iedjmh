@@ -37,6 +37,7 @@ class TransparencyController extends Controller
         return view('public.transparencia.index', [
             'title' => $landingPage?->title ?: 'Transparencia',
             'lead' => $landingPage?->summary ?: 'Consulta informacion publica institucional y documentos oficiales para control social y rendicion de cuentas.',
+            'banner' => $this->resolvePageBanner($landingPage),
             'categories' => $categories,
             'recentDocuments' => $recentDocuments,
         ]);
@@ -130,6 +131,7 @@ class TransparencyController extends Controller
         return view('public.transparencia.documents', [
             'title' => $listingPage?->title ?: 'Documentos de Transparencia',
             'lead' => $listingPage?->summary ?: 'Filtra, busca y consulta documentos institucionales oficiales.',
+            'banner' => $this->resolvePageBanner($listingPage),
             'filters' => $filters,
             'categories' => $categories,
             'years' => $years,
@@ -146,6 +148,8 @@ class TransparencyController extends Controller
     public function showDocument(string $slug): View
     {
         abort_unless($this->canQueryTable('documents'), 404);
+        $listingPage = $this->publishedPageBySlug('transparencia-documentos')
+            ?: $this->publishedPageBySlug('transparencia');
 
         $document = $this->documentsBaseQuery()
             ->with('categories')
@@ -175,6 +179,7 @@ class TransparencyController extends Controller
             'document' => $this->mapDocument($document, includeDescription: true),
             'categories' => $this->resolveDocumentCategories(),
             'related' => $related,
+            'banner' => $this->resolvePageBanner($listingPage),
         ]);
     }
 

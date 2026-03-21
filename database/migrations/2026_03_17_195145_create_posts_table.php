@@ -22,9 +22,6 @@ return new class extends Migration
             $table->unsignedInteger('sort_order')->default(0)->index();
             $table->boolean('is_featured')->default(false)->index();
             $table->string('cover_image_path')->nullable();
-            $table->string('seo_title')->nullable();
-            $table->text('seo_description')->nullable();
-            $table->string('seo_image_path')->nullable();
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();

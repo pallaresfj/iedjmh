@@ -67,7 +67,7 @@
                 <x-public.home.section-heading
                     title="Muro de Actualidad"
                     action-label="Ver todas las noticias"
-                    :action-url="route('comunidad.index')"
+                    :action-url="route('noticias.index')"
                 />
 
                 <div class="grid gap-10 md:grid-cols-3">
@@ -99,17 +99,6 @@
                         <p class="text-lg leading-relaxed text-slate-600 lg:text-xl">
                             {{ $featuredProject['description'] }}
                         </p>
-
-                        <ul class="grid gap-4 sm:grid-cols-2">
-                            @foreach ($featuredProject['highlights'] as $highlight)
-                                <li class="flex items-start gap-3 text-sm text-slate-600">
-                                    <span class="material-symbols-outlined rounded-lg bg-ied-primary/10 p-2 text-ied-primary !text-[18px]" aria-hidden="true">
-                                        {{ $highlight['icon'] ?? 'eco' }}
-                                    </span>
-                                    <span>{{ $highlight['label'] ?? $highlight }}</span>
-                                </li>
-                            @endforeach
-                        </ul>
 
                         <a
                             href="{{ $featuredProject['cta_url'] }}"

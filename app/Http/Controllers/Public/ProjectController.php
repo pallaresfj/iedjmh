@@ -57,9 +57,6 @@ class ProjectController extends Controller
                     $query->whereHas('categories', function (Builder $categoryQuery) use ($filters): void {
                         $categoryQuery->where('categories.slug', $filters['category']);
                     });
-                })
-                ->when($filters['featured'] !== '', function (Builder $query) use ($filters): void {
-                    $query->where('is_featured', $filters['featured'] === '1');
                 });
 
             $this->applySort($baseQuery, $filters['sort']);
@@ -85,6 +82,7 @@ class ProjectController extends Controller
         return view('public.proyectos.index', [
             'title' => $listingPage?->title ?: ($sectionConfig['title'] ?? 'Proyectos'),
             'lead' => $listingPage?->summary ?: ($sectionConfig['description'] ?? 'Consulta iniciativas institucionales de impacto pedagogico, ambiental y comunitario.'),
+            'banner' => $this->resolvePageBanner($listingPage),
             'content' => $listingPage?->content,
             'featuredProject' => $featuredProject,
             'projects' => $projects,
@@ -97,6 +95,7 @@ class ProjectController extends Controller
     public function show(string $slug): View
     {
         abort_unless($this->canQueryTable('projects'), 404);
+        $listingPage = $this->publishedPageBySlug('proyectos');
 
         /** @var Project $project */
         $project = $this->publishedProjectsQuery()
@@ -117,6 +116,7 @@ class ProjectController extends Controller
         return view('public.proyectos.show', [
             'project' => $this->mapProject($project, includeDescription: true),
             'related' => $related,
+            'banner' => $this->resolvePageBanner($listingPage),
         ]);
     }
 
@@ -127,20 +127,16 @@ class ProjectController extends Controller
 
     /**
      * @param  array<string, string>  $sortOptions
-     * @return array{q: string, category: string, featured: string, sort: string}
+     * @return array{q: string, category: string, sort: string}
      */
     private function extractFilters(Request $request, array $sortOptions): array
     {
-        $featured = trim((string) $request->query('featured', ''));
-        $featured = in_array($featured, ['', '1', '0'], true) ? $featured : '';
-
         $sort = trim((string) $request->query('sort', 'recent'));
         $sort = array_key_exists($sort, $sortOptions) ? $sort : 'recent';
 
         return [
             'q' => trim((string) $request->query('q', '')),
             'category' => trim((string) $request->query('category', '')),
-            'featured' => $featured,
             'sort' => $sort,
         ];
     }
@@ -214,13 +210,12 @@ class ProjectController extends Controller
     }
 
     /**
-     * @param  array{q: string, category: string, featured: string, sort: string}  $filters
+     * @param  array{q: string, category: string, sort: string}  $filters
      */
     private function shouldShowFeaturedProject(array $filters): bool
     {
         return $filters['q'] === ''
             && $filters['category'] === ''
-            && $filters['featured'] === ''
             && $filters['sort'] === 'recent';
     }
 

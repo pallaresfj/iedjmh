@@ -8,6 +8,7 @@ use App\Models\Banner;
 use App\Models\Event;
 use App\Models\Post;
 use App\Models\Project;
+use App\Support\PublicSettings;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -32,8 +33,10 @@ class HomeController extends Controller
      */
     private function resolveHero(): array
     {
+        $institutionName = (string) PublicSettings::get('institution_name', 'IED Agropecuaria Jose Maria Herrera');
+
         $fallback = [
-            'eyebrow' => 'IED Agropecuaria Jose Maria Herrera',
+            'eyebrow' => $institutionName,
             'title' => 'Formando lideres para el agro y la vida',
             'description' => 'Educacion de calidad con enfoque tecnico agropecuario para el desarrollo sostenible de nuestra comunidad.',
             'cta_label' => 'Conoce nuestra matricula 2026',
@@ -46,7 +49,7 @@ class HomeController extends Controller
         }
 
         /** @var Banner|null $banner */
-        $banner = Banner::query()
+        $bannerQuery = Banner::query()
             ->where('status', 'published')
             ->where(function ($query): void {
                 $query->whereNull('starts_at')->orWhere('starts_at', '<=', now());
@@ -55,8 +58,14 @@ class HomeController extends Controller
                 $query->whereNull('ends_at')->orWhere('ends_at', '>=', now());
             })
             ->orderBy('sort_order')
-            ->latest('id')
-            ->first();
+            ->latest('id');
+
+        if ($this->canQueryColumn('banners', 'page_id')) {
+            $bannerQuery->whereNull('page_id');
+        }
+
+        /** @var Banner|null $banner */
+        $banner = $bannerQuery->first();
 
         if (! $banner) {
             return $fallback;
@@ -79,14 +88,14 @@ class HomeController extends Controller
     {
         return [
             [
-                'title' => 'Consultar notas',
-                'description' => 'Ingreso estudiantes y familias',
-                'route' => route('zona-academica.index'),
-                'icon' => 'grade',
+                'title' => 'Calendario academico',
+                'description' => 'Fechas institucionales y actividades',
+                'route' => route('academico.calendario-academico'),
+                'icon' => 'calendar_month',
             ],
             [
-                'title' => 'Tareas y guias',
-                'description' => 'Actividades y recursos de aula',
+                'title' => 'Recursos academicos',
+                'description' => 'Lineamientos, planes y modalidad',
                 'route' => route('academico.index'),
                 'icon' => 'library_books',
             ],
@@ -131,8 +140,8 @@ class HomeController extends Controller
                         'excerpt' => $post->excerpt ?: Str::limit(strip_tags((string) $post->content), 120),
                         'date' => optional($post->published_at)->translatedFormat('d M Y') ?? 'Publicacion institucional',
                         'image_url' => $this->resolveMediaUrl($post->cover_image_path) ?: ($fallbackImages[$index] ?? null),
-                        'badge' => $fallbackBadges[$index] ?? 'COMUNIDAD',
-                        'url' => route('comunidad.index'),
+                        'badge' => $fallbackBadges[$index] ?? 'NOTICIAS',
+                        'url' => route('noticias.show', ['slug' => $post->slug]),
                     ];
                 });
 
@@ -148,7 +157,7 @@ class HomeController extends Controller
                 'date' => 'Comunidad educativa',
                 'image_url' => $fallbackImages[0],
                 'badge' => $fallbackBadges[0],
-                'url' => route('comunidad.index'),
+                'url' => route('noticias.index'),
             ],
             [
                 'title' => 'Prueba Saber 11: estrategia institucional para el fortalecimiento academico',
@@ -156,7 +165,7 @@ class HomeController extends Controller
                 'date' => 'Area academica',
                 'image_url' => $fallbackImages[1],
                 'badge' => $fallbackBadges[1],
-                'url' => route('academico.index'),
+                'url' => route('noticias.index'),
             ],
             [
                 'title' => 'Inscripciones de nuevos ingresos 2026 ya estan abiertas',
@@ -164,7 +173,7 @@ class HomeController extends Controller
                 'date' => 'Secretaria academica',
                 'image_url' => $fallbackImages[2],
                 'badge' => $fallbackBadges[2],
-                'url' => route('atencion.index'),
+                'url' => route('noticias.index'),
             ],
         ]);
     }
@@ -178,12 +187,6 @@ class HomeController extends Controller
             'title' => 'Granja Experimental',
             'subtitle' => 'Conoce de cerca nuestro enfoque tecnico agropecuario.',
             'description' => 'Espacio de aprendizaje practico para fortalecer competencias en produccion sostenible, trabajo colaborativo y emprendimiento rural.',
-            'highlights' => [
-                ['icon' => 'set_meal', 'label' => 'Piscicultura y produccion sostenible'],
-                ['icon' => 'grass', 'label' => 'Ganaderia y manejo de cultivos'],
-                ['icon' => 'science', 'label' => 'Laboratorios de campo'],
-                ['icon' => 'school', 'label' => 'Formacion para el trabajo'],
-            ],
             'cta_label' => 'Conoce nuestros proyectos',
             'cta_url' => route('proyectos.index'),
             'gallery' => [
@@ -210,21 +213,34 @@ class HomeController extends Controller
             return $fallback;
         }
 
+        $projectGallery = collect(is_array($project->gallery_image_paths) ? $project->gallery_image_paths : [])
+            ->filter(fn (mixed $path): bool => is_string($path) && trim($path) !== '')
+            ->map(fn (string $path): ?string => $this->resolveMediaUrl($path))
+            ->filter(fn (?string $url): bool => filled($url))
+            ->unique()
+            ->values();
+
+        $gallery = $projectGallery
+            ->take(4)
+            ->values()
+            ->pipe(function (Collection $items) use ($fallback): Collection {
+                if ($items->count() >= 4) {
+                    return $items;
+                }
+
+                return $items->concat(collect($fallback['gallery'])->take(4 - $items->count()));
+            })
+            ->values();
+
         return [
             'title' => $project->title ?: $fallback['title'],
             'subtitle' => $project->summary ?: $fallback['subtitle'],
             'description' => $project->description
-                ? Str::limit(strip_tags((string) $project->description), 220)
+                ? Str::words(strip_tags((string) $project->description), 72)
                 : $fallback['description'],
-            'highlights' => $fallback['highlights'],
             'cta_label' => $fallback['cta_label'],
             'cta_url' => route('proyectos.index'),
-            'gallery' => [
-                $this->resolveMediaUrl($project->cover_image_path) ?: $fallback['gallery'][0],
-                $this->resolveMediaUrl($project->seo_image_path) ?: $fallback['gallery'][1],
-                $fallback['gallery'][2],
-                $fallback['gallery'][3],
-            ],
+            'gallery' => $gallery->all(),
         ];
     }
 

@@ -16,6 +16,7 @@ class EventController extends Controller
     public function show(string $slug): View
     {
         abort_unless($this->canQueryTable('events'), 404);
+        $calendarPage = $this->publishedPageBySlug('academico-calendario-academico');
 
         /** @var Event $event */
         $event = Event::query()
@@ -61,6 +62,7 @@ class EventController extends Controller
                     ->values(),
             ],
             'relatedEvents' => $relatedEvents,
+            'banner' => $this->resolvePageBanner($calendarPage),
         ]);
     }
 }
