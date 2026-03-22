@@ -82,6 +82,8 @@ class PageForm
                         'link',
                         'undo',
                         'redo',
+                        'table',
+                        'attachFiles',
                     ])
                     ->columnSpanFull(),
                 Select::make('status')

@@ -31,6 +31,11 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function configureDefaults(): void
     {
+        config()->set(
+            'livewire.payload.max_nesting_depth',
+            (int) env('LIVEWIRE_MAX_NESTING_DEPTH', 30),
+        );
+
         Date::use(CarbonImmutable::class);
 
         DB::prohibitDestructiveCommands(
