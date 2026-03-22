@@ -10,6 +10,7 @@ export default defineConfig({
             input: {
                 app: 'resources/css/app.css',
                 public: 'resources/css/public.css',
+                'filament-admin': 'resources/css/filament/admin/theme.css',
                 main: 'resources/js/app.js',
             },
             refresh: true,

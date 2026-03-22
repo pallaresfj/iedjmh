@@ -50,8 +50,8 @@ return [
                 'label' => 'Transparencia',
                 'route' => 'transparencia.index',
                 'children' => [
-                    ['label' => 'Informacion de la entidad', 'route' => 'transparencia.index', 'icon' => 'info'],
                     ['label' => 'Documentos', 'route' => 'transparencia.documentos', 'icon' => 'description'],
+                    ['label' => 'Contratación', 'route' => 'transparencia.contratacion.index', 'icon' => 'work'],
                 ],
             ],
             [

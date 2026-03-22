@@ -41,11 +41,35 @@ class HomeController extends Controller
             'description' => 'Educacion de calidad con enfoque tecnico agropecuario para el desarrollo sostenible de nuestra comunidad.',
             'cta_label' => 'Conoce nuestra matricula 2026',
             'cta_url' => route('atencion.index'),
+            'cta_target' => '_self',
             'image_url' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuDMUNlu1vZSYgs1mJ8XI2JBGdEGv7h77-FKsinYr5EjYaApSudFf0jhOBzLc6yoEXKGCF-tewz8MJIFovX4aKHbA0O3FnBStuhctqyV0oVkBdASloF8K2rO8VVM18nBjgTP2zwD60uTY7U6Vw-bB3w4vymqId0y98mtqnopTqtBAvch6WRWhfF7lV9eqtrHoQxcCTLHXNxBGP1xnxW6D-Hw4cLmuICL4qmBewmK1UqmRBf9D7Wau-xa_o7aSt4rGKkayqhXd0Sj8bxl',
         ];
 
+        $settingsImagePath = PublicSettings::get('home_hero_image_path');
+        $settingsImageUrl = is_string($settingsImagePath)
+            ? PublicSettings::mediaUrl($settingsImagePath)
+            : null;
+        $homeBanner = $this->resolveHomeBanner();
+        $cta = $this->resolveHeroCta($fallback, $homeBanner);
+
+        return [
+            'eyebrow' => trim((string) PublicSettings::get('home_hero_eyebrow', '')) ?: ($homeBanner['eyebrow'] ?? $fallback['eyebrow']),
+            'title' => trim((string) PublicSettings::get('home_hero_title', '')) ?: ($homeBanner['title'] ?? $fallback['title']),
+            'description' => trim((string) PublicSettings::get('home_hero_description', '')) ?: ($homeBanner['description'] ?? $fallback['description']),
+            'cta_label' => $cta['cta_label'],
+            'cta_url' => $cta['cta_url'],
+            'cta_target' => $cta['cta_target'],
+            'image_url' => $settingsImageUrl ?: ($homeBanner['image_url'] ?? $fallback['image_url']),
+        ];
+    }
+
+    /**
+     * @return array<string, string>|null
+     */
+    private function resolveHomeBanner(): ?array
+    {
         if (! $this->canQueryTable('banners')) {
-            return $fallback;
+            return null;
         }
 
         /** @var Banner|null $banner */
@@ -68,17 +92,59 @@ class HomeController extends Controller
         $banner = $bannerQuery->first();
 
         if (! $banner) {
-            return $fallback;
+            return null;
         }
 
         return [
-            'eyebrow' => $banner->subtitle ?: $fallback['eyebrow'],
-            'title' => $banner->title ?: $fallback['title'],
-            'description' => $banner->description ?: $fallback['description'],
-            'cta_label' => $banner->cta_label ?: $fallback['cta_label'],
-            'cta_url' => $banner->cta_url ?: $fallback['cta_url'],
-            'image_url' => $this->resolveMediaUrl($banner->image_path) ?: $fallback['image_url'],
+            'eyebrow' => (string) ($banner->subtitle ?? ''),
+            'title' => (string) ($banner->title ?? ''),
+            'description' => (string) ($banner->description ?? ''),
+            'cta_label' => (string) ($banner->cta_label ?? ''),
+            'cta_url' => (string) ($banner->cta_url ?? ''),
+            'cta_target' => $this->normalizeLinkTarget($banner->target),
+            'image_url' => (string) ($this->resolveMediaUrl($banner->image_path) ?? ''),
         ];
+    }
+
+    /**
+     * @param  array<string, string>  $fallback
+     * @param  array<string, string>|null  $homeBanner
+     * @return array{cta_label: string, cta_url: string, cta_target: string}
+     */
+    private function resolveHeroCta(array $fallback, ?array $homeBanner): array
+    {
+        $settingsLabel = trim((string) PublicSettings::get('home_hero_cta_label', ''));
+        $settingsUrl = trim((string) PublicSettings::get('home_hero_cta_url', ''));
+
+        if ($settingsLabel !== '' && $settingsUrl !== '') {
+            return [
+                'cta_label' => $settingsLabel,
+                'cta_url' => $settingsUrl,
+                'cta_target' => $this->normalizeLinkTarget(PublicSettings::get('home_hero_cta_target', '_self')),
+            ];
+        }
+
+        $bannerLabel = trim((string) ($homeBanner['cta_label'] ?? ''));
+        $bannerUrl = trim((string) ($homeBanner['cta_url'] ?? ''));
+
+        if ($bannerLabel !== '' && $bannerUrl !== '') {
+            return [
+                'cta_label' => $bannerLabel,
+                'cta_url' => $bannerUrl,
+                'cta_target' => $this->normalizeLinkTarget($homeBanner['cta_target'] ?? '_self'),
+            ];
+        }
+
+        return [
+            'cta_label' => $fallback['cta_label'],
+            'cta_url' => $fallback['cta_url'],
+            'cta_target' => $fallback['cta_target'],
+        ];
+    }
+
+    private function normalizeLinkTarget(mixed $target): string
+    {
+        return $target === '_blank' ? '_blank' : '_self';
     }
 
     /**

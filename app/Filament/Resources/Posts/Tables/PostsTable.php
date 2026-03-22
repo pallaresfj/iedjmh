@@ -11,10 +11,12 @@ use Filament\Actions\RestoreBulkAction;
 use Filament\Support\Enums\IconSize;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class PostsTable
 {
@@ -56,6 +58,15 @@ class PostsTable
                 SelectFilter::make('categories')
                     ->label('Categoria')
                     ->relationship('categories', 'name'),
+                Filter::make('pending_moderation')
+                    ->label('Pendientes de moderacion')
+                    ->query(function (Builder $query): Builder {
+                        return $query
+                            ->where('status', 'draft')
+                            ->whereHas('creator.roles', function (Builder $rolesQuery): void {
+                                $rolesQuery->where('name', 'colaborador');
+                            });
+                    }),
                 TernaryFilter::make('is_featured')
                     ->label('Destacado'),
                 TrashedFilter::make(),

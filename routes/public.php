@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Public\AcademicController;
 use App\Http\Controllers\Public\CitizenAttentionController;
+use App\Http\Controllers\Public\ContractingController;
 use App\Http\Controllers\Public\EventController;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\InstitutionController;
@@ -46,6 +47,8 @@ Route::prefix('noticias')->group(function () {
 
 Route::prefix('transparencia')->group(function () {
     Route::get('/', [TransparencyController::class, 'index'])->name('transparencia.index');
+    Route::get('/contratacion', [ContractingController::class, 'index'])->name('transparencia.contratacion.index');
+    Route::get('/contratacion/{processCode}', [ContractingController::class, 'show'])->name('transparencia.contratacion.show');
     Route::get('/documentos', [TransparencyController::class, 'documents'])->name('transparencia.documentos');
     Route::get('/documentos/{slug}', [TransparencyController::class, 'showDocument'])->name('transparencia.documento');
 });

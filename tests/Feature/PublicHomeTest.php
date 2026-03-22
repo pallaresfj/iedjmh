@@ -19,3 +19,13 @@ test('public home renders global public layout elements', function () {
         ->assertSee('Matriculas')
         ->assertSee('Explorar');
 });
+
+test('public home hero uses directional overlay structure', function () {
+    $response = $this->get(route('home'));
+
+    $response
+        ->assertOk()
+        ->assertSee('public-home-hero relative', false)
+        ->assertSee('public-home-hero__overlay', false)
+        ->assertDontSee('bg-gradient-to-r from-slate-950 via-slate-900/45 to-transparent', false);
+});

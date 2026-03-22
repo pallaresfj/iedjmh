@@ -1,7 +1,9 @@
 <?php
 
+use App\Models\Banner;
 use App\Models\Setting;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 
 uses(RefreshDatabase::class);
 
@@ -34,6 +36,21 @@ test('home header uses institution settings and renders external platform links'
         ->assertSee('rel="noopener noreferrer"', false);
 });
 
+test('home hero uses relative storage url when settings image exists on public disk', function () {
+    Storage::disk('public')->put('settings/home/hero-test.jpg', 'fake-image-content');
+
+    Setting::query()->create([
+        'institution_name' => 'IED Hero Imagen Local',
+        'home_hero_image_path' => 'settings/home/hero-test.jpg',
+        'singleton' => 1,
+    ]);
+
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertSee('src="/storage/settings/home/hero-test.jpg"', false)
+        ->assertDontSee('src="http://iedjmh.test/storage/settings/home/hero-test.jpg"', false);
+});
+
 test('home header hides external platform links when urls are empty', function () {
     Setting::query()->create([
         'institution_name' => 'IED Sin Plataformas',
@@ -52,4 +69,113 @@ test('setting singleton helper always returns a single record', function () {
 
     expect($first->is($second))->toBeTrue()
         ->and(Setting::query()->count())->toBe(1);
+});
+
+test('public layout injects theme colors from settings', function () {
+    Setting::query()->create([
+        'institution_name' => 'IED Tema Dinamico',
+        'theme_primary' => '#123ABC',
+        'theme_primary_dark' => '#102030',
+        'theme_primary_light' => '#DDEEFF',
+        'theme_accent' => '#FF9900',
+        'theme_gray_900' => '#1F2937',
+        'theme_gray_700' => '#374151',
+        'theme_gray_600' => '#4B5563',
+        'theme_gray_200' => '#E5E7EB',
+        'theme_gray_100' => '#F3F4F6',
+        'singleton' => 1,
+    ]);
+
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertSee('--color-ied-primary: #123ABC;', false)
+        ->assertSee('--color-ied-gray-100: #F3F4F6;', false);
+});
+
+test('invalid theme color value falls back to safe default', function () {
+    Setting::query()->create([
+        'institution_name' => 'IED Color Invalido',
+        'theme_primary' => 'verde-invalido',
+        'singleton' => 1,
+    ]);
+
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertSee('--color-ied-primary: #2E7D32;', false);
+});
+
+test('home hero prioritizes settings content over home banner', function () {
+    Setting::query()->create([
+        'institution_name' => 'IED Hero Settings',
+        'home_hero_eyebrow' => 'Hero desde settings',
+        'home_hero_title' => 'Titulo hero configurado',
+        'home_hero_description' => 'Descripcion del hero configurable.',
+        'home_hero_cta_label' => 'Ir al proceso',
+        'home_hero_cta_url' => 'https://settings-hero.example.edu',
+        'home_hero_cta_target' => '_blank',
+        'home_hero_image_path' => 'settings/home/hero-settings.jpg',
+        'singleton' => 1,
+    ]);
+
+    Banner::query()->create([
+        'title' => 'Titulo hero desde banner',
+        'slug' => 'hero-banner-home',
+        'subtitle' => 'Subtitulo banner',
+        'description' => 'Descripcion banner',
+        'cta_label' => 'CTA Banner',
+        'cta_url' => 'https://banner-hero.example.edu',
+        'target' => '_self',
+        'status' => 'published',
+    ]);
+
+    $response = $this->get(route('home'));
+
+    $response
+        ->assertOk()
+        ->assertSee('Hero desde settings')
+        ->assertSee('Titulo hero configurado')
+        ->assertSee('Descripcion del hero configurable.')
+        ->assertSee('href="https://settings-hero.example.edu"', false)
+        ->assertSee('src="/storage/settings/home/hero-settings.jpg"', false)
+        ->assertDontSee('Titulo hero desde banner');
+
+    expect($response->getContent())
+        ->toMatch('/href="https:\/\/settings-hero\.example\.edu"[^>]*target="_blank"[^>]*rel="noopener noreferrer"/');
+});
+
+test('home hero falls back to home banner when settings are empty', function () {
+    Setting::query()->create([
+        'institution_name' => 'IED Hero Banner',
+        'singleton' => 1,
+    ]);
+
+    Banner::query()->create([
+        'title' => 'Hero principal desde banner',
+        'slug' => 'hero-principal-banner',
+        'subtitle' => 'Subtitulo banner home',
+        'description' => 'Contenido principal desde banner vigente.',
+        'cta_label' => 'Conocer mas',
+        'cta_url' => 'https://banner-home.example.edu',
+        'target' => '_blank',
+        'status' => 'published',
+    ]);
+
+    $response = $this->get(route('home'));
+
+    $response
+        ->assertOk()
+        ->assertSee('Subtitulo banner home')
+        ->assertSee('Hero principal desde banner')
+        ->assertSee('Contenido principal desde banner vigente.')
+        ->assertSee('href="https://banner-home.example.edu"', false);
+
+    expect($response->getContent())
+        ->toMatch('/href="https:\/\/banner-home\.example\.edu"[^>]*target="_blank"[^>]*rel="noopener noreferrer"/');
+});
+
+test('home hero falls back to built in defaults when no settings and no banners exist', function () {
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertSee('Formando lideres para el agro y la vida')
+        ->assertSee('Conoce nuestra matricula 2026');
 });

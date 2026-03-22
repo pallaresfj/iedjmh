@@ -2,52 +2,161 @@
 
 namespace App\Filament\Resources\Settings\Schemas;
 
+use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 
 class SettingForm
 {
+    private const HEX_COLOR_REGEX = '/^#[0-9A-Fa-f]{6}$/';
+
+    /**
+     * @var array<string, string>
+     */
+    private const THEME_DEFAULTS = [
+        'theme_primary' => '#2E7D32',
+        'theme_primary_dark' => '#1B5E20',
+        'theme_primary_light' => '#66BB6A',
+        'theme_accent' => '#F57C00',
+        'theme_gray_900' => '#263238',
+        'theme_gray_700' => '#4C5A61',
+        'theme_gray_600' => '#5F6F77',
+        'theme_gray_200' => '#DFE5E8',
+        'theme_gray_100' => '#F5F7FA',
+    ];
+
     public static function configure(Schema $schema): Schema
     {
         return $schema
             ->columns(2)
             ->components([
-                TextInput::make('institution_name')
-                    ->label('Nombre institucion')
-                    ->required()
-                    ->maxLength(255)
+                Fieldset::make('Informacion institucional')
+                    ->schema([
+                        TextInput::make('institution_name')
+                            ->label('Nombre institucion')
+                            ->required()
+                            ->maxLength(255)
+                            ->columnSpanFull(),
+                        TextInput::make('dane')
+                            ->label('DANE')
+                            ->maxLength(100),
+                        TextInput::make('nit')
+                            ->label('NIT')
+                            ->maxLength(100),
+                        TextInput::make('location')
+                            ->label('Ubicacion')
+                            ->placeholder('Pivijay, Magdalena')
+                            ->maxLength(255)
+                            ->columnSpanFull(),
+                        TextInput::make('siee')
+                            ->label('SIEE')
+                            ->url()
+                            ->placeholder('https://...')
+                            ->maxLength(2048),
+                        TextInput::make('aula_virtual')
+                            ->label('Aula Virtual')
+                            ->url()
+                            ->placeholder('https://...')
+                            ->maxLength(2048),
+                        FileUpload::make('logo_path')
+                            ->label('Logo institucional')
+                            ->helperText('Admite formato PNG o SVG.')
+                            ->disk('public')
+                            ->directory('settings')
+                            ->image()
+                            ->acceptedFileTypes(['image/png', 'image/svg+xml'])
+                            ->maxSize(2048)
+                            ->columnSpanFull(),
+                        Select::make('contracting_manual_document_id')
+                            ->label('Manual de contratacion (documento)')
+                            ->relationship(
+                                name: 'contractingManualDocument',
+                                titleAttribute: 'title',
+                                modifyQueryUsing: fn (Builder $query): Builder => $query
+                                    ->where('status', 'published')
+                                    ->orderByDesc('published_at')
+                                    ->orderBy('title'),
+                            )
+                            ->searchable()
+                            ->preload()
+                            ->placeholder('Selecciona un documento de transparencia')
+                            ->columnSpanFull(),
+                    ])
+                    ->columns(2)
                     ->columnSpanFull(),
-                TextInput::make('dane')
-                    ->label('DANE')
-                    ->maxLength(100),
-                TextInput::make('nit')
-                    ->label('NIT')
-                    ->maxLength(100),
-                TextInput::make('location')
-                    ->label('Ubicacion')
-                    ->placeholder('Pivijay, Magdalena')
-                    ->maxLength(255)
+                Fieldset::make('Identidad visual')
+                    ->schema([
+                        static::colorPicker('theme_primary', 'Primario', self::THEME_DEFAULTS['theme_primary']),
+                        static::colorPicker('theme_primary_dark', 'Primario oscuro', self::THEME_DEFAULTS['theme_primary_dark']),
+                        static::colorPicker('theme_primary_light', 'Primario claro', self::THEME_DEFAULTS['theme_primary_light']),
+                        static::colorPicker('theme_accent', 'Acento', self::THEME_DEFAULTS['theme_accent']),
+                        static::colorPicker('theme_gray_900', 'Gris 900', self::THEME_DEFAULTS['theme_gray_900']),
+                        static::colorPicker('theme_gray_700', 'Gris 700', self::THEME_DEFAULTS['theme_gray_700']),
+                        static::colorPicker('theme_gray_600', 'Gris 600', self::THEME_DEFAULTS['theme_gray_600']),
+                        static::colorPicker('theme_gray_200', 'Gris 200', self::THEME_DEFAULTS['theme_gray_200']),
+                        static::colorPicker('theme_gray_100', 'Gris 100', self::THEME_DEFAULTS['theme_gray_100']),
+                    ])
+                    ->columns(3)
                     ->columnSpanFull(),
-                TextInput::make('siee')
-                    ->label('SIEE')
-                    ->url()
-                    ->placeholder('https://...')
-                    ->maxLength(2048),
-                TextInput::make('aula_virtual')
-                    ->label('Aula Virtual')
-                    ->url()
-                    ->placeholder('https://...')
-                    ->maxLength(2048),
-                FileUpload::make('logo_path')
-                    ->label('Logo institucional')
-                    ->helperText('Admite formato PNG o SVG.')
-                    ->disk('public')
-                    ->directory('settings')
-                    ->image()
-                    ->acceptedFileTypes(['image/png', 'image/svg+xml'])
-                    ->maxSize(2048)
+                Fieldset::make('Hero de inicio')
+                    ->schema([
+                        TextInput::make('home_hero_eyebrow')
+                            ->label('Ante titulo')
+                            ->maxLength(120)
+                            ->columnSpanFull(),
+                        TextInput::make('home_hero_title')
+                            ->label('Titulo principal')
+                            ->maxLength(160)
+                            ->columnSpanFull(),
+                        Textarea::make('home_hero_description')
+                            ->label('Descripcion')
+                            ->rows(4)
+                            ->maxLength(500)
+                            ->columnSpanFull(),
+                        TextInput::make('home_hero_cta_label')
+                            ->label('Texto del boton')
+                            ->maxLength(100),
+                        TextInput::make('home_hero_cta_url')
+                            ->label('URL del boton')
+                            ->url()
+                            ->placeholder('https://...')
+                            ->maxLength(2048),
+                        Select::make('home_hero_cta_target')
+                            ->label('Destino del boton')
+                            ->options([
+                                '_self' => 'Misma ventana',
+                                '_blank' => 'Nueva ventana',
+                            ])
+                            ->default('_self')
+                            ->native(false),
+                        FileUpload::make('home_hero_image_path')
+                            ->label('Imagen de fondo del hero')
+                            ->helperText('Recomendado: 1920 x 800 px.')
+                            ->disk('public')
+                            ->directory('settings/home')
+                            ->image()
+                            ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp'])
+                            ->maxSize(4096)
+                            ->columnSpanFull(),
+                    ])
+                    ->columns(2)
                     ->columnSpanFull(),
             ]);
+    }
+
+    private static function colorPicker(string $name, string $label, string $default): ColorPicker
+    {
+        return ColorPicker::make($name)
+            ->label($label)
+            ->hex()
+            ->default($default)
+            ->formatStateUsing(fn (mixed $state): string => filled($state) ? strtoupper(trim((string) $state)) : $default)
+            ->rule('regex:'.self::HEX_COLOR_REGEX)
+            ->helperText("Formato HEX de 6 digitos. Color base: {$default}.");
     }
 }

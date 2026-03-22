@@ -3,21 +3,23 @@
 @section('title', 'Inicio')
 
 @section('content')
-    <section class="relative flex min-h-[37.5rem] items-center overflow-hidden bg-slate-900 text-white">
+    @php($heroOpensInNewTab = ($hero['cta_target'] ?? '_self') === '_blank')
+
+    <section class="public-home-hero relative flex min-h-[37.5rem] items-center overflow-hidden text-white">
         @if ($hero['image_url'])
             <img
                 src="{{ $hero['image_url'] }}"
                 alt="{{ $hero['title'] }}"
-                class="absolute inset-0 h-full w-full object-cover opacity-65"
+                class="absolute inset-0 z-0 h-full w-full object-cover opacity-65"
                 loading="eager"
             />
         @else
-            <div class="absolute inset-0 h-full w-full bg-linear-to-r from-[#08131d] via-[#143329] to-[#38680d]" aria-hidden="true"></div>
+            <div class="public-home-hero__fallback absolute inset-0 z-0 h-full w-full" aria-hidden="true"></div>
         @endif
 
-        <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/45 to-transparent" aria-hidden="true"></div>
+        <div class="public-home-hero__overlay absolute inset-0 z-10" aria-hidden="true"></div>
 
-        <div class="public-container relative py-20">
+        <div class="public-container relative z-20 py-20">
             <div class="public-content-shell">
                 <div class="max-w-2xl">
                     <span class="inline-block rounded-full border border-ied-primary/30 bg-ied-primary/25 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-white">
@@ -33,6 +35,8 @@
                     <div class="mt-10">
                         <a
                             href="{{ $hero['cta_url'] }}"
+                            target="{{ $heroOpensInNewTab ? '_blank' : '_self' }}"
+                            @if ($heroOpensInNewTab) rel="noopener noreferrer" @endif
                             class="inline-flex items-center gap-2 rounded-full bg-ied-primary px-8 py-4 text-base font-bold text-white shadow-lg shadow-ied-primary/30 transition hover:bg-ied-primary-dark"
                         >
                             <span>{{ $hero['cta_label'] }}</span>
@@ -61,7 +65,7 @@
         </div>
     </section>
 
-    <section class="bg-[#f5f7f6] py-20">
+    <section class="bg-ied-gray-100 py-20">
         <div class="public-container">
             <div class="public-content-shell">
                 <x-public.home.section-heading
