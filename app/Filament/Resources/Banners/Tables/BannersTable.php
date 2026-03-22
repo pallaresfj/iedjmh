@@ -21,7 +21,7 @@ class BannersTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->defaultSort('sort_order')
+            ->defaultSort('id', 'desc')
             ->columns([
                 TextColumn::make('title')
                     ->label('Titulo')
@@ -42,10 +42,6 @@ class BannersTable
                 TextColumn::make('ends_at')
                     ->label('Hasta')
                     ->dateTime()
-                    ->sortable(),
-                TextColumn::make('sort_order')
-                    ->label('Orden')
-                    ->numeric()
                     ->sortable(),
             ])
             ->filters([

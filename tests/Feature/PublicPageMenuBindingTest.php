@@ -210,3 +210,67 @@ test('news detail page reuses linked listing banner', function () {
         ->assertSee('Banner noticias detalle')
         ->assertSee('Noticia para detalle');
 });
+
+test('cms base page hides standard header when linked banner is present', function () {
+    $page = Page::query()->create([
+        'title' => 'Historia con reemplazo de encabezado',
+        'slug' => 'historia-con-banner-encabezado',
+        'menu_binding' => 'institucion.historia',
+        'status' => 'published',
+        'summary' => 'Resumen de historia',
+    ]);
+
+    Banner::query()->create([
+        'title' => 'Banner principal historia',
+        'slug' => 'banner-principal-historia',
+        'page_id' => $page->id,
+        'status' => 'published',
+    ]);
+
+    $this->get(route('institucion.historia'))
+        ->assertOk()
+        ->assertSee('Banner principal historia')
+        ->assertDontSee('Seccion institucional');
+});
+
+test('cms base page keeps standard header when no linked banner exists', function () {
+    Page::query()->create([
+        'title' => 'Historia sin banner',
+        'slug' => 'historia-sin-banner-encabezado',
+        'menu_binding' => 'institucion.historia',
+        'status' => 'published',
+    ]);
+
+    $this->get(route('institucion.historia'))
+        ->assertOk()
+        ->assertSee('Seccion institucional');
+});
+
+test('detail page keeps standard header even when listing banner exists', function () {
+    $listingPage = Page::query()->create([
+        'title' => 'Noticias CMS para detalle',
+        'slug' => 'noticias',
+        'status' => 'published',
+    ]);
+
+    Banner::query()->create([
+        'title' => 'Banner listado noticias',
+        'slug' => 'banner-listado-noticias',
+        'page_id' => $listingPage->id,
+        'status' => 'published',
+    ]);
+
+    $post = Post::query()->create([
+        'title' => 'Detalle noticia con encabezado',
+        'slug' => 'detalle-noticia-con-encabezado',
+        'status' => 'published',
+        'content' => '<p>Contenido detalle</p>',
+        'published_at' => now(),
+    ]);
+
+    $this->get(route('noticias.show', ['slug' => $post->slug]))
+        ->assertOk()
+        ->assertSee('Seccion institucional')
+        ->assertSee('Detalle noticia con encabezado')
+        ->assertSee('Banner listado noticias');
+});

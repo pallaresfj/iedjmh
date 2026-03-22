@@ -22,9 +22,9 @@ class ProcedureResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-clipboard-document-list';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Atencion al Ciudadano';
+    protected static string|UnitEnum|null $navigationGroup = 'Contenido';
 
-    protected static ?int $navigationSort = 20;
+    protected static ?int $navigationSort = 80;
 
     protected static ?string $navigationLabel = 'Tramites';
 

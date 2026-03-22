@@ -24,7 +24,6 @@ class Banner extends Model
         'status',
         'starts_at',
         'ends_at',
-        'sort_order',
         'created_by',
         'updated_by',
     ];

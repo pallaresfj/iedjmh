@@ -3,43 +3,52 @@
     'lead' => null,
     'banner' => null,
     'sectionKey' => null,
+    'replaceHeaderWithBanner' => false,
 ])
 
 @php($primaryNav = config('institution.navigation.primary', []))
+@php($hasBanner = is_array($banner))
 
-<section class="border-b border-ied-gray-200 bg-white">
-    <div class="public-container py-10 sm:py-12">
-        <p class="text-sm font-medium uppercase tracking-wide text-ied-primary-dark">Seccion institucional</p>
-        <h1 class="public-heading mt-2 text-3xl font-semibold text-ied-gray-900 sm:text-4xl">{{ $title }}</h1>
-        @if ($lead)
-            <p class="mt-3 max-w-3xl text-base leading-relaxed text-ied-gray-700 sm:text-lg">{{ $lead }}</p>
-        @endif
-    </div>
-</section>
+@if (! ($replaceHeaderWithBanner && $hasBanner))
+    <section class="border-b border-ied-gray-200 bg-white">
+        <div class="public-container py-10 sm:py-12">
+            <p class="text-sm font-medium uppercase tracking-wide text-ied-primary-dark">Seccion institucional</p>
+            <h1 class="public-heading mt-2 text-3xl font-semibold text-ied-gray-900 sm:text-4xl">{{ $title }}</h1>
+            @if ($lead)
+                <p class="mt-3 max-w-3xl text-base leading-relaxed text-ied-gray-700 sm:text-lg">{{ $lead }}</p>
+            @endif
+        </div>
+    </section>
+@endif
 
-@if (is_array($banner))
+@if ($hasBanner)
     @php($opensInNewTab = ($banner['target'] ?? '_self') === '_blank')
     @php($bannerHasImage = filled($banner['image_url'] ?? null))
     <section class="border-b border-ied-gray-200 bg-ied-gray-100/40">
-        <div class="public-container py-6 sm:py-7">
-            <div class="public-surface overflow-hidden p-0">
-                <div @class([
-                    'grid gap-0',
-                    'md:grid-cols-[minmax(0,1fr)_19rem]' => $bannerHasImage,
-                ])>
-                    <div class="space-y-3 p-5 sm:p-6">
+        <div class="public-container py-6 sm:py-8">
+            <div @class([
+                'public-internal-banner',
+                'public-internal-banner--with-image' => $bannerHasImage,
+                'public-internal-banner--without-image' => ! $bannerHasImage,
+            ])>
+                @if ($bannerHasImage)
+                    <img src="{{ $banner['image_url'] }}" alt="" class="public-internal-banner__image" loading="lazy" aria-hidden="true" />
+                @endif
+
+                <div class="public-internal-banner__overlay" aria-hidden="true"></div>
+
+                <div class="public-internal-banner__content">
+                    <div class="max-w-3xl space-y-4 sm:space-y-5">
                         @if (filled($banner['subtitle'] ?? null))
-                            <p class="text-xs font-semibold uppercase tracking-[0.14em] text-ied-primary-dark">
-                                {{ $banner['subtitle'] }}
-                            </p>
+                            <p class="public-internal-banner__eyebrow">{{ $banner['subtitle'] }}</p>
                         @endif
 
-                        <h2 class="public-heading text-xl font-semibold text-ied-gray-900 sm:text-2xl">
-                            {{ $banner['title'] }}
+                        <h2 class="public-internal-banner__title">
+                            {{ $banner['title'] ?? $title }}
                         </h2>
 
                         @if (filled($banner['description'] ?? null))
-                            <p class="text-sm leading-relaxed text-ied-gray-700 sm:text-base">
+                            <p class="public-internal-banner__description">
                                 {{ $banner['description'] }}
                             </p>
                         @endif
@@ -49,18 +58,12 @@
                                 href="{{ $banner['cta_url'] }}"
                                 target="{{ $opensInNewTab ? '_blank' : '_self' }}"
                                 @if ($opensInNewTab) rel="noopener noreferrer" @endif
-                                class="inline-flex items-center rounded-full bg-ied-primary px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-ied-primary-dark"
+                                class="public-internal-banner__cta"
                             >
                                 {{ $banner['cta_label'] }}
                             </a>
                         @endif
                     </div>
-
-                    @if ($bannerHasImage)
-                        <div class="h-full min-h-44 border-t border-ied-gray-200 md:border-t-0 md:border-l">
-                            <img src="{{ $banner['image_url'] }}" alt="{{ $banner['title'] }}" class="h-full w-full object-cover" />
-                        </div>
-                    @endif
                 </div>
             </div>
         </div>

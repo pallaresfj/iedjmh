@@ -25,7 +25,6 @@ return new class extends Migration
             $table->string('status')->default('draft')->index();
             $table->timestamp('starts_at')->nullable()->index();
             $table->timestamp('ends_at')->nullable()->index();
-            $table->unsignedInteger('sort_order')->default(0)->index();
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();

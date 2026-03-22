@@ -22,7 +22,7 @@ class SettingResource extends Resource
 
     protected static string|UnitEnum|null $navigationGroup = 'Institucion';
 
-    protected static ?int $navigationSort = 20;
+    protected static ?int $navigationSort = 10;
 
     protected static ?string $navigationLabel = 'Configuracion';
 

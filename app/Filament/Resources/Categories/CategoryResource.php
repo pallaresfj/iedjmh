@@ -22,9 +22,9 @@ class CategoryResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-tag';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Contenido';
+    protected static string|UnitEnum|null $navigationGroup = 'Institucion';
 
-    protected static ?int $navigationSort = 15;
+    protected static ?int $navigationSort = 30;
 
     protected static ?string $navigationLabel = 'Categorias';
 

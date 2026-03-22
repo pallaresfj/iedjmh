@@ -53,16 +53,16 @@ class BannerForm
                     ->visible(fn (): bool => ! static::hasPageIdColumn())
                     ->columnSpanFull(),
                 TextInput::make('subtitle')
-                    ->label('Subtitulo')
+                    ->label('Ante titulo')
                     ->maxLength(255)
-                    ->columnSpanFull(),
+                    ->columnSpan(fn (): int|string => static::hasPageIdColumn() ? 1 : 'full'),
                 Textarea::make('description')
                     ->label('Descripcion')
                     ->rows(4)
                     ->columnSpanFull(),
                 FileUpload::make('image_path')
                     ->label('Imagen')
-                    ->helperText('Recomendado: 1600 x 900 px (minimo 1200 x 675). Mantener el contenido importante centrado para evitar recortes.')
+                    ->helperText('Fondo recomendado: 1920 x 800 px (proporcion 12:5). Minimo: 1440 x 600 px. Ubica el motivo principal en zona centro-derecha para evitar que el texto y overlay lo tapen.')
                     ->image()
                     ->directory('banners')
                     ->columnSpanFull(),
@@ -98,12 +98,6 @@ class BannerForm
                 DateTimePicker::make('ends_at')
                     ->label('Mostrar hasta')
                     ->seconds(false),
-                TextInput::make('sort_order')
-                    ->label('Orden')
-                    ->required()
-                    ->numeric()
-                    ->default(0)
-                    ->minValue(0),
             ]);
     }
 

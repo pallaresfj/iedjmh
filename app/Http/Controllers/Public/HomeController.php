@@ -57,8 +57,8 @@ class HomeController extends Controller
             ->where(function ($query): void {
                 $query->whereNull('ends_at')->orWhere('ends_at', '>=', now());
             })
-            ->orderBy('sort_order')
-            ->latest('id');
+            ->orderByDesc('starts_at')
+            ->orderByDesc('id');
 
         if ($this->canQueryColumn('banners', 'page_id')) {
             $bannerQuery->whereNull('page_id');
