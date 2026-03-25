@@ -9,6 +9,7 @@ use App\Models\Event;
 use App\Models\Page;
 use App\Models\Project;
 use App\Support\PageMenuCatalog;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -319,7 +320,7 @@ class AcademicController extends Controller
      */
     /**
      * @return array{
-     *     events: Collection<int, array<string, string|null|bool>>,
+     *     events: Collection<int, array<string, string|null|bool>>|LengthAwarePaginator<int, array<string, string|null|bool>>,
      *     months: Collection<int, array{value: string, label: string}>,
      *     filters: array{q: string, month: string}
      * }
@@ -372,9 +373,9 @@ class AcademicController extends Controller
                         ->whereMonth('starts_at', (int) $month);
                 })
                 ->orderBy('starts_at')
-                ->limit(12)
-                ->get()
-                ->map(function (Event $event): array {
+                ->paginate(5)
+                ->withQueryString()
+                ->through(function (Event $event): array {
                     return [
                         'day' => $event->starts_at->format('d'),
                         'month' => Str::upper($event->starts_at->translatedFormat('M')),
@@ -388,17 +389,9 @@ class AcademicController extends Controller
                     ];
                 });
 
-            if ($events->isNotEmpty()) {
+            if ($events->isNotEmpty() || $filters['q'] !== '' || $filters['month'] !== '') {
                 return [
                     'events' => $events,
-                    'months' => $months,
-                    'filters' => $filters,
-                ];
-            }
-
-            if ($filters['q'] !== '' || $filters['month'] !== '') {
-                return [
-                    'events' => collect(),
                     'months' => $months,
                     'filters' => $filters,
                 ];

@@ -79,7 +79,7 @@
                     @endforeach
 
                     <div class="pt-2">
-                        {{ $items->links() }}
+                        {{ $items->links('vendor.pagination.public') }}
                     </div>
                 @endif
             </section>

@@ -146,6 +146,20 @@ class PublicSettings
         ];
     }
 
+    /**
+     * @return array<int, array{name: string, url: string}>
+     */
+    public static function allies(): array
+    {
+        $allies = static::normalizeAllies(static::get('allies', []));
+
+        if ($allies !== []) {
+            return $allies;
+        }
+
+        return static::normalizeAllies(config('institution.allies', []));
+    }
+
     private static function resolve(): ?Setting
     {
         if (app()->bound('request')) {
@@ -248,5 +262,56 @@ class PublicSettings
             (string) hexdec(substr($sanitized, 3, 2)),
             (string) hexdec(substr($sanitized, 5, 2)),
         ]);
+    }
+
+    /**
+     * @return array<int, array{name: string, url: string}>
+     */
+    private static function normalizeAllies(mixed $allies): array
+    {
+        if (! is_array($allies)) {
+            return [];
+        }
+
+        $normalized = [];
+
+        foreach ($allies as $ally) {
+            if (! is_array($ally)) {
+                continue;
+            }
+
+            $name = trim((string) ($ally['name'] ?? $ally['label'] ?? ''));
+            $url = trim((string) ($ally['url'] ?? ''));
+
+            if ($name === '' || ! static::isValidAllyUrl($url)) {
+                continue;
+            }
+
+            $normalized[] = [
+                'name' => $name,
+                'url' => $url,
+            ];
+        }
+
+        return $normalized;
+    }
+
+    private static function isValidAllyUrl(string $url): bool
+    {
+        if ($url === '#') {
+            return true;
+        }
+
+        if (Str::startsWith($url, '/')) {
+            return true;
+        }
+
+        if (! filter_var($url, FILTER_VALIDATE_URL)) {
+            return false;
+        }
+
+        $scheme = parse_url($url, PHP_URL_SCHEME);
+
+        return is_string($scheme) && in_array(strtolower($scheme), ['http', 'https'], true);
     }
 }

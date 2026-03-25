@@ -110,6 +110,12 @@
                                     <x-public.academico.calendar-item :item="$item" />
                                 @endforeach
                             </div>
+
+                            @if ($calendarEvents instanceof \Illuminate\Contracts\Pagination\Paginator && $calendarEvents->hasPages())
+                                <div class="pt-2">
+                                    {{ $calendarEvents->links('vendor.pagination.public') }}
+                                </div>
+                            @endif
                         @endif
                     </div>
                 </section>

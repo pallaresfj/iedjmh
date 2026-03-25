@@ -142,7 +142,7 @@
                     </div>
 
                     <div class="pt-2">
-                        {{ $projects->links() }}
+                        {{ $projects->links('vendor.pagination.public') }}
                     </div>
                 @endif
             </section>

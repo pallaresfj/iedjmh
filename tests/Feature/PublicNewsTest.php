@@ -145,3 +145,21 @@ test('news page groups featured posts in featured section', function () {
         ->assertSee('Noticia destacada')
         ->assertSee('Noticia general');
 });
+
+test('news pagination uses custom public template and keeps query string', function () {
+    foreach (range(1, 10) as $index) {
+        Post::query()->create([
+            'title' => "Boletin institucional {$index}",
+            'slug' => "boletin-institucional-{$index}",
+            'excerpt' => "Resumen boletin {$index}.",
+            'status' => 'published',
+            'published_at' => now()->subMinutes($index),
+        ]);
+    }
+
+    $this->get(route('noticias.index', ['q' => 'boletin']))
+        ->assertOk()
+        ->assertSee('page=2', false)
+        ->assertSee('q=boletin', false)
+        ->assertSee('data-public-pagination-link', false);
+});

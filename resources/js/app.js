@@ -1,5 +1,10 @@
 const initAutoFilters = () => {
     const forms = document.querySelectorAll('[data-auto-filter-form]');
+    const isPrimaryClick = (event) => event.button === 0
+        && !event.metaKey
+        && !event.ctrlKey
+        && !event.shiftKey
+        && !event.altKey;
 
     forms.forEach((form) => {
         if (form.dataset.autoFilterInitialized === '1') {
@@ -34,14 +39,13 @@ const initAutoFilters = () => {
             return url;
         };
 
-        const submitFilters = async () => {
+        const requestAndSwap = async (requestUrl) => {
             const targetSelector = form.dataset.autoFilterTarget;
 
             if (!targetSelector) {
                 return;
             }
 
-            const requestUrl = buildRequestUrl();
             const currentTarget = document.querySelector(targetSelector);
 
             if (!currentTarget) {
@@ -93,6 +97,60 @@ const initAutoFilters = () => {
                 }
             }
         };
+
+        const submitFilters = async () => {
+            const requestUrl = buildRequestUrl();
+
+            await requestAndSwap(requestUrl);
+        };
+
+        const handlePaginationClick = (event) => {
+            if (event.defaultPrevented || !isPrimaryClick(event)) {
+                return;
+            }
+
+            if (!(event.target instanceof Element)) {
+                return;
+            }
+
+            const link = event.target.closest('a[data-public-pagination-link]');
+
+            if (!link) {
+                return;
+            }
+
+            if (link.target && link.target !== '_self') {
+                return;
+            }
+
+            if (link.hasAttribute('download')) {
+                return;
+            }
+
+            const targetSelector = form.dataset.autoFilterTarget;
+
+            if (!targetSelector) {
+                return;
+            }
+
+            const currentTarget = document.querySelector(targetSelector);
+
+            if (!currentTarget || !currentTarget.contains(link)) {
+                return;
+            }
+
+            const href = link.getAttribute('href');
+
+            if (!href) {
+                return;
+            }
+
+            event.preventDefault();
+            window.clearTimeout(debounceTimer);
+            requestAndSwap(new URL(href, window.location.origin));
+        };
+
+        document.addEventListener('click', handlePaginationClick);
 
         form.querySelectorAll('input[type="text"], input[type="search"]').forEach((input) => {
             input.addEventListener('input', () => {

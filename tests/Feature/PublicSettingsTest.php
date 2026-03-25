@@ -21,19 +21,55 @@ test('home header uses institution settings and renders external platform links'
         'siee' => 'https://siee.example.edu',
         'aula_virtual' => 'https://aula.example.edu',
         'logo_path' => 'settings/logo-institucional.svg',
+        'allies' => [
+            ['name' => 'Aliado desde settings', 'url' => 'https://aliado-settings.example.edu'],
+        ],
+        'singleton' => 1,
+    ]);
+
+    $response = $this->get(route('home'));
+
+    $response
+        ->assertOk()
+        ->assertSee('IED Prueba Institucional')
+        ->assertSee('Pivijay Centro, Magdalena')
+        ->assertSee('src="/storage/settings/logo-institucional.svg"', false)
+        ->assertSee('alt="Logo institucional footer"', false)
+        ->assertSee('public-footer__logo', false)
+        ->assertSee('rel="icon" href="/storage/settings/logo-institucional.svg"', false)
+        ->assertSee('href="https://siee.example.edu"', false)
+        ->assertSee('href="https://aula.example.edu"', false)
+        ->assertSee('target="_blank"', false)
+        ->assertSee('rel="noopener noreferrer"', false)
+        ->assertSee('Aliado desde settings')
+        ->assertSee('href="https://aliado-settings.example.edu"', false)
+        ->assertSee('href="https://asyservicios.com"', false)
+        ->assertSee('AS&amp;Servicios.com', false)
+        ->assertDontSee('Formando lideres para el agro y la vida.', false)
+        ->assertDontSee('Sitio institucional oficial.', false);
+
+    expect($response->getContent())
+        ->toMatch('/&copy;\s*'.now()->year.'\s+IED Prueba Institucional\s*-\s*Desarrollado por/s');
+
+    expect($response->getContent())
+        ->toMatch('/href="https:\/\/aliado-settings\.example\.edu"[^>]*target="_blank"[^>]*rel="noopener noreferrer"/');
+});
+
+test('footer allies fallback to config when settings allies are empty', function () {
+    config()->set('institution.allies', [
+        ['label' => 'Aliado fallback de config', 'url' => 'https://ally-fallback.example.edu'],
+    ]);
+
+    Setting::query()->create([
+        'institution_name' => 'IED Sin Aliados En Settings',
+        'allies' => [],
         'singleton' => 1,
     ]);
 
     $this->get(route('home'))
         ->assertOk()
-        ->assertSee('IED Prueba Institucional')
-        ->assertSee('Pivijay Centro, Magdalena')
-        ->assertSee('src="/storage/settings/logo-institucional.svg"', false)
-        ->assertSee('rel="icon" href="/storage/settings/logo-institucional.svg"', false)
-        ->assertSee('href="https://siee.example.edu"', false)
-        ->assertSee('href="https://aula.example.edu"', false)
-        ->assertSee('target="_blank"', false)
-        ->assertSee('rel="noopener noreferrer"', false);
+        ->assertSee('Aliado fallback de config')
+        ->assertSee('href="https://ally-fallback.example.edu"', false);
 });
 
 test('home hero uses relative storage url when settings image exists on public disk', function () {
@@ -60,7 +96,8 @@ test('home header hides external platform links when urls are empty', function (
     $this->get(route('home'))
         ->assertOk()
         ->assertDontSee('>SIEE<', false)
-        ->assertDontSee('>Aula Virtual<', false);
+        ->assertDontSee('>Aula Virtual<', false)
+        ->assertSee('public-footer__icon-fallback', false);
 });
 
 test('setting singleton helper always returns a single record', function () {

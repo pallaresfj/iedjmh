@@ -18,6 +18,7 @@ class Setting extends Model
         'siee',
         'aula_virtual',
         'logo_path',
+        'allies',
         'theme_primary',
         'theme_primary_dark',
         'theme_primary_light',
@@ -43,6 +44,7 @@ class Setting extends Model
         return [
             'singleton' => 'integer',
             'home_hero_description' => 'string',
+            'allies' => 'array',
         ];
     }
 

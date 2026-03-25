@@ -206,7 +206,66 @@
         background-color: #f8fafc;
     }
 
+    .public-pagination {
+        @apply flex justify-center;
+    }
+
+    .public-pagination__list {
+        @apply flex items-center gap-3;
+    }
+
+    .public-pagination__item {
+        @apply inline-flex items-center justify-center rounded-xl border border-ied-gray-200 bg-white font-semibold text-ied-gray-700 transition;
+        width: 3.125rem;
+        height: 3.125rem;
+        font-size: 1.5rem;
+        line-height: 1;
+    }
+
+    .public-pagination__item:hover {
+        border-color: rgba(var(--color-ied-primary-rgb), 0.35);
+        color: var(--color-ied-primary-dark);
+    }
+
+    .public-pagination__item:focus-visible {
+        outline: 2px solid rgba(var(--color-ied-primary-rgb), 0.55);
+        outline-offset: 2px;
+    }
+
+    .public-pagination__item--active {
+        background-color: var(--color-ied-primary);
+        border-color: var(--color-ied-primary);
+        color: #fff;
+        box-shadow: 0 6px 16px rgba(var(--color-ied-primary-dark-rgb), 0.28);
+    }
+
+    .public-pagination__item--disabled {
+        border-color: rgba(148, 163, 184, 0.28);
+        color: rgb(148 163 184);
+        cursor: not-allowed;
+    }
+
+    .public-pagination__icon {
+        width: 1.35rem;
+        height: 1.35rem;
+    }
+
     @media (max-width: 640px) {
+        .public-pagination__list {
+            gap: 0.55rem;
+        }
+
+        .public-pagination__item {
+            width: 2.75rem;
+            height: 2.75rem;
+            font-size: 1.25rem;
+        }
+
+        .public-pagination__icon {
+            width: 1.2rem;
+            height: 1.2rem;
+        }
+
         .public-home-hero__overlay {
             background:
                 linear-gradient(

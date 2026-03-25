@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Settings\Schemas;
 
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -71,6 +72,26 @@ class SettingForm
                             ->image()
                             ->acceptedFileTypes(['image/png', 'image/svg+xml'])
                             ->maxSize(2048)
+                            ->columnSpanFull(),
+                        Repeater::make('allies')
+                            ->label('Aliados')
+                            ->helperText('Configura los aliados institucionales mostrados en el footer.')
+                            ->defaultItems(0)
+                            ->reorderableWithButtons()
+                            ->addActionLabel('Agregar aliado')
+                            ->schema([
+                                TextInput::make('name')
+                                    ->label('Nombre')
+                                    ->required()
+                                    ->maxLength(120),
+                                TextInput::make('url')
+                                    ->label('Enlace')
+                                    ->required()
+                                    ->url()
+                                    ->placeholder('https://...')
+                                    ->maxLength(2048),
+                            ])
+                            ->columns(2)
                             ->columnSpanFull(),
                         Select::make('contracting_manual_document_id')
                             ->label('Manual de contratacion (documento)')
