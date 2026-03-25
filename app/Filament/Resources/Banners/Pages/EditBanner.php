@@ -12,6 +12,15 @@ class EditBanner extends EditRecord
 {
     protected static string $resource = BannerResource::class;
 
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        if ((bool) data_get($this->data, 'is_permanent', false) === true) {
+            $data['ends_at'] = null;
+        }
+
+        return $data;
+    }
+
     protected function getHeaderActions(): array
     {
         return [

@@ -9,6 +9,15 @@ class CreateBanner extends CreateRecord
 {
     protected static string $resource = BannerResource::class;
 
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        if ((bool) data_get($this->data, 'is_permanent', false) === true) {
+            $data['ends_at'] = null;
+        }
+
+        return $data;
+    }
+
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');

@@ -42,6 +42,7 @@ class BannersTable
                 TextColumn::make('ends_at')
                     ->label('Hasta')
                     ->dateTime()
+                    ->placeholder('Permanente')
                     ->sortable(),
             ])
             ->filters([

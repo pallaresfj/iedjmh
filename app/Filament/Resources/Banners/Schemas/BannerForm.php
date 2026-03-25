@@ -10,6 +10,7 @@ use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
@@ -95,9 +96,27 @@ class BannerForm
                 DateTimePicker::make('starts_at')
                     ->label('Mostrar desde')
                     ->seconds(false),
+                Toggle::make('is_permanent')
+                    ->label('Permanente')
+                    ->dehydrated(false)
+                    ->default(true)
+                    ->live()
+                    ->afterStateHydrated(fn (Get $get, Set $set) => $set('is_permanent', blank($get('ends_at'))))
+                    ->afterStateUpdated(function (Set $set, ?bool $state): void {
+                        if ($state === true) {
+                            $set('ends_at', null);
+                        }
+                    }),
                 DateTimePicker::make('ends_at')
                     ->label('Mostrar hasta')
-                    ->seconds(false),
+                    ->seconds(false)
+                    ->hidden(fn (Get $get): bool => (bool) $get('is_permanent'))
+                    ->dehydrated(fn (Get $get): bool => ! (bool) $get('is_permanent'))
+                    ->afterStateUpdated(function (Set $set, mixed $state): void {
+                        if (blank($state)) {
+                            $set('is_permanent', true);
+                        }
+                    }),
             ]);
     }
 

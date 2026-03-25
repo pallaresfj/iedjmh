@@ -25,7 +25,7 @@
 
 @layer components {
     .fi-main-sidebar {
-        @apply border-r border-slate-200 bg-slate-50/95 shadow-xl;
+        @apply border-r border-slate-200 bg-slate-50/95 shadow-xl dark:border-slate-800 dark:bg-slate-900/95;
     }
 
     .fi-topbar {
@@ -33,7 +33,19 @@
     }
 
     .fi-sidebar-item-btn {
-        @apply rounded-xl;
+        @apply rounded-xl text-slate-700 transition dark:text-slate-300;
+    }
+
+    .fi-sidebar-item:not(.fi-active) > .fi-sidebar-item-btn {
+        @apply hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-white;
+    }
+
+    .fi-sidebar-item:not(.fi-active) > .fi-sidebar-item-btn > .fi-sidebar-item-icon {
+        @apply text-slate-500 dark:text-slate-400;
+    }
+
+    .fi-sidebar-item:not(.fi-active) > .fi-sidebar-item-btn > .fi-sidebar-item-label {
+        @apply text-slate-700 dark:text-slate-200;
     }
 
     .fi-sidebar-item.fi-active .fi-sidebar-item-btn {
