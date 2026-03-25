@@ -7,7 +7,9 @@ test('public home renders key institutional sections', function () {
         ->assertOk()
         ->assertSee('Muro de Actualidad')
         ->assertSee('Granja Experimental')
-        ->assertSee('Proximos Eventos');
+        ->assertSee('Próximos Eventos')
+        ->assertSee('08:00 AM - 04:00 PM')
+        ->assertSee('Sede Principal - Granja');
 });
 
 test('public home renders global public layout elements', function () {

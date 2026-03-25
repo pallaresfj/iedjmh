@@ -148,17 +148,20 @@
             <div class="public-content-shell">
                 <div class="mb-12 flex items-center gap-3">
                     <span class="material-symbols-outlined text-ied-primary !text-[30px]" aria-hidden="true">event</span>
-                    <h2 class="public-heading text-3xl font-black tracking-[-0.02em] text-slate-900">Proximos Eventos</h2>
+                    <h2 class="public-heading text-3xl font-black tracking-[-0.02em] text-slate-900">Próximos Eventos</h2>
                 </div>
 
-                <div class="flex flex-col gap-4">
+                <div class="flex flex-col gap-6">
                     @foreach ($upcomingEvents as $event)
                         <x-public.home.event-item
                             :day="$event['day']"
                             :month="$event['month']"
                             :title="$event['title']"
-                            :meta="$event['meta']"
+                            :time="$event['time'] ?? null"
+                            :location="$event['location'] ?? null"
+                            :meta="$event['meta'] ?? null"
                             :url="$event['url']"
+                            :highlight-date="$loop->first"
                         />
                     @endforeach
                 </div>

@@ -89,6 +89,9 @@ test('public layout injects theme colors from settings', function () {
     $this->get(route('home'))
         ->assertOk()
         ->assertSee('--color-ied-primary: #123ABC;', false)
+        ->assertSee('--color-ied-primary-rgb: 18, 58, 188;', false)
+        ->assertSee('--color-ied-primary-dark-rgb: 16, 32, 48;', false)
+        ->assertSee('--color-ied-primary-light-rgb: 221, 238, 255;', false)
         ->assertSee('--color-ied-gray-100: #F3F4F6;', false);
 });
 
@@ -101,7 +104,8 @@ test('invalid theme color value falls back to safe default', function () {
 
     $this->get(route('home'))
         ->assertOk()
-        ->assertSee('--color-ied-primary: #2E7D32;', false);
+        ->assertSee('--color-ied-primary: #2E7D32;', false)
+        ->assertSee('--color-ied-primary-rgb: 46, 125, 50;', false);
 });
 
 test('home hero prioritizes settings content over home banner', function () {

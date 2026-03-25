@@ -7,6 +7,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\ReplicateAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Support\Enums\IconSize;
 use Filament\Tables\Columns\TextColumn;
@@ -14,6 +15,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Schema as DbSchema;
+use Illuminate\Support\Str;
 use Throwable;
 
 class BannersTable
@@ -60,6 +62,23 @@ class BannersTable
                     ->iconButton()
                     ->tooltip('Editar')
                     ->iconSize(IconSize::Large),
+                ReplicateAction::make()
+                    ->label('Duplicar')
+                    ->iconButton()
+                    ->tooltip('Duplicar')
+                    ->iconSize(IconSize::Large)
+                    ->mutateRecordDataUsing(function (array $data): array {
+                        $originalTitle = trim((string) ($data['title'] ?? ''));
+
+                        if ($originalTitle !== '') {
+                            $data['title'] = Str::limit("{$originalTitle} (copia)", 255, '');
+                        }
+
+                        $data['status'] = 'draft';
+                        $data['slug'] = null;
+
+                        return $data;
+                    }),
                 DeleteAction::make()
                     ->iconButton()
                     ->tooltip('Eliminar')

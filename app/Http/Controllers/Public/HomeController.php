@@ -328,10 +328,8 @@ class HomeController extends Controller
                         'day' => $event->starts_at->format('d'),
                         'month' => Str::upper($event->starts_at->translatedFormat('M')),
                         'title' => $event->title,
-                        'meta' => trim(collect([
-                            $event->starts_at->format('h:i A'),
-                            $event->location,
-                        ])->filter()->join(' • ')),
+                        'time' => $this->formatEventTimeRange($event->starts_at, $event->ends_at, (bool) $event->is_all_day),
+                        'location' => $this->normalizeEventLocation($event->location),
                         'url' => route('eventos.show', ['slug' => $event->slug]),
                     ];
                 });
@@ -346,21 +344,24 @@ class HomeController extends Controller
                 'day' => '24',
                 'month' => 'ABR',
                 'title' => 'Dia del Campesino Institucional',
-                'meta' => '08:00 AM • Granja escolar',
+                'time' => '08:00 AM - 04:00 PM',
+                'location' => 'Sede Principal - Granja',
                 'url' => route('academico.calendario-academico'),
             ],
             [
                 'day' => '15',
                 'month' => 'MAY',
                 'title' => 'Feria Tecnologica y de Emprendimiento',
-                'meta' => '09:30 AM • Coliseo institucional',
+                'time' => '09:00 AM - 02:00 PM',
+                'location' => 'Polideportivo Institucional',
                 'url' => route('academico.calendario-academico'),
             ],
             [
                 'day' => '05',
                 'month' => 'JUN',
                 'title' => 'Ceremonia de Graduacion 2026',
-                'meta' => '06:00 PM • Patio de honor',
+                'time' => '04:00 PM',
+                'location' => 'Centro de Eventos Municipal',
                 'url' => route('academico.calendario-academico'),
             ],
         ]);

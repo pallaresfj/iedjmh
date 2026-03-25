@@ -40,6 +40,34 @@ test('home upcoming events link to event detail page', function () {
         ->assertSee(route('eventos.show', ['slug' => $event->slug]), false);
 });
 
+test('public event detail renders related events with time and location metadata', function () {
+    $mainEvent = Event::query()->create([
+        'title' => 'Foro Institucional',
+        'slug' => 'foro-institucional',
+        'summary' => 'Evento principal.',
+        'starts_at' => now()->addDays(4)->setTime(8, 0),
+        'status' => 'published',
+        'published_at' => now(),
+    ]);
+
+    $relatedEvent = Event::query()->create([
+        'title' => 'Feria Tecnologica y del Emprendimiento',
+        'slug' => 'feria-tecnologica-emprendimiento',
+        'starts_at' => now()->addDays(6)->setTime(9, 0),
+        'ends_at' => now()->addDays(6)->setTime(14, 0),
+        'location' => 'Polideportivo Institucional',
+        'status' => 'published',
+        'published_at' => now(),
+    ]);
+
+    $this->get(route('eventos.show', ['slug' => $mainEvent->slug]))
+        ->assertOk()
+        ->assertSee('Otros eventos')
+        ->assertSee($relatedEvent->title)
+        ->assertSee('09:00 AM - 02:00 PM')
+        ->assertSee('Polideportivo Institucional');
+});
+
 test('draft events are not publicly accessible by detail route', function () {
     $event = Event::query()->create([
         'title' => 'Evento en borrador',

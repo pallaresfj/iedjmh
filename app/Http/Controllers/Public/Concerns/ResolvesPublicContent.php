@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Public\Concerns;
 
 use App\Models\Banner;
 use App\Models\Page;
+use Carbon\CarbonInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
@@ -239,5 +240,32 @@ trait ResolvesPublicContent
         }
 
         return '/storage/'.$normalizedPath;
+    }
+
+    protected function formatEventTimeRange(
+        ?CarbonInterface $startsAt,
+        ?CarbonInterface $endsAt,
+        bool $isAllDay = false,
+    ): ?string {
+        if ($isAllDay) {
+            return 'Todo el dia';
+        }
+
+        if (! $startsAt && ! $endsAt) {
+            return null;
+        }
+
+        if ($startsAt && $endsAt) {
+            return $startsAt->format('h:i A').' - '.$endsAt->format('h:i A');
+        }
+
+        return ($startsAt ?? $endsAt)?->format('h:i A');
+    }
+
+    protected function normalizeEventLocation(?string $location): ?string
+    {
+        $value = trim((string) $location);
+
+        return $value !== '' ? $value : null;
     }
 }

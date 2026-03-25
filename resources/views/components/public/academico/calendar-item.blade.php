@@ -5,20 +5,21 @@
 @php($wrapperTag = ! empty($item['url']) ? 'a' : 'article')
 @php($opensInNewTab = (bool) ($item['open_in_new_tab'] ?? false))
 @php($wrapperAttrs = ! empty($item['url']) ? ['href' => $item['url']] : [])
+@php($monthLabel = strtoupper(rtrim(trim((string) ($item['month'] ?? '')), '. ')))
 @if (! empty($item['url']) && $opensInNewTab)
     @php($wrapperAttrs = array_merge($wrapperAttrs, ['target' => '_blank', 'rel' => 'noopener noreferrer']))
 @endif
 
 <{{ $wrapperTag }} {{ $attributes->merge($wrapperAttrs)->class('group flex items-start gap-4 rounded-2xl px-1 py-4 transition hover:bg-ied-gray-100/70 sm:gap-5') }}>
-    <div class="grid min-w-14 place-items-center rounded-xl bg-ied-primary px-2 py-2 text-white shadow-sm">
+    <div class="flex min-w-14 flex-col items-center justify-center rounded-xl bg-ied-primary px-2 py-2 text-center leading-none text-white shadow-sm">
         <span class="public-heading text-xl font-semibold leading-none">{{ $item['day'] }}</span>
-        <span class="mt-1 text-[11px] font-semibold uppercase tracking-wide text-white/90">{{ $item['month'] }}</span>
+        <span class="mt-0.5 text-[10px] font-semibold uppercase leading-none tracking-wide text-white/90">{{ $monthLabel }}</span>
     </div>
 
     <div class="min-w-0 flex-1 pt-1">
         <h3 class="public-heading text-base font-semibold text-ied-gray-900 transition group-hover:text-ied-primary-dark sm:text-lg">{{ $item['title'] }}</h3>
         @if (! empty($item['meta']))
-            <p class="mt-1 text-sm text-ied-gray-600">{{ $item['meta'] }}</p>
+            <p class="mt-1 text-sm font-normal text-ied-gray-600">{{ $item['meta'] }}</p>
         @endif
     </div>
 

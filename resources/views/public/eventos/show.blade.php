@@ -75,14 +75,17 @@
             @if ($relatedEvents->isNotEmpty())
                 <section class="space-y-4 border-t border-ied-gray-200 pt-6">
                     <h2 class="public-heading text-xl font-semibold text-ied-gray-900">Otros eventos</h2>
-                    <div class="space-y-3">
+                    <div class="space-y-6">
                         @foreach ($relatedEvents as $item)
                             <x-public.home.event-item
                                 :day="$item['day']"
                                 :month="$item['month']"
                                 :title="$item['title']"
-                                :meta="$item['meta']"
+                                :time="$item['time'] ?? null"
+                                :location="$item['location'] ?? null"
+                                :meta="$item['meta'] ?? null"
                                 :url="$item['url']"
+                                :highlight-date="$loop->first"
                             />
                         @endforeach
                     </div>

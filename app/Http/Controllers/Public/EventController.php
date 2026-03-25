@@ -36,10 +36,8 @@ class EventController extends Controller
                 'day' => $relatedEvent->starts_at?->format('d') ?? '--',
                 'month' => $relatedEvent->starts_at?->translatedFormat('M') ? Str::upper($relatedEvent->starts_at->translatedFormat('M')) : '---',
                 'title' => $relatedEvent->title,
-                'meta' => trim(collect([
-                    $relatedEvent->is_all_day ? 'Todo el dia' : $relatedEvent->starts_at?->format('h:i A'),
-                    $relatedEvent->location,
-                ])->filter()->join(' • ')),
+                'time' => $this->formatEventTimeRange($relatedEvent->starts_at, $relatedEvent->ends_at, (bool) $relatedEvent->is_all_day),
+                'location' => $this->normalizeEventLocation($relatedEvent->location),
                 'url' => route('eventos.show', ['slug' => $relatedEvent->slug]),
             ]);
 

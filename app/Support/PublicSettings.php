@@ -120,16 +120,29 @@ class PublicSettings
      */
     public static function themeColors(): array
     {
+        $primary = static::themeColor('theme_primary');
+        $primaryDark = static::themeColor('theme_primary_dark');
+        $primaryLight = static::themeColor('theme_primary_light');
+        $accent = static::themeColor('theme_accent');
+        $gray900 = static::themeColor('theme_gray_900');
+        $gray700 = static::themeColor('theme_gray_700');
+        $gray600 = static::themeColor('theme_gray_600');
+        $gray200 = static::themeColor('theme_gray_200');
+        $gray100 = static::themeColor('theme_gray_100');
+
         return [
-            '--color-ied-primary' => static::themeColor('theme_primary'),
-            '--color-ied-primary-dark' => static::themeColor('theme_primary_dark'),
-            '--color-ied-primary-light' => static::themeColor('theme_primary_light'),
-            '--color-ied-accent' => static::themeColor('theme_accent'),
-            '--color-ied-gray-900' => static::themeColor('theme_gray_900'),
-            '--color-ied-gray-700' => static::themeColor('theme_gray_700'),
-            '--color-ied-gray-600' => static::themeColor('theme_gray_600'),
-            '--color-ied-gray-200' => static::themeColor('theme_gray_200'),
-            '--color-ied-gray-100' => static::themeColor('theme_gray_100'),
+            '--color-ied-primary' => $primary,
+            '--color-ied-primary-dark' => $primaryDark,
+            '--color-ied-primary-light' => $primaryLight,
+            '--color-ied-accent' => $accent,
+            '--color-ied-gray-900' => $gray900,
+            '--color-ied-gray-700' => $gray700,
+            '--color-ied-gray-600' => $gray600,
+            '--color-ied-gray-200' => $gray200,
+            '--color-ied-gray-100' => $gray100,
+            '--color-ied-primary-rgb' => static::hexColorToRgbChannels($primary),
+            '--color-ied-primary-dark-rgb' => static::hexColorToRgbChannels($primaryDark),
+            '--color-ied-primary-light-rgb' => static::hexColorToRgbChannels($primaryLight),
         ];
     }
 
@@ -220,5 +233,20 @@ class PublicSettings
         }
 
         return $value;
+    }
+
+    private static function hexColorToRgbChannels(string $value): string
+    {
+        $sanitized = static::sanitizeHexColor($value);
+
+        if ($sanitized === null) {
+            return '0, 0, 0';
+        }
+
+        return implode(', ', [
+            (string) hexdec(substr($sanitized, 1, 2)),
+            (string) hexdec(substr($sanitized, 3, 2)),
+            (string) hexdec(substr($sanitized, 5, 2)),
+        ]);
     }
 }
