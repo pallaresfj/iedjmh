@@ -29,7 +29,7 @@
     }
 
     .fi-topbar {
-        @apply border-b border-slate-200 bg-white/80 backdrop-blur-sm;
+        @apply border-b border-slate-200 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90;
     }
 
     .fi-sidebar-item-btn {
@@ -66,11 +66,11 @@
     }
 
     .agro-surface {
-        @apply rounded-2xl border border-slate-200 bg-white shadow-sm;
+        @apply rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:shadow-slate-950/30;
     }
 
     .agro-surface__header {
-        @apply flex items-center justify-between border-b border-slate-100 px-6 py-5;
+        @apply flex items-center justify-between border-b border-slate-100 px-6 py-5 dark:border-slate-800;
     }
 
     .agro-surface__actions {
@@ -78,11 +78,11 @@
     }
 
     .agro-surface__title {
-        @apply text-xl font-extrabold tracking-tight text-slate-900;
+        @apply text-xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100;
     }
 
     .agro-surface__action {
-        @apply rounded-lg bg-emerald-50 px-4 py-2 text-sm font-bold text-emerald-700 transition hover:bg-emerald-100;
+        @apply rounded-lg bg-emerald-50 px-4 py-2 text-sm font-bold text-emerald-700 transition hover:bg-emerald-100 dark:bg-emerald-500/15 dark:text-emerald-300 dark:hover:bg-emerald-500/25;
     }
 
     .agro-kpi-grid {
@@ -90,7 +90,7 @@
     }
 
     .agro-kpi-card {
-        @apply rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1;
+        @apply rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 dark:border-slate-700 dark:bg-slate-900 dark:shadow-slate-950/30;
     }
 
     .agro-kpi-card--highlight {
@@ -102,7 +102,7 @@
     }
 
     .agro-kpi-card__icon {
-        @apply inline-flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700;
+        @apply inline-flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300;
     }
 
     .agro-kpi-card--highlight .agro-kpi-card__icon {
@@ -114,7 +114,7 @@
     }
 
     .agro-kpi-card__value {
-        @apply text-4xl font-black leading-none text-slate-900;
+        @apply text-4xl font-black leading-none text-slate-900 dark:text-slate-100;
     }
 
     .agro-kpi-card--highlight .agro-kpi-card__value {
@@ -122,7 +122,7 @@
     }
 
     .agro-kpi-card__label {
-        @apply mt-2 text-xs font-semibold uppercase tracking-widest text-slate-500;
+        @apply mt-2 text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-400;
     }
 
     .agro-kpi-card--highlight .agro-kpi-card__label {
@@ -130,7 +130,7 @@
     }
 
     .agro-kpi-card__link {
-        @apply mt-4 inline-flex text-xs font-semibold text-emerald-700 underline decoration-transparent transition hover:decoration-emerald-700;
+        @apply mt-4 inline-flex text-xs font-semibold text-emerald-700 underline decoration-transparent transition hover:decoration-emerald-700 dark:text-emerald-300 dark:hover:decoration-emerald-300;
     }
 
     .agro-kpi-card--highlight .agro-kpi-card__link {
@@ -142,19 +142,19 @@
     }
 
     .agro-badge--emerald {
-        @apply bg-emerald-100 text-emerald-700;
+        @apply bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300;
     }
 
     .agro-badge--blue {
-        @apply bg-blue-100 text-blue-700;
+        @apply bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-300;
     }
 
     .agro-badge--amber {
-        @apply bg-amber-100 text-amber-700;
+        @apply bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300;
     }
 
     .agro-badge--slate {
-        @apply bg-slate-200 text-slate-700;
+        @apply bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200;
     }
 
     .agro-badge--light {
@@ -166,11 +166,11 @@
     }
 
     .agro-table thead th {
-        @apply bg-slate-50 px-6 py-4 text-left text-[11px] font-black uppercase tracking-[0.22em] text-slate-500;
+        @apply bg-slate-50 px-6 py-4 text-left text-[11px] font-black uppercase tracking-[0.22em] text-slate-500 dark:bg-slate-950 dark:text-slate-400;
     }
 
     .agro-table tbody td {
-        @apply border-t border-slate-100 px-6 py-4 text-sm text-slate-600;
+        @apply border-t border-slate-100 px-6 py-4 text-sm text-slate-600 dark:border-slate-800 dark:text-slate-300;
     }
 
     .agro-table-title {
@@ -178,7 +178,7 @@
     }
 
     .agro-table-thumb {
-        @apply inline-flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700;
+        @apply inline-flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300;
     }
 
     .agro-table-thumb svg {
@@ -186,7 +186,7 @@
     }
 
     .agro-table-title__text {
-        @apply font-semibold text-slate-900;
+        @apply font-semibold text-slate-900 dark:text-slate-100;
     }
 
     .agro-status {
@@ -194,19 +194,19 @@
     }
 
     .agro-status--published {
-        @apply bg-emerald-100 text-emerald-700;
+        @apply bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300;
     }
 
     .agro-status--draft {
-        @apply bg-amber-100 text-amber-800;
+        @apply bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300;
     }
 
     .agro-status--archived {
-        @apply bg-slate-200 text-slate-700;
+        @apply bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200;
     }
 
     .agro-icon-link {
-        @apply inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 transition hover:bg-emerald-50 hover:text-emerald-700;
+        @apply inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 transition hover:bg-emerald-50 hover:text-emerald-700 dark:text-slate-500 dark:hover:bg-emerald-500/20 dark:hover:text-emerald-300;
     }
 
     .agro-icon-link svg {
@@ -218,7 +218,7 @@
     }
 
     .agro-empty-row {
-        @apply py-8 text-center text-sm text-slate-500;
+        @apply py-8 text-center text-sm text-slate-500 dark:text-slate-400;
     }
 
     .agro-pqrs-list {
@@ -226,7 +226,7 @@
     }
 
     .agro-pqrs-item {
-        @apply flex flex-col justify-between gap-3 rounded-xl border-l-4 bg-slate-50 p-4 md:flex-row md:items-center;
+        @apply flex flex-col justify-between gap-3 rounded-xl border-l-4 bg-slate-50 p-4 md:flex-row md:items-center dark:bg-slate-800;
     }
 
     .agro-pqrs-item--amber {
@@ -246,15 +246,15 @@
     }
 
     .agro-pqrs-item__subject {
-        @apply text-base font-bold text-slate-900;
+        @apply text-base font-bold text-slate-900 dark:text-slate-100;
     }
 
     .agro-pqrs-item__meta {
-        @apply mt-1 text-xs text-slate-500;
+        @apply mt-1 text-xs text-slate-500 dark:text-slate-400;
     }
 
     .agro-empty-copy {
-        @apply p-6 text-sm text-slate-500;
+        @apply p-6 text-sm text-slate-500 dark:text-slate-400;
     }
 
     .agro-contract-card {
@@ -330,7 +330,7 @@
     }
 
     .agro-round-add {
-        @apply inline-flex h-9 w-9 items-center justify-center rounded-full bg-emerald-700 text-white shadow-lg transition hover:bg-emerald-600;
+        @apply inline-flex h-9 w-9 items-center justify-center rounded-full bg-emerald-700 text-white shadow-lg transition hover:bg-emerald-600 dark:bg-emerald-500 dark:hover:bg-emerald-400;
     }
 
     .agro-round-add svg {
@@ -362,23 +362,23 @@
     }
 
     .agro-event-item__title {
-        @apply text-sm font-bold text-slate-900;
+        @apply text-sm font-bold text-slate-900 dark:text-slate-100;
     }
 
     .agro-event-item__meta {
-        @apply mt-0.5 text-[11px] text-slate-500;
+        @apply mt-0.5 text-[11px] text-slate-500 dark:text-slate-400;
     }
 
     .agro-outline-btn {
-        @apply mx-6 mb-6 mt-2 block rounded-lg border border-emerald-200 px-4 py-2 text-center text-xs font-black uppercase tracking-[0.18em] text-emerald-700 transition hover:bg-emerald-50;
+        @apply mx-6 mb-6 mt-2 block rounded-lg border border-emerald-200 px-4 py-2 text-center text-xs font-black uppercase tracking-[0.18em] text-emerald-700 transition hover:bg-emerald-50 dark:border-emerald-500/40 dark:text-emerald-300 dark:hover:bg-emerald-500/10;
     }
 
     .agro-moderation-alert {
-        @apply rounded-2xl border border-amber-200 bg-amber-50/70 shadow-sm;
+        @apply rounded-2xl border border-amber-200 bg-amber-50/70 shadow-sm dark:border-amber-500/30 dark:bg-amber-500/10;
     }
 
     .agro-moderation-alert__header {
-        @apply flex flex-col gap-4 border-b border-amber-200 px-6 py-5 lg:flex-row lg:items-start lg:justify-between;
+        @apply flex flex-col gap-4 border-b border-amber-200 px-6 py-5 lg:flex-row lg:items-start lg:justify-between dark:border-amber-500/25;
     }
 
     .agro-moderation-alert__title-wrap {
@@ -386,7 +386,7 @@
     }
 
     .agro-moderation-alert__icon {
-        @apply mt-0.5 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-700;
+        @apply mt-0.5 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300;
     }
 
     .agro-moderation-alert__icon svg {
@@ -394,15 +394,15 @@
     }
 
     .agro-moderation-alert__title {
-        @apply text-lg font-black tracking-tight text-amber-950;
+        @apply text-lg font-black tracking-tight text-amber-950 dark:text-amber-200;
     }
 
     .agro-moderation-alert__copy {
-        @apply mt-1 text-sm text-amber-900;
+        @apply mt-1 text-sm text-amber-900 dark:text-amber-100/85;
     }
 
     .agro-moderation-alert__counter {
-        @apply inline-flex w-fit rounded-full border border-amber-300 bg-white px-3 py-1 text-xs font-black uppercase tracking-[0.16em] text-amber-700;
+        @apply inline-flex w-fit rounded-full border border-amber-300 bg-white px-3 py-1 text-xs font-black uppercase tracking-[0.16em] text-amber-700 dark:border-amber-500/40 dark:bg-slate-900/70 dark:text-amber-200;
     }
 
     .agro-moderation-alert__list {
@@ -410,15 +410,15 @@
     }
 
     .agro-moderation-item {
-        @apply flex flex-col gap-3 rounded-xl border border-amber-200 bg-white/80 p-4 md:flex-row md:items-center md:justify-between;
+        @apply flex flex-col gap-3 rounded-xl border border-amber-200 bg-white/80 p-4 md:flex-row md:items-center md:justify-between dark:border-amber-500/30 dark:bg-slate-900/70;
     }
 
     .agro-moderation-item__title {
-        @apply text-sm font-bold text-slate-900;
+        @apply text-sm font-bold text-slate-900 dark:text-slate-100;
     }
 
     .agro-moderation-item__meta {
-        @apply mt-1 text-xs text-slate-600;
+        @apply mt-1 text-xs text-slate-600 dark:text-slate-400;
     }
 
     .agro-moderation-item__action {
@@ -426,14 +426,14 @@
     }
 
     .agro-moderation-alert__empty {
-        @apply px-6 py-6 text-sm text-slate-600;
+        @apply px-6 py-6 text-sm text-slate-600 dark:text-slate-300;
     }
 
     .agro-moderation-alert__footer {
-        @apply border-t border-amber-200 px-6 py-4 text-xs font-semibold text-amber-900;
+        @apply border-t border-amber-200 px-6 py-4 text-xs font-semibold text-amber-900 dark:border-amber-500/25 dark:text-amber-200;
     }
 
     .agro-moderation-alert__footer a {
-        @apply underline decoration-transparent transition hover:decoration-amber-900;
+        @apply underline decoration-transparent transition hover:decoration-amber-900 dark:hover:decoration-amber-200;
     }
 }

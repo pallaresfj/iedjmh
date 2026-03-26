@@ -191,8 +191,106 @@ const initAutoFilters = () => {
     });
 };
 
+const PUBLIC_THEME_STORAGE_KEY = 'ied_public_theme';
+const LEGACY_HOME_THEME_STORAGE_KEY = 'ied_public_home_theme';
+
+const isValidPublicTheme = (value) => value === 'light' || value === 'dark';
+
+const getSystemPublicTheme = () => (
+    window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+);
+
+const getStoredPublicTheme = () => {
+    try {
+        const storedTheme = localStorage.getItem(PUBLIC_THEME_STORAGE_KEY);
+        const legacyTheme = localStorage.getItem(LEGACY_HOME_THEME_STORAGE_KEY);
+
+        if (isValidPublicTheme(storedTheme)) {
+            return storedTheme;
+        }
+
+        return isValidPublicTheme(legacyTheme) ? legacyTheme : null;
+    } catch (error) {
+        return null;
+    }
+};
+
+const setStoredPublicTheme = (theme) => {
+    try {
+        localStorage.setItem(PUBLIC_THEME_STORAGE_KEY, theme);
+        localStorage.setItem(LEGACY_HOME_THEME_STORAGE_KEY, theme);
+    } catch (error) {
+        // Ignore storage failures and keep runtime theme.
+    }
+};
+
+const updatePublicThemeToggleUi = (theme) => {
+    const isDarkTheme = theme === 'dark';
+    const iconName = isDarkTheme ? 'light_mode' : 'dark_mode';
+    const buttonLabel = isDarkTheme ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro';
+
+    document.querySelectorAll('[data-public-theme-toggle]').forEach((button) => {
+        if (!(button instanceof HTMLButtonElement)) {
+            return;
+        }
+
+        button.setAttribute('aria-pressed', isDarkTheme ? 'true' : 'false');
+        button.setAttribute('aria-label', buttonLabel);
+
+        const icon = button.querySelector('[data-public-theme-toggle-icon]');
+
+        if (icon) {
+            icon.textContent = iconName;
+        }
+    });
+};
+
+const setPublicTheme = (theme, persist = true) => {
+    if (!isValidPublicTheme(theme)) {
+        return;
+    }
+
+    document.documentElement.setAttribute('data-public-theme', theme);
+    // Backward compatibility for existing home-scoped selectors.
+    document.documentElement.setAttribute('data-home-theme', theme);
+    updatePublicThemeToggleUi(theme);
+
+    if (persist) {
+        setStoredPublicTheme(theme);
+    }
+};
+
+const initPublicThemeToggle = () => {
+    const storedTheme = getStoredPublicTheme();
+    const runtimeTheme = document.documentElement.getAttribute('data-public-theme');
+    const initialTheme = isValidPublicTheme(runtimeTheme)
+        ? runtimeTheme
+        : (storedTheme ?? getSystemPublicTheme());
+
+    setPublicTheme(initialTheme, false);
+
+    document.querySelectorAll('[data-public-theme-toggle]').forEach((button) => {
+        if (!(button instanceof HTMLButtonElement) || button.dataset.publicThemeInitialized === '1') {
+            return;
+        }
+
+        button.dataset.publicThemeInitialized = '1';
+
+        button.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-public-theme') === 'dark' ? 'dark' : 'light';
+            const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+            setPublicTheme(nextTheme);
+        });
+    });
+};
+
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAutoFilters, { once: true });
+    document.addEventListener('DOMContentLoaded', () => {
+        initAutoFilters();
+        initPublicThemeToggle();
+    }, { once: true });
 } else {
     initAutoFilters();
+    initPublicThemeToggle();
 }

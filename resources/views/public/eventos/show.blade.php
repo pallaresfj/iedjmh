@@ -86,6 +86,7 @@
                                 :meta="$item['meta'] ?? null"
                                 :url="$item['url']"
                                 :highlight-date="$loop->first"
+                                tone="home"
                             />
                         @endforeach
                     </div>

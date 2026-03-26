@@ -31,3 +31,19 @@ test('public home hero uses directional overlay structure', function () {
         ->assertSee('public-home-hero__overlay', false)
         ->assertDontSee('bg-gradient-to-r from-slate-950 via-slate-900/45 to-transparent', false);
 });
+
+test('public home renders theme marker and toggle controls', function () {
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertSee('data-home-page="1"', false)
+        ->assertSee('data-public-theme="', false)
+        ->assertSee('data-public-theme-toggle', false);
+});
+
+test('non-home public pages render global theme marker and toggle', function () {
+    $this->get(route('noticias.index'))
+        ->assertOk()
+        ->assertSee('data-home-page="0"', false)
+        ->assertSee('data-public-theme="', false)
+        ->assertSee('data-public-theme-toggle', false);
+});

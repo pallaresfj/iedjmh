@@ -1,5 +1,11 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+@php($isHomeRoute = request()->routeIs('home'))
+<html
+    lang="{{ str_replace('_', '-', app()->getLocale()) }}"
+    data-home-page="{{ $isHomeRoute ? '1' : '0' }}"
+    data-public-theme="light"
+    data-home-theme="light"
+>
     <head>
         @php($pageTitle = trim($__env->yieldContent('title')))
         @php($pageLead = isset($lead) && is_string($lead) ? trim(strip_tags($lead)) : '')
@@ -55,22 +61,51 @@
             }
         </style>
 
+        <script>
+            (() => {
+                const storageKey = 'ied_public_theme';
+                const legacyStorageKey = 'ied_public_home_theme';
+                let theme = 'light';
+
+                try {
+                    const storedTheme = localStorage.getItem(storageKey);
+                    const legacyTheme = localStorage.getItem(legacyStorageKey);
+
+                    if (storedTheme === 'light' || storedTheme === 'dark') {
+                        theme = storedTheme;
+                    } else if (legacyTheme === 'light' || legacyTheme === 'dark') {
+                        theme = legacyTheme;
+                    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                        theme = 'dark';
+                    }
+                } catch (error) {
+                    theme = 'light';
+                }
+
+                document.documentElement.setAttribute('data-public-theme', theme);
+                document.documentElement.setAttribute('data-home-theme', theme);
+            })();
+        </script>
+
         @vite(['resources/css/public.css', 'resources/js/app.js'])
     </head>
-    <body class="public-site antialiased">
+    <body @class([
+        'public-site antialiased',
+        'public-site--home' => $isHomeRoute,
+    ])>
         <div class="flex min-h-screen flex-col">
-            <a href="#contenido-principal" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-white focus:px-3 focus:py-2 focus:text-sm focus:text-ied-gray-900">
+            <a href="#contenido-principal" class="public-skip-link sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:px-3 focus:py-2 focus:text-sm">
                 Ir al contenido principal
             </a>
 
-            <x-public.topbar />
-            <x-public.header />
+            <x-public.topbar :home-themeable="$isHomeRoute" />
+            <x-public.header :home-themeable="$isHomeRoute" />
 
             <main id="contenido-principal" class="flex-1">
                 @yield('content')
             </main>
 
-            <x-public.footer />
+            <x-public.footer :home-themeable="$isHomeRoute" />
         </div>
 
         @stack('scripts')

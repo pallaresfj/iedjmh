@@ -1,10 +1,17 @@
+@props([
+    'homeThemeable' => false,
+])
+
 @php($primaryNav = config('institution.navigation.primary', []))
 @php($footerNav = config('institution.navigation.footer', []))
 @php($allies = \App\Support\PublicSettings::allies())
 @php($institutionName = \App\Support\PublicSettings::get('institution_name', config('institution.name')))
 @php($logoUrl = \App\Support\PublicSettings::mediaUrl(\App\Support\PublicSettings::get('logo_path')))
 
-<footer class="public-footer mt-14 border-t border-white/10 text-white/90">
+<footer @class([
+    'public-footer mt-14 border-t border-white/10 text-white/90',
+    'public-footer--home' => $homeThemeable,
+])>
     <div class="public-container pt-14 pb-8">
         <div class="public-shell grid gap-10 border-b border-white/10 pb-10 md:grid-cols-2 lg:grid-cols-4">
             <div class="space-y-5">

@@ -60,12 +60,24 @@ test('public event detail renders related events with time and location metadata
         'published_at' => now(),
     ]);
 
+    Event::query()->create([
+        'title' => 'Jornada Pedagogica',
+        'slug' => 'jornada-pedagogica-relacionada',
+        'starts_at' => now()->addDays(8)->setTime(7, 0),
+        'ends_at' => now()->addDays(8)->setTime(13, 0),
+        'location' => 'Sede Colegio Agropecuario',
+        'status' => 'published',
+        'published_at' => now(),
+    ]);
+
     $this->get(route('eventos.show', ['slug' => $mainEvent->slug]))
         ->assertOk()
         ->assertSee('Otros eventos')
         ->assertSee($relatedEvent->title)
         ->assertSee('09:00 AM - 02:00 PM')
-        ->assertSee('Polideportivo Institucional');
+        ->assertSee('Polideportivo Institucional')
+        ->assertSee('public-home-event-item__date--highlight', false)
+        ->assertSee('public-home-event-item__date--default', false);
 });
 
 test('draft events are not publicly accessible by detail route', function () {

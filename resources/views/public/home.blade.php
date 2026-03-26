@@ -22,13 +22,13 @@
         <div class="public-container relative z-20 py-20">
             <div class="public-content-shell">
                 <div class="max-w-2xl">
-                    <span class="inline-block rounded-full border border-ied-primary/30 bg-ied-primary/25 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-white">
+                    <span class="public-home-hero__eyebrow inline-block rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-[0.16em]">
                         {{ $hero['eyebrow'] }}
                     </span>
                     <h1 class="public-heading mt-6 text-4xl font-black leading-[1.04] tracking-[-0.03em] text-white sm:text-5xl lg:text-6xl">
                         {{ $hero['title'] }}
                     </h1>
-                    <p class="mt-5 max-w-xl text-[17px] leading-relaxed text-slate-200 sm:text-lg">
+                    <p class="public-home-hero__description mt-5 max-w-xl text-[17px] leading-relaxed sm:text-lg">
                         {{ $hero['description'] }}
                     </p>
 
@@ -48,7 +48,7 @@
         </div>
     </section>
 
-    <section class="relative z-20 -mt-16 pb-20">
+    <section class="public-home-quick-links-section relative z-20 -mt-16 pb-20">
         <div class="public-container">
             <div class="public-content-shell">
                 <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -58,6 +58,7 @@
                         :description="$item['description']"
                         :url="$item['route']"
                         :icon="$item['icon']"
+                        tone="home"
                     />
                 @endforeach
                 </div>
@@ -65,13 +66,14 @@
         </div>
     </section>
 
-    <section class="bg-ied-gray-100 py-20">
+    <section class="public-home-news-section py-20">
         <div class="public-container">
             <div class="public-content-shell">
                 <x-public.home.section-heading
                     title="Muro de Actualidad"
                     action-label="Ver todas las noticias"
                     :action-url="route('noticias.index')"
+                    tone="home"
                 />
 
                 <div class="grid gap-10 md:grid-cols-3">
@@ -83,6 +85,7 @@
                             :url="$item['url']"
                             :image-url="$item['image_url']"
                             :badge="$item['badge'] ?? null"
+                            tone="home"
                         />
                     @endforeach
                 </div>
@@ -90,23 +93,23 @@
         </div>
     </section>
 
-    <section class="bg-ied-primary/5 py-24">
+    <section class="public-home-featured-section py-24">
         <div class="public-container">
             <div class="public-content-shell">
                 <div class="grid items-center gap-12 lg:grid-cols-2">
                     <div class="space-y-10">
                         <div>
-                            <h2 class="public-heading text-4xl font-black tracking-[-0.02em] text-slate-900 lg:text-5xl">{{ $featuredProject['title'] }}</h2>
-                            <p class="mt-2 text-sm font-bold text-ied-primary">{{ $featuredProject['subtitle'] }}</p>
+                            <h2 class="public-home-featured__title public-heading text-4xl font-black tracking-[-0.02em] lg:text-5xl">{{ $featuredProject['title'] }}</h2>
+                            <p class="public-home-featured__subtitle mt-2 text-sm font-bold">{{ $featuredProject['subtitle'] }}</p>
                         </div>
 
-                        <p class="text-lg leading-relaxed text-slate-600 lg:text-xl">
+                        <p class="public-home-featured__description text-lg leading-relaxed lg:text-xl">
                             {{ $featuredProject['description'] }}
                         </p>
 
                         <a
                             href="{{ $featuredProject['cta_url'] }}"
-                            class="inline-flex items-center rounded-full bg-ied-primary px-8 py-4 text-base font-bold text-white transition hover:bg-ied-primary-dark"
+                            class="public-home-featured__cta inline-flex items-center rounded-full px-8 py-4 text-base font-bold transition"
                         >
                             {{ $featuredProject['cta_label'] }}
                         </a>
@@ -143,12 +146,12 @@
         </div>
     </section>
 
-    <section class="bg-white py-20">
+    <section class="public-home-events-section py-20">
         <div class="public-container">
             <div class="public-content-shell">
                 <div class="mb-12 flex items-center gap-3">
-                    <span class="material-symbols-outlined text-ied-primary !text-[30px]" aria-hidden="true">event</span>
-                    <h2 class="public-heading text-3xl font-black tracking-[-0.02em] text-slate-900">Próximos Eventos</h2>
+                    <span class="public-home-events__icon material-symbols-outlined !text-[30px]" aria-hidden="true">event</span>
+                    <h2 class="public-home-events__title public-heading text-3xl font-black tracking-[-0.02em]">Próximos Eventos</h2>
                 </div>
 
                 <div class="flex flex-col gap-6">
@@ -162,6 +165,7 @@
                             :meta="$event['meta'] ?? null"
                             :url="$event['url']"
                             :highlight-date="$loop->first"
+                            tone="home"
                         />
                     @endforeach
                 </div>

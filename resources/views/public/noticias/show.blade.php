@@ -48,11 +48,11 @@
                 @endif
 
                 @if (! empty($news['content']))
-                    <div class="public-rich-content mt-5 border-t border-ied-gray-200 pt-5">
+                    <div class="public-rich-content mt-5 border-t border-ied-gray-200 pt-4 text-sm leading-relaxed text-ied-gray-700 sm:text-base">
                         {!! $news['content'] !!}
                     </div>
                 @elseif (! empty($news['excerpt']))
-                    <p class="mt-5 border-t border-ied-gray-200 pt-5 text-sm leading-relaxed text-ied-gray-700 sm:text-base">
+                    <p class="mt-5 border-t border-ied-gray-200 pt-4 text-sm leading-relaxed text-ied-gray-700 sm:text-base">
                         {{ $news['excerpt'] }}
                     </p>
                 @endif
