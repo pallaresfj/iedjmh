@@ -1,0 +1,4 @@
+interface:
+  display_name: "Laravel Migration Workflow"
+  short_description: "Gestiona migraciones Laravel de forma segura"
+  default_prompt: "Aplicar flujo seguro de migraciones Laravel, validando estado, comandos y formato de reporte obligatorio."
