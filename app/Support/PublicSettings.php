@@ -160,6 +160,19 @@ class PublicSettings
         return static::normalizeAllies(config('institution.allies', []));
     }
 
+    /**
+     * @return array{address: ?string, phone: ?string, email: ?string, location: ?string}
+     */
+    public static function contact(): array
+    {
+        return [
+            'address' => static::nullableString(static::get('address')),
+            'phone' => static::nullableString(static::get('phone')),
+            'email' => static::nullableString(static::get('email')),
+            'location' => static::nullableString(static::get('location')),
+        ];
+    }
+
     private static function resolve(): ?Setting
     {
         if (app()->bound('request')) {
@@ -207,6 +220,9 @@ class PublicSettings
             'dane' => config('institution.dane'),
             'nit' => config('institution.nit'),
             'location' => collect([config('institution.city'), config('institution.department')])->filter()->join(', '),
+            'address' => config('institution.address'),
+            'phone' => config('institution.phone'),
+            'email' => config('institution.email'),
             'siee' => config('institution.siee'),
             'aula_virtual' => config('institution.aula_virtual'),
             'logo_path' => config('institution.logo'),
@@ -313,5 +329,16 @@ class PublicSettings
         $scheme = parse_url($url, PHP_URL_SCHEME);
 
         return is_string($scheme) && in_array(strtolower($scheme), ['http', 'https'], true);
+    }
+
+    private static function nullableString(mixed $value): ?string
+    {
+        if (! is_string($value)) {
+            return null;
+        }
+
+        $value = trim($value);
+
+        return $value !== '' ? $value : null;
     }
 }

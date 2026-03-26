@@ -34,7 +34,7 @@ class SettingForm
     public static function configure(Schema $schema): Schema
     {
         return $schema
-            ->columns(2)
+            ->columns(1)
             ->components([
                 Fieldset::make('Informacion institucional')
                     ->schema([
@@ -52,8 +52,29 @@ class SettingForm
                         TextInput::make('location')
                             ->label('Ubicacion')
                             ->placeholder('Pivijay, Magdalena')
-                            ->maxLength(255)
-                            ->columnSpanFull(),
+                            ->maxLength(255),
+                        TextInput::make('address')
+                            ->label('Direccion')
+                            ->placeholder('Carrera 5 # 12-34, Pivijay')
+                            ->maxLength(255),
+                        TextInput::make('phone')
+                            ->label('Telefono')
+                            ->tel()
+                            ->placeholder('+57 300 000 0000')
+                            ->maxLength(80),
+                        TextInput::make('email')
+                            ->label('Correo')
+                            ->email()
+                            ->placeholder('contacto@iedjmh.edu.co')
+                            ->maxLength(255),
+                        FileUpload::make('logo_path')
+                            ->label('Logo institucional')
+                            ->helperText('Admite formato PNG o SVG.')
+                            ->disk('public')
+                            ->directory('settings')
+                            ->image()
+                            ->acceptedFileTypes(['image/png', 'image/svg+xml'])
+                            ->maxSize(2048),
                         TextInput::make('siee')
                             ->label('SIEE')
                             ->url()
@@ -64,15 +85,6 @@ class SettingForm
                             ->url()
                             ->placeholder('https://...')
                             ->maxLength(2048),
-                        FileUpload::make('logo_path')
-                            ->label('Logo institucional')
-                            ->helperText('Admite formato PNG o SVG.')
-                            ->disk('public')
-                            ->directory('settings')
-                            ->image()
-                            ->acceptedFileTypes(['image/png', 'image/svg+xml'])
-                            ->maxSize(2048)
-                            ->columnSpanFull(),
                         Repeater::make('allies')
                             ->label('Aliados')
                             ->helperText('Configura los aliados institucionales mostrados en el footer.')
@@ -93,34 +105,6 @@ class SettingForm
                             ])
                             ->columns(2)
                             ->columnSpanFull(),
-                        Select::make('contracting_manual_document_id')
-                            ->label('Manual de contratacion (documento)')
-                            ->relationship(
-                                name: 'contractingManualDocument',
-                                titleAttribute: 'title',
-                                modifyQueryUsing: fn (Builder $query): Builder => $query
-                                    ->where('status', 'published')
-                                    ->orderByDesc('published_at')
-                                    ->orderBy('title'),
-                            )
-                            ->searchable()
-                            ->preload()
-                            ->placeholder('Selecciona un documento de transparencia')
-                            ->columnSpanFull(),
-                    ])
-                    ->columns(2)
-                    ->columnSpanFull(),
-                Fieldset::make('Identidad visual')
-                    ->schema([
-                        static::colorPicker('theme_primary', 'Primario', self::THEME_DEFAULTS['theme_primary']),
-                        static::colorPicker('theme_primary_dark', 'Primario oscuro', self::THEME_DEFAULTS['theme_primary_dark']),
-                        static::colorPicker('theme_primary_light', 'Primario claro', self::THEME_DEFAULTS['theme_primary_light']),
-                        static::colorPicker('theme_accent', 'Acento', self::THEME_DEFAULTS['theme_accent']),
-                        static::colorPicker('theme_gray_900', 'Gris 900', self::THEME_DEFAULTS['theme_gray_900']),
-                        static::colorPicker('theme_gray_700', 'Gris 700', self::THEME_DEFAULTS['theme_gray_700']),
-                        static::colorPicker('theme_gray_600', 'Gris 600', self::THEME_DEFAULTS['theme_gray_600']),
-                        static::colorPicker('theme_gray_200', 'Gris 200', self::THEME_DEFAULTS['theme_gray_200']),
-                        static::colorPicker('theme_gray_100', 'Gris 100', self::THEME_DEFAULTS['theme_gray_100']),
                     ])
                     ->columns(3)
                     ->columnSpanFull(),
@@ -128,12 +112,11 @@ class SettingForm
                     ->schema([
                         TextInput::make('home_hero_eyebrow')
                             ->label('Ante titulo')
-                            ->maxLength(120)
-                            ->columnSpanFull(),
+                            ->maxLength(120),
                         TextInput::make('home_hero_title')
                             ->label('Titulo principal')
                             ->maxLength(160)
-                            ->columnSpanFull(),
+                            ->columnSpan(2),
                         Textarea::make('home_hero_description')
                             ->label('Descripcion')
                             ->rows(4)
@@ -165,7 +148,39 @@ class SettingForm
                             ->maxSize(4096)
                             ->columnSpanFull(),
                     ])
-                    ->columns(2)
+                    ->columns(3)
+                    ->columnSpanFull(),
+                Fieldset::make('Identidad visual')
+                    ->schema([
+                        static::colorPicker('theme_primary', 'Primario', self::THEME_DEFAULTS['theme_primary']),
+                        static::colorPicker('theme_primary_dark', 'Primario oscuro', self::THEME_DEFAULTS['theme_primary_dark']),
+                        static::colorPicker('theme_primary_light', 'Primario claro', self::THEME_DEFAULTS['theme_primary_light']),
+                        static::colorPicker('theme_accent', 'Acento', self::THEME_DEFAULTS['theme_accent']),
+                        static::colorPicker('theme_gray_900', 'Gris 900', self::THEME_DEFAULTS['theme_gray_900']),
+                        static::colorPicker('theme_gray_700', 'Gris 700', self::THEME_DEFAULTS['theme_gray_700']),
+                        static::colorPicker('theme_gray_600', 'Gris 600', self::THEME_DEFAULTS['theme_gray_600']),
+                        static::colorPicker('theme_gray_200', 'Gris 200', self::THEME_DEFAULTS['theme_gray_200']),
+                        static::colorPicker('theme_gray_100', 'Gris 100', self::THEME_DEFAULTS['theme_gray_100']),
+                    ])
+                    ->columns(3)
+                    ->columnSpanFull(),
+                Fieldset::make('Manual de contratacion')
+                    ->schema([
+                        Select::make('contracting_manual_document_id')
+                            ->label('Manual de contratacion (documento)')
+                            ->relationship(
+                                name: 'contractingManualDocument',
+                                titleAttribute: 'title',
+                                modifyQueryUsing: fn (Builder $query): Builder => $query
+                                    ->where('status', 'published')
+                                    ->orderByDesc('published_at')
+                                    ->orderBy('title'),
+                            )
+                            ->searchable()
+                            ->preload()
+                            ->placeholder('Selecciona un documento de transparencia'),
+                    ])
+                    ->columns(1)
                     ->columnSpanFull(),
             ]);
     }

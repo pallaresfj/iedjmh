@@ -34,7 +34,7 @@
                 </article>
                 <article class="public-surface p-5">
                     <h2 class="public-heading text-lg font-semibold text-ied-gray-900">Ubicacion</h2>
-                    <p class="mt-2 text-sm text-ied-gray-700">{{ $contact['city'] }}, {{ $contact['department'] }}</p>
+                    <p class="mt-2 text-sm text-ied-gray-700">{{ $contact['location'] ?: 'No disponible' }}</p>
                 </article>
             </section>
 

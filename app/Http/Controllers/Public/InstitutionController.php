@@ -7,6 +7,7 @@ use App\Http\Controllers\Public\Concerns\ResolvesPublicContent;
 use App\Models\Campus;
 use App\Models\Page;
 use App\Support\PageMenuCatalog;
+use App\Support\PublicSettings;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
@@ -257,13 +258,15 @@ class InstitutionController extends Controller
             }
         }
 
+        $contact = PublicSettings::contact();
+
         return collect([
             [
                 'name' => 'Sede Principal',
                 'description' => 'Sede administrativa y academica principal de la institucion.',
-                'address' => config('institution.address'),
-                'phone' => config('institution.phone'),
-                'email' => config('institution.email'),
+                'address' => $contact['address'],
+                'phone' => $contact['phone'],
+                'email' => $contact['email'],
                 'map_url' => null,
             ],
         ]);

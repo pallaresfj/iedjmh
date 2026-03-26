@@ -9,6 +9,7 @@ use App\Models\Faq;
 use App\Models\PqrsMessage;
 use App\Models\PqrsRequest;
 use App\Models\Procedure;
+use App\Support\PublicSettings;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -47,13 +48,7 @@ class CitizenAttentionController extends Controller
             'banner' => $this->resolvePageBanner($page),
             'content' => $page?->content,
             'attentionPages' => $this->attentionPages(),
-            'contact' => [
-                'address' => config('institution.address'),
-                'phone' => config('institution.phone'),
-                'email' => config('institution.email'),
-                'city' => config('institution.city'),
-                'department' => config('institution.department'),
-            ],
+            'contact' => PublicSettings::contact(),
         ]);
     }
 

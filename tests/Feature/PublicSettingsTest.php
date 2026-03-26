@@ -55,6 +55,105 @@ test('home header uses institution settings and renders external platform links'
         ->toMatch('/href="https:\/\/aliado-settings\.example\.edu"[^>]*target="_blank"[^>]*rel="noopener noreferrer"/');
 });
 
+test('contact page uses contact data from settings', function () {
+    config()->set('institution.address', 'Direccion desde config');
+    config()->set('institution.phone', '3000000000');
+    config()->set('institution.email', 'config@iedjmh.edu.co');
+    config()->set('institution.city', 'Ciudad config');
+    config()->set('institution.department', 'Departamento config');
+
+    Setting::query()->create([
+        'institution_name' => 'IED Contacto desde settings',
+        'address' => 'Carrera 5 # 12-34, Barrio Centro',
+        'phone' => '+57 300 111 2233',
+        'email' => 'contacto@iedjmh.edu.co',
+        'location' => 'Pivijay Centro, Magdalena',
+        'singleton' => 1,
+    ]);
+
+    $this->get(route('atencion.contactenos'))
+        ->assertOk()
+        ->assertSee('Carrera 5 # 12-34, Barrio Centro')
+        ->assertSee('+57 300 111 2233')
+        ->assertSee('contacto@iedjmh.edu.co')
+        ->assertSee('Pivijay Centro, Magdalena')
+        ->assertDontSee('Direccion desde config')
+        ->assertDontSee('3000000000')
+        ->assertDontSee('config@iedjmh.edu.co');
+});
+
+test('contact page falls back to config values when contact settings are empty', function () {
+    config()->set('institution.address', 'Direccion fallback config');
+    config()->set('institution.phone', '3119998877');
+    config()->set('institution.email', 'fallback@iedjmh.edu.co');
+    config()->set('institution.city', 'Ciudad fallback');
+    config()->set('institution.department', 'Departamento fallback');
+
+    Setting::query()->create([
+        'institution_name' => 'IED Contacto fallback',
+        'address' => '',
+        'phone' => null,
+        'email' => ' ',
+        'location' => null,
+        'singleton' => 1,
+    ]);
+
+    $this->get(route('atencion.contactenos'))
+        ->assertOk()
+        ->assertSee('Direccion fallback config')
+        ->assertSee('3119998877')
+        ->assertSee('fallback@iedjmh.edu.co')
+        ->assertSee('Ciudad fallback, Departamento fallback');
+});
+
+test('topbar reads email phone and location from settings contact data', function () {
+    config()->set('institution.email', 'legacy-topbar@iedjmh.edu.co');
+    config()->set('institution.phone', '3000000011');
+    config()->set('institution.city', 'Ciudad legacy');
+    config()->set('institution.department', 'Departamento legacy');
+
+    Setting::query()->create([
+        'institution_name' => 'IED Topbar desde settings',
+        'email' => 'topbar@iedjmh.edu.co',
+        'phone' => '+57 300 777 8899',
+        'location' => 'Ubicacion topbar settings',
+        'singleton' => 1,
+    ]);
+
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertSee('topbar@iedjmh.edu.co')
+        ->assertSee('+57 300 777 8899')
+        ->assertSee('Ubicacion topbar settings')
+        ->assertDontSee('legacy-topbar@iedjmh.edu.co')
+        ->assertDontSee('3000000011')
+        ->assertDontSee('Ciudad legacy, Departamento legacy');
+});
+
+test('institution campuses fallback uses settings contact data', function () {
+    config()->set('institution.address', 'Direccion legacy sedes');
+    config()->set('institution.phone', '3004445566');
+    config()->set('institution.email', 'legacy-sedes@iedjmh.edu.co');
+
+    Setting::query()->create([
+        'institution_name' => 'IED Sedes desde settings',
+        'address' => 'Direccion principal desde settings',
+        'phone' => '+57 300 444 5566',
+        'email' => 'sedes@iedjmh.edu.co',
+        'singleton' => 1,
+    ]);
+
+    $this->get(route('institucion.sedes'))
+        ->assertOk()
+        ->assertSee('Sede Principal')
+        ->assertSee('Direccion principal desde settings')
+        ->assertSee('+57 300 444 5566')
+        ->assertSee('sedes@iedjmh.edu.co')
+        ->assertDontSee('Direccion legacy sedes')
+        ->assertDontSee('3004445566')
+        ->assertDontSee('legacy-sedes@iedjmh.edu.co');
+});
+
 test('footer allies fallback to config when settings allies are empty', function () {
     config()->set('institution.allies', [
         ['label' => 'Aliado fallback de config', 'url' => 'https://ally-fallback.example.edu'],

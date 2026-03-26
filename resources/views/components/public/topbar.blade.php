@@ -2,10 +2,11 @@
     'homeThemeable' => false,
 ])
 
-@php($email = config('institution.email'))
-@php($phone = config('institution.phone'))
+@php($contact = \App\Support\PublicSettings::contact())
+@php($email = $contact['email'])
+@php($phone = $contact['phone'])
 @php($govLabel = config('institution.govbar.label', 'GOV.CO'))
-@php($location = \App\Support\PublicSettings::get('location', collect([config('institution.city'), config('institution.department')])->filter()->join(', ')))
+@php($location = $contact['location'])
 
 <div @class([
     'public-topbar',
