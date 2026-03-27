@@ -161,7 +161,7 @@ class PublicSettings
     }
 
     /**
-     * @return array{address: ?string, phone: ?string, email: ?string, location: ?string}
+     * @return array{address: ?string, phone: ?string, email: ?string, location: ?string, latitude: ?string, longitude: ?string}
      */
     public static function contact(): array
     {
@@ -170,6 +170,8 @@ class PublicSettings
             'phone' => static::nullableString(static::get('phone')),
             'email' => static::nullableString(static::get('email')),
             'location' => static::nullableString(static::get('location')),
+            'latitude' => static::nullableCoordinate(static::get('location_latitude')),
+            'longitude' => static::nullableCoordinate(static::get('location_longitude')),
         ];
     }
 
@@ -220,6 +222,8 @@ class PublicSettings
             'dane' => config('institution.dane'),
             'nit' => config('institution.nit'),
             'location' => collect([config('institution.city'), config('institution.department')])->filter()->join(', '),
+            'location_latitude' => null,
+            'location_longitude' => null,
             'address' => config('institution.address'),
             'phone' => config('institution.phone'),
             'email' => config('institution.email'),
@@ -340,5 +344,20 @@ class PublicSettings
         $value = trim($value);
 
         return $value !== '' ? $value : null;
+    }
+
+    private static function nullableCoordinate(mixed $value): ?string
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        if (! is_numeric($value)) {
+            return null;
+        }
+
+        $normalized = number_format((float) $value, 7, '.', '');
+
+        return rtrim(rtrim($normalized, '0'), '.');
     }
 }

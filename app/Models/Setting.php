@@ -15,6 +15,8 @@ class Setting extends Model
         'dane',
         'nit',
         'location',
+        'location_latitude',
+        'location_longitude',
         'address',
         'phone',
         'email',
@@ -46,6 +48,8 @@ class Setting extends Model
     {
         return [
             'singleton' => 'integer',
+            'location_latitude' => 'decimal:7',
+            'location_longitude' => 'decimal:7',
             'home_hero_description' => 'string',
             'allies' => 'array',
         ];

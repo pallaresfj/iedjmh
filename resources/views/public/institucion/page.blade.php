@@ -46,6 +46,82 @@
                     </div>
                 </section>
             @endif
+
+            @if ($pageKey === 'equipo-directivo')
+                <section class="space-y-5 border-t border-ied-gray-200 pt-6">
+                    <section class="public-surface p-5 sm:p-6">
+                        <form action="{{ route('institucion.equipo-directivo') }}" method="GET" class="grid gap-3 md:grid-cols-2 xl:grid-cols-4" data-auto-filter-form data-auto-filter-target="#staff-results">
+                            <label class="xl:col-span-2">
+                                <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Buscar</span>
+                                <input
+                                    type="text"
+                                    name="q"
+                                    value="{{ $staffFilters['q'] }}"
+                                    placeholder="Buscar por nombre o cargo..."
+                                    class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
+                                >
+                            </label>
+
+                            <label>
+                                <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Sede</span>
+                                <select
+                                    name="campus"
+                                    class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
+                                >
+                                    <option value="">Todas las Sedes</option>
+                                    @foreach ($staffCampuses as $campus)
+                                        <option value="{{ $campus['slug'] }}" @selected($staffFilters['campus'] === $campus['slug'])>{{ $campus['name'] }}</option>
+                                    @endforeach
+                                </select>
+                            </label>
+
+                            <div class="flex items-end gap-2 md:col-span-2 xl:col-span-4">
+                                <noscript>
+                                    <button type="submit" class="inline-flex items-center rounded-full bg-ied-primary px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-ied-primary-dark">
+                                        Aplicar filtros
+                                    </button>
+                                </noscript>
+                                <a href="{{ route('institucion.equipo-directivo') }}" data-auto-filter-clear class="inline-flex items-center rounded-full border border-ied-gray-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-ied-gray-700 transition hover:border-ied-gray-400 hover:text-ied-gray-900">
+                                    Limpiar
+                                </a>
+                            </div>
+                        </form>
+                    </section>
+
+                    <section id="staff-results" class="space-y-4">
+                        @if ($hasStaffActiveFilters)
+                            <div class="rounded-xl border border-ied-gray-200 bg-white p-3">
+                                <p class="text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Filtros activos</p>
+                                <div class="mt-2 flex flex-wrap gap-2">
+                                    @if ($staffFilters['q'] !== '')
+                                        <span class="inline-flex items-center rounded-full bg-ied-primary/10 px-3 py-1 text-xs font-semibold text-ied-primary-dark">
+                                            Busqueda: {{ $staffFilters['q'] }}
+                                        </span>
+                                    @endif
+                                    @if ($staffFilters['campus'] !== '')
+                                        <span class="inline-flex items-center rounded-full bg-ied-primary/10 px-3 py-1 text-xs font-semibold text-ied-primary-dark">
+                                            Sede:
+                                            {{ data_get(collect($staffCampuses)->firstWhere('slug', $staffFilters['campus']), 'name', $staffFilters['campus']) }}
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                        @endif
+
+                        @if ($directiveStaff->isEmpty())
+                            <div class="rounded-xl border border-dashed border-ied-gray-200 bg-ied-gray-100 p-4 text-sm text-ied-gray-700">
+                                No se encontraron integrantes del equipo directivo con los filtros aplicados.
+                            </div>
+                        @else
+                            <div class="space-y-3">
+                                @foreach ($directiveStaff as $member)
+                                    <x-public.institucion.staff-card :member="$member" />
+                                @endforeach
+                            </div>
+                        @endif
+                    </section>
+                </section>
+            @endif
         </div>
     </x-public.internal-page>
 @endsection

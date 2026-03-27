@@ -42,31 +42,67 @@ class SettingForm
                             ->label('Nombre institucion')
                             ->required()
                             ->maxLength(255)
-                            ->columnSpanFull(),
+                            ->columnSpan(6),
                         TextInput::make('dane')
                             ->label('DANE')
-                            ->maxLength(100),
+                            ->maxLength(100)
+                            ->columnSpan(3),
                         TextInput::make('nit')
                             ->label('NIT')
-                            ->maxLength(100),
-                        TextInput::make('location')
-                            ->label('Ubicacion')
-                            ->placeholder('Pivijay, Magdalena')
-                            ->maxLength(255),
+                            ->maxLength(100)
+                            ->columnSpan(3),
                         TextInput::make('address')
                             ->label('Direccion')
                             ->placeholder('Carrera 5 # 12-34, Pivijay')
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->columnSpan(3),
+                        TextInput::make('location')
+                            ->label('Ubicacion')
+                            ->placeholder('Pivijay, Magdalena')
+                            ->maxLength(255)
+                            ->columnSpan(3),
+                        TextInput::make('location_latitude')
+                            ->label('Latitud')
+                            ->placeholder('10.595432')
+                            ->numeric()
+                            ->inputMode('decimal')
+                            ->step('any')
+                            ->rule('between:-90,90')
+                            ->helperText('Formato decimal entre -90 y 90. Ejemplo: 10.595432.')
+                            ->columnSpan(3),
+                        TextInput::make('location_longitude')
+                            ->label('Longitud')
+                            ->placeholder('-74.186521')
+                            ->numeric()
+                            ->inputMode('decimal')
+                            ->step('any')
+                            ->rule('between:-180,180')
+                            ->helperText('Formato decimal entre -180 y 180. Ejemplo: -74.186521.')
+                            ->columnSpan(3),
                         TextInput::make('phone')
                             ->label('Telefono')
                             ->tel()
                             ->placeholder('+57 300 000 0000')
-                            ->maxLength(80),
+                            ->maxLength(80)
+                            ->columnSpan(3),
                         TextInput::make('email')
                             ->label('Correo')
                             ->email()
                             ->placeholder('contacto@iedjmh.edu.co')
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->columnSpan(3),
+                        TextInput::make('siee')
+                            ->label('SIEE')
+                            ->url()
+                            ->placeholder('https://...')
+                            ->maxLength(2048)
+                            ->columnSpan(3),
+                        TextInput::make('aula_virtual')
+                            ->label('Aula Virtual')
+                            ->url()
+                            ->placeholder('https://...')
+                            ->maxLength(2048)
+                            ->columnSpan(3),
                         FileUpload::make('logo_path')
                             ->label('Logo institucional')
                             ->helperText('Admite formato PNG o SVG.')
@@ -74,17 +110,22 @@ class SettingForm
                             ->directory('settings')
                             ->image()
                             ->acceptedFileTypes(['image/png', 'image/svg+xml'])
-                            ->maxSize(2048),
-                        TextInput::make('siee')
-                            ->label('SIEE')
-                            ->url()
-                            ->placeholder('https://...')
-                            ->maxLength(2048),
-                        TextInput::make('aula_virtual')
-                            ->label('Aula Virtual')
-                            ->url()
-                            ->placeholder('https://...')
-                            ->maxLength(2048),
+                            ->maxSize(2048)
+                            ->columnSpan(6),
+                        Select::make('contracting_manual_document_id')
+                            ->label('Manual de contratacion (documento)')
+                            ->relationship(
+                                name: 'contractingManualDocument',
+                                titleAttribute: 'title',
+                                modifyQueryUsing: fn (Builder $query): Builder => $query
+                                    ->where('status', 'published')
+                                    ->orderByDesc('published_at')
+                                    ->orderBy('title'),
+                            )
+                            ->searchable()
+                            ->preload()
+                            ->placeholder('Selecciona un documento de transparencia')
+                            ->columnSpan(6),
                         Repeater::make('allies')
                             ->label('Aliados')
                             ->helperText('Configura los aliados institucionales mostrados en el footer.')
@@ -106,7 +147,7 @@ class SettingForm
                             ->columns(2)
                             ->columnSpanFull(),
                     ])
-                    ->columns(3)
+                    ->columns(12)
                     ->columnSpanFull(),
                 Fieldset::make('Hero de inicio')
                     ->schema([
@@ -163,24 +204,6 @@ class SettingForm
                         static::colorPicker('theme_gray_100', 'Gris 100', self::THEME_DEFAULTS['theme_gray_100']),
                     ])
                     ->columns(3)
-                    ->columnSpanFull(),
-                Fieldset::make('Manual de contratacion')
-                    ->schema([
-                        Select::make('contracting_manual_document_id')
-                            ->label('Manual de contratacion (documento)')
-                            ->relationship(
-                                name: 'contractingManualDocument',
-                                titleAttribute: 'title',
-                                modifyQueryUsing: fn (Builder $query): Builder => $query
-                                    ->where('status', 'published')
-                                    ->orderByDesc('published_at')
-                                    ->orderBy('title'),
-                            )
-                            ->searchable()
-                            ->preload()
-                            ->placeholder('Selecciona un documento de transparencia'),
-                    ])
-                    ->columns(1)
                     ->columnSpanFull(),
             ]);
     }

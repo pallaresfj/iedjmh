@@ -259,31 +259,60 @@
             radial-gradient(120% 140% at 0% 0%, rgba(0, 0, 0, 0.44) 0%, rgba(0, 0, 0, 0) 60%);
     }
 
-    .public-home-theme-toggle {
-        @apply inline-flex items-center justify-center rounded-full border transition;
-        width: 1.9rem;
-        height: 1.9rem;
+    .public-icon-button {
+        @apply inline-flex shrink-0 items-center justify-center rounded-full border transition-all duration-200;
+        width: 1.95rem;
+        height: 1.95rem;
+        cursor: pointer;
+        transform: translateY(0);
+    }
+
+    .public-icon-button:hover {
+        transform: translateY(-1px);
+    }
+
+    .public-icon-button:focus-visible {
+        outline-offset: 2px;
+    }
+
+    .public-icon-button .material-symbols-outlined {
+        font-size: 1.1rem;
+    }
+
+    .public-icon-button--topbar {
         border-color: rgba(255, 255, 255, 0.32);
         color: #ffffff;
         background-color: rgba(255, 255, 255, 0.08);
     }
 
-    .public-home-theme-toggle:hover {
+    .public-icon-button--topbar:hover {
         border-color: rgba(255, 255, 255, 0.55);
         background-color: rgba(255, 255, 255, 0.16);
+        color: #ffffff;
     }
 
-    .public-home-theme-toggle:focus-visible {
+    .public-icon-button--topbar:focus-visible {
         outline: 2px solid rgba(255, 255, 255, 0.65);
-        outline-offset: 2px;
+    }
+
+    .public-icon-button--surface {
+        border-color: rgba(var(--color-ied-primary-rgb), 0.35);
+        color: var(--color-ied-primary-dark);
+        background-color: rgba(var(--color-ied-primary-rgb), 0.04);
+    }
+
+    .public-icon-button--surface:hover {
+        border-color: rgba(var(--color-ied-primary-rgb), 0.55);
+        background-color: rgba(var(--color-ied-primary-rgb), 0.14);
+        color: var(--color-ied-primary-dark);
+    }
+
+    .public-icon-button--surface:focus-visible {
+        outline: 2px solid rgba(var(--color-ied-primary-rgb), 0.4);
     }
 
     .public-home-theme-toggle--icon {
         @apply shrink-0;
-    }
-
-    .public-home-theme-toggle .material-symbols-outlined {
-        font-size: 1.1rem;
     }
 
     .public-site .public-topbar {

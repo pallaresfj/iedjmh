@@ -285,12 +285,184 @@ const initPublicThemeToggle = () => {
     });
 };
 
+const buildLocationMapUrls = (latitude, longitude) => {
+    const lat = Number.parseFloat(`${latitude ?? ''}`);
+    const lng = Number.parseFloat(`${longitude ?? ''}`);
+
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+        return null;
+    }
+
+    if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+        return null;
+    }
+
+    const query = `${lat.toFixed(6)},${lng.toFixed(6)}`;
+
+    return {
+        embedUrl: `https://maps.google.com/maps?hl=es&q=${encodeURIComponent(query)}&z=17&output=embed`,
+        externalUrl: `https://www.google.com/maps?q=${encodeURIComponent(query)}`,
+    };
+};
+
+const initLocationMapModal = () => {
+    const modal = document.querySelector('[data-location-map-modal]');
+
+    if (!(modal instanceof HTMLElement) || modal.dataset.locationMapInitialized === '1') {
+        return;
+    }
+
+    modal.dataset.locationMapInitialized = '1';
+
+    const iframe = modal.querySelector('[data-location-map-iframe]');
+    const externalLink = modal.querySelector('[data-location-map-external]');
+    const closeButton = modal.querySelector('[data-location-map-close]');
+    const defaultUrls = buildLocationMapUrls(
+        modal.dataset.locationMapDefaultLatitude,
+        modal.dataset.locationMapDefaultLongitude,
+    );
+
+    let lastFocusedElement = null;
+    let bodyOverflow = '';
+
+    const getFocusableElements = () => {
+        const selectors = [
+            'a[href]',
+            'button:not([disabled])',
+            'input:not([disabled])',
+            'select:not([disabled])',
+            'textarea:not([disabled])',
+            '[tabindex]:not([tabindex="-1"])',
+        ];
+
+        return Array.from(modal.querySelectorAll(selectors.join(',')))
+            .filter((element) => element instanceof HTMLElement && !element.hasAttribute('hidden'));
+    };
+
+    const closeModal = () => {
+        if (modal.hasAttribute('hidden')) {
+            return;
+        }
+
+        modal.setAttribute('hidden', '');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = bodyOverflow;
+
+        if (lastFocusedElement instanceof HTMLElement) {
+            lastFocusedElement.focus();
+        }
+    };
+
+    const openModal = (trigger) => {
+        const urls = buildLocationMapUrls(
+            trigger?.dataset.locationLatitude ?? modal.dataset.locationMapDefaultLatitude,
+            trigger?.dataset.locationLongitude ?? modal.dataset.locationMapDefaultLongitude,
+        ) ?? defaultUrls;
+
+        if (!urls) {
+            return;
+        }
+
+        lastFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        bodyOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+
+        modal.removeAttribute('hidden');
+        modal.setAttribute('aria-hidden', 'false');
+
+        if (iframe instanceof HTMLIFrameElement) {
+            const currentSrc = iframe.getAttribute('src');
+
+            if (currentSrc !== urls.embedUrl) {
+                iframe.setAttribute('src', urls.embedUrl);
+            }
+        }
+
+        if (externalLink instanceof HTMLAnchorElement) {
+            externalLink.setAttribute('href', urls.externalUrl);
+        }
+
+        if (closeButton instanceof HTMLElement) {
+            closeButton.focus();
+        }
+    };
+
+    document.addEventListener('click', (event) => {
+        if (!(event.target instanceof Element)) {
+            return;
+        }
+
+        const trigger = event.target.closest('[data-location-map-open]');
+
+        if (!(trigger instanceof HTMLElement)) {
+            return;
+        }
+
+        event.preventDefault();
+        openModal(trigger);
+    });
+
+    if (closeButton instanceof HTMLButtonElement) {
+        closeButton.addEventListener('click', closeModal);
+    }
+
+    modal.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (modal.hasAttribute('hidden')) {
+            return;
+        }
+
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            closeModal();
+
+            return;
+        }
+
+        if (event.key !== 'Tab') {
+            return;
+        }
+
+        const focusableElements = getFocusableElements();
+
+        if (focusableElements.length === 0) {
+            return;
+        }
+
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (!(firstElement instanceof HTMLElement) || !(lastElement instanceof HTMLElement)) {
+            return;
+        }
+
+        if (event.shiftKey && document.activeElement === firstElement) {
+            event.preventDefault();
+            lastElement.focus();
+
+            return;
+        }
+
+        if (!event.shiftKey && document.activeElement === lastElement) {
+            event.preventDefault();
+            firstElement.focus();
+        }
+    });
+};
+
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
         initAutoFilters();
         initPublicThemeToggle();
+        initLocationMapModal();
     }, { once: true });
 } else {
     initAutoFilters();
     initPublicThemeToggle();
+    initLocationMapModal();
 }

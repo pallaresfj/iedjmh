@@ -36,6 +36,7 @@ class ShieldRolesAndUsersSeeder extends Seeder
         'Procedure',
         'Project',
         'Setting',
+        'StaffMember',
     ];
 
     /**

@@ -6,9 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Public\Concerns\ResolvesPublicContent;
 use App\Models\Campus;
 use App\Models\Page;
+use App\Models\StaffMember;
 use App\Support\PageMenuCatalog;
 use App\Support\PublicSettings;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class InstitutionController extends Controller
@@ -55,13 +59,21 @@ class InstitutionController extends Controller
         ]);
     }
 
-    public function page(string $pageKey): View
+    public function page(Request $request, string $pageKey): View
     {
         $definitions = $this->pageDefinitions();
         abort_unless(array_key_exists($pageKey, $definitions), 404);
 
         $definition = $definitions[$pageKey];
         $cmsPage = $this->publishedPageByBindingOrSlug($definition['menu_binding'] ?? null, $definition['slug']);
+        $directiveDirectory = $pageKey === 'equipo-directivo'
+            ? $this->resolveDirectiveStaffDirectory($request)
+            : [
+                'filters' => ['q' => '', 'campus' => ''],
+                'campuses' => collect(),
+                'members' => collect(),
+                'has_active_filters' => false,
+            ];
 
         return view('public.institucion.page', [
             'pageKey' => $pageKey,
@@ -70,6 +82,10 @@ class InstitutionController extends Controller
             'banner' => $this->resolvePageBanner($cmsPage),
             'blocks' => $this->resolveBlocks($cmsPage, $definition),
             'campuses' => $pageKey === 'sedes' ? $this->resolveCampuses() : collect(),
+            'staffFilters' => $directiveDirectory['filters'],
+            'staffCampuses' => $directiveDirectory['campuses'],
+            'directiveStaff' => $directiveDirectory['members'],
+            'hasStaffActiveFilters' => $directiveDirectory['has_active_filters'],
             'institutionPages' => $this->navigationItems($definitions),
         ]);
     }
@@ -270,5 +286,130 @@ class InstitutionController extends Controller
                 'map_url' => null,
             ],
         ]);
+    }
+
+    /**
+     * @return array{
+     *     filters: array{q: string, campus: string},
+     *     campuses: Collection<int, array{slug: string, name: string}>,
+     *     members: Collection<int, array{
+     *         full_name: string,
+     *         position_title: string,
+     *         department_label: string|null,
+     *         campus_name: string|null,
+     *         institutional_email: string|null,
+     *         phone: string|null,
+     *         photo_url: string|null,
+     *         initials: string,
+     *         contact_url: string|null
+     *     }>,
+     *     has_active_filters: bool
+     * }
+     */
+    private function resolveDirectiveStaffDirectory(Request $request): array
+    {
+        $hasCampusesTable = $this->canQueryTable('campuses');
+        $filters = [
+            'q' => trim((string) $request->query('q', '')),
+            'campus' => trim((string) $request->query('campus', '')),
+        ];
+
+        $campuses = collect();
+
+        if ($hasCampusesTable) {
+            $campuses = Campus::query()
+                ->where('status', 'published')
+                ->orderBy('sort_order')
+                ->orderBy('name')
+                ->get(['slug', 'name'])
+                ->map(fn (Campus $campus): array => [
+                    'slug' => (string) $campus->slug,
+                    'name' => $campus->name,
+                ]);
+        }
+
+        $validCampusSlugs = $campuses->pluck('slug')->filter()->all();
+
+        if ($filters['campus'] !== '' && ! in_array($filters['campus'], $validCampusSlugs, true)) {
+            $filters['campus'] = '';
+        }
+
+        $members = collect();
+
+        if ($this->canQueryTable('staff_members')) {
+            $query = StaffMember::query()
+                ->published()
+                ->where('staff_group', 'directive');
+
+            if ($hasCampusesTable) {
+                $query->with('campus');
+            }
+
+            if ($filters['q'] !== '') {
+                $search = '%'.$filters['q'].'%';
+
+                $query->where(function (Builder $staffQuery) use ($search): void {
+                    $staffQuery
+                        ->where('full_name', 'like', $search)
+                        ->orWhere('position_title', 'like', $search)
+                        ->orWhere('department_label', 'like', $search);
+                });
+            }
+
+            if ($filters['campus'] !== '') {
+                $query->whereHas('campus', function (Builder $campusQuery) use ($filters): void {
+                    $campusQuery->where('slug', $filters['campus']);
+                });
+            }
+
+            $members = $query
+                ->orderBy('sort_order')
+                ->orderBy('full_name')
+                ->get()
+                ->map(function (StaffMember $staffMember) use ($hasCampusesTable): array {
+                    return [
+                        'full_name' => $staffMember->full_name,
+                        'position_title' => $staffMember->position_title,
+                        'department_label' => $staffMember->department_label,
+                        'campus_name' => $hasCampusesTable ? $staffMember->campus?->name : null,
+                        'institutional_email' => $staffMember->institutional_email,
+                        'phone' => $staffMember->phone,
+                        'photo_url' => $this->resolveMediaUrl($staffMember->profile_photo_path),
+                        'initials' => $this->nameInitials($staffMember->full_name),
+                        'contact_url' => $this->buildStaffContactUrl($staffMember),
+                    ];
+                });
+        }
+
+        return [
+            'filters' => $filters,
+            'campuses' => $campuses,
+            'members' => $members,
+            'has_active_filters' => $filters['q'] !== '' || $filters['campus'] !== '',
+        ];
+    }
+
+    private function nameInitials(string $fullName): string
+    {
+        $initials = collect(explode(' ', trim($fullName)))
+            ->filter()
+            ->take(2)
+            ->map(fn (string $chunk): string => Str::upper(Str::substr($chunk, 0, 1)))
+            ->join('');
+
+        return $initials !== '' ? $initials : 'IP';
+    }
+
+    private function buildStaffContactUrl(StaffMember $staffMember): ?string
+    {
+        $email = trim((string) $staffMember->institutional_email);
+
+        if ($email === '') {
+            return null;
+        }
+
+        $subject = rawurlencode('Contacto institucional - '.$staffMember->full_name);
+
+        return "mailto:{$email}?subject={$subject}";
     }
 }

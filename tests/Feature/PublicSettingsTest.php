@@ -125,9 +125,53 @@ test('topbar reads email phone and location from settings contact data', functio
         ->assertSee('topbar@iedjmh.edu.co')
         ->assertSee('+57 300 777 8899')
         ->assertSee('Ubicacion topbar settings')
+        ->assertDontSee('data-location-map-open', false)
         ->assertDontSee('legacy-topbar@iedjmh.edu.co')
         ->assertDontSee('3000000011')
         ->assertDontSee('Ciudad legacy, Departamento legacy');
+});
+
+test('topbar renders map icon and modal when location coordinates are configured', function () {
+    Setting::query()->create([
+        'institution_name' => 'IED Topbar Mapa',
+        'email' => 'mapa@iedjmh.edu.co',
+        'phone' => '+57 300 000 1234',
+        'location' => 'Sede Principal, Pivijay',
+        'location_latitude' => 10.595432,
+        'location_longitude' => -74.186521,
+        'singleton' => 1,
+    ]);
+
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertSee('data-location-map-open', false)
+        ->assertSee('data-location-latitude="10.595432"', false)
+        ->assertSee('data-location-longitude="-74.186521"', false)
+        ->assertSee('aria-label="Ver ubicacion de Sede Principal, Pivijay en el mapa"', false)
+        ->assertSee('data-location-map-modal', false)
+        ->assertSee('data-location-map-default-latitude="10.595432"', false)
+        ->assertSee('data-location-map-default-longitude="-74.186521"', false);
+});
+
+test('contact page keeps location text and adds map action when coordinates are configured', function () {
+    Setting::query()->create([
+        'institution_name' => 'IED Contacto Mapa',
+        'address' => 'Carrera 5 # 12-34, Pivijay',
+        'phone' => '+57 300 111 2233',
+        'email' => 'contacto@iedjmh.edu.co',
+        'location' => 'Sede principal',
+        'location_latitude' => 10.595432,
+        'location_longitude' => -74.186521,
+        'singleton' => 1,
+    ]);
+
+    $this->get(route('atencion.contactenos'))
+        ->assertOk()
+        ->assertSee('Sede principal')
+        ->assertSee('Ver mapa')
+        ->assertSee('data-location-map-open', false)
+        ->assertSee('data-location-latitude="10.595432"', false)
+        ->assertSee('data-location-longitude="-74.186521"', false);
 });
 
 test('institution campuses fallback uses settings contact data', function () {

@@ -20,6 +20,7 @@
         @php($settingsLogoUrl = \App\Support\PublicSettings::mediaUrl($settingsLogoPath))
         @php($faviconIsSvg = is_string($settingsLogoPath) && \Illuminate\Support\Str::endsWith(strtolower($settingsLogoPath), '.svg'))
         @php($themeColors = \App\Support\PublicSettings::themeColors())
+        @php($mapContact = \App\Support\PublicSettings::contact())
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="description" content="{{ $metaDescription }}" />
@@ -100,6 +101,11 @@
 
             <x-public.topbar :home-themeable="$isHomeRoute" />
             <x-public.header :home-themeable="$isHomeRoute" />
+            <x-public.location-map-modal
+                :latitude="$mapContact['latitude']"
+                :longitude="$mapContact['longitude']"
+                :location-label="$mapContact['location']"
+            />
 
             <main id="contenido-principal" class="flex-1">
                 @yield('content')
