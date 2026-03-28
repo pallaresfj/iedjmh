@@ -19,7 +19,7 @@ test('institution landing shows navigation cards for all sub-pages', function ()
         ->assertSee('Historia')
         ->assertSee('Mision y Vision')
         ->assertSee('Simbolos')
-        ->assertSee('Equipo Directivo')
+        ->assertSee('Equipo Institucional')
         ->assertSee('Sedes')
         ->assertSee('PEI');
 });
@@ -58,13 +58,13 @@ test('institution simbolos page loads', function () {
         ->assertSee('Simbolos');
 });
 
-test('institution equipo directivo page loads', function () {
-    $this->get(route('institucion.equipo-directivo'))
+test('institution equipo institucional page loads', function () {
+    $this->get(route('institucion.equipo-institucional'))
         ->assertOk()
-        ->assertSee('Equipo Directivo');
+        ->assertSee('Equipo Institucional');
 });
 
-test('institution equipo directivo shows published staff members', function () {
+test('institution equipo institucional shows published staff members', function () {
     StaffMember::query()->create([
         'full_name' => 'Maria Garcia Lopez',
         'position_title' => 'Rectora',
@@ -80,7 +80,7 @@ test('institution equipo directivo shows published staff members', function () {
         'status' => 'draft',
     ]);
 
-    $this->get(route('institucion.equipo-directivo'))
+    $this->get(route('institucion.equipo-institucional'))
         ->assertOk()
         ->assertSee('Maria Garcia Lopez')
         ->assertSee('Rectora')

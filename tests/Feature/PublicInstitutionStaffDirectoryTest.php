@@ -30,7 +30,7 @@ function createStaffMember(array $attributes = []): StaffMember
     ], $attributes));
 }
 
-test('equipo directivo page renders published directive staff', function () {
+test('equipo institucional page renders published directive staff', function () {
     $campus = createCampus();
 
     createStaffMember([
@@ -58,18 +58,18 @@ test('equipo directivo page renders published directive staff', function () {
         'campus_id' => $campus->id,
     ]);
 
-    $this->get(route('institucion.equipo-directivo'))
+    $this->get(route('institucion.equipo-institucional'))
         ->assertOk()
         ->assertSee('Buscar por nombre o cargo...')
         ->assertSee('Dr. Carlos Eduardo Mendez')
         ->assertSee('Rector Institucional')
         ->assertSee('Rectoria')
         ->assertSee('mailto:rectoria@iedjmh.edu.co', false)
-        ->assertDontSee('Docente de apoyo')
+        ->assertSee('Docente de apoyo')
         ->assertDontSee('Directivo borrador');
 });
 
-test('equipo directivo supports text search by name or position', function () {
+test('equipo institucional supports text search by name or position', function () {
     $campus = createCampus();
 
     createStaffMember([
@@ -84,18 +84,18 @@ test('equipo directivo supports text search by name or position', function () {
         'campus_id' => $campus->id,
     ]);
 
-    $this->get(route('institucion.equipo-directivo', ['q' => 'Martha']))
+    $this->get(route('institucion.equipo-institucional', ['q' => 'Martha']))
         ->assertOk()
         ->assertSee('MSc. Martha Lucia Rivera')
         ->assertDontSee('Lic. Ricardo Jose Torres');
 
-    $this->get(route('institucion.equipo-directivo', ['q' => 'Convivencia']))
+    $this->get(route('institucion.equipo-institucional', ['q' => 'Convivencia']))
         ->assertOk()
         ->assertSee('Lic. Ricardo Jose Torres')
         ->assertDontSee('MSc. Martha Lucia Rivera');
 });
 
-test('equipo directivo filters by selected campus', function () {
+test('equipo institucional filters by selected campus', function () {
     $principal = createCampus([
         'name' => 'Sede Principal',
         'slug' => 'sede-principal',
@@ -119,13 +119,13 @@ test('equipo directivo filters by selected campus', function () {
         'campus_id' => $campestre->id,
     ]);
 
-    $this->get(route('institucion.equipo-directivo', ['campus' => 'sede-campestre']))
+    $this->get(route('institucion.equipo-institucional', ['campus' => 'sede-campestre']))
         ->assertOk()
         ->assertSee('Carlos Mendez')
         ->assertDontSee('Beatriz Elena Castro');
 });
 
-test('equipo directivo contact action uses institutional email mailto', function () {
+test('equipo institucional contact action uses institutional email mailto', function () {
     $campus = createCampus();
 
     $member = createStaffMember([
@@ -137,12 +137,12 @@ test('equipo directivo contact action uses institutional email mailto', function
 
     $expected = 'mailto:rectoria@iedjmh.edu.co?subject='.rawurlencode('Contacto institucional - '.$member->full_name);
 
-    $this->get(route('institucion.equipo-directivo'))
+    $this->get(route('institucion.equipo-institucional'))
         ->assertOk()
         ->assertSee($expected, false);
 });
 
-test('equipo directivo shows empty state when there are no matching directives', function () {
+test('equipo institucional shows empty state when there are no matching directives', function () {
     $campus = createCampus();
 
     createStaffMember([
@@ -152,7 +152,7 @@ test('equipo directivo shows empty state when there are no matching directives',
         'campus_id' => $campus->id,
     ]);
 
-    $this->get(route('institucion.equipo-directivo', ['q' => 'No existe']))
+    $this->get(route('institucion.equipo-institucional', ['q' => 'No existe']))
         ->assertOk()
-        ->assertSee('No se encontraron integrantes del equipo directivo con los filtros aplicados.');
+        ->assertSee('No se encontraron integrantes con los filtros aplicados.');
 });

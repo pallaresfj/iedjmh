@@ -504,7 +504,7 @@ class CitizenAttentionController extends Controller
                     ['label' => 'Historia', 'route' => 'institucion.historia'],
                     ['label' => 'Mision y Vision', 'route' => 'institucion.mision-vision'],
                     ['label' => 'Simbolos', 'route' => 'institucion.simbolos'],
-                    ['label' => 'Equipo Directivo', 'route' => 'institucion.equipo-directivo'],
+                    ['label' => 'Equipo Institucional', 'route' => 'institucion.equipo-institucional'],
                     ['label' => 'Sedes', 'route' => 'institucion.sedes'],
                     ['label' => 'PEI', 'route' => 'institucion.pei'],
                     ['label' => 'Manual de Convivencia', 'route' => 'institucion.manual-convivencia'],

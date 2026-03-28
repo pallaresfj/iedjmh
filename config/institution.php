@@ -31,7 +31,7 @@ return [
                     ['label' => 'Historia', 'route' => 'institucion.historia', 'icon' => 'history'],
                     ['label' => 'Mision y vision', 'route' => 'institucion.mision-vision', 'icon' => 'shield'],
                     ['label' => 'Simbolos', 'route' => 'institucion.simbolos', 'icon' => 'workspace_premium'],
-                    ['label' => 'Equipo directivo', 'route' => 'institucion.equipo-directivo', 'icon' => 'groups'],
+                    ['label' => 'Equipo institucional', 'route' => 'institucion.equipo-institucional', 'icon' => 'groups'],
                     ['label' => 'Sedes', 'route' => 'institucion.sedes', 'icon' => 'domain'],
                 ],
             ],

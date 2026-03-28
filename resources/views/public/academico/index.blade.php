@@ -24,21 +24,15 @@
             </div>
         </x-slot:sidebar>
 
-        <div class="space-y-6">
-            <p class="text-sm leading-relaxed text-ied-gray-700 sm:text-base">
-                Esta seccion integra informacion curricular y recursos de consulta academica. El contenido editorial
-                se administra desde CMS y los listados se actualizan con modulos dinamicos.
-            </p>
-
-            <div class="grid gap-4 md:grid-cols-2">
-                @foreach ($cards as $card)
-                    <x-public.academico.page-card
-                        :title="$card['title']"
-                        :summary="$card['summary']"
-                        :route="$card['route']"
-                    />
-                @endforeach
-            </div>
+        <div class="grid gap-4 md:grid-cols-2">
+            @foreach ($cards as $card)
+                <x-public.academico.page-card
+                    :title="$card['title']"
+                    :summary="$card['summary']"
+                    :route="$card['route']"
+                    :icon="$card['icon']"
+                />
+            @endforeach
         </div>
     </x-public.internal-page>
 @endsection

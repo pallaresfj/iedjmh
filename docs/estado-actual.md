@@ -7,7 +7,7 @@ Fecha de corte: 2026-03-28
 ### Frontend publico institucional
 
 - Inicio (`/`): home dinamica con hero, enlaces rapidos, noticias, proyecto destacado y proximos eventos.
-- Institucion (`/institucion`): landing y 8 paginas internas (historia, mision/vision, simbolos, equipo directivo, sedes, PEI, manual, directorio) con soporte CMS/fallback.
+- Institucion (`/institucion`): landing y 8 paginas internas (historia, mision/vision, simbolos, equipo institucional, sedes, PEI, manual, directorio) con soporte CMS/fallback.
 - Academico (`/academico`): landing y 6 paginas internas (niveles, modalidad, planes, evaluacion, proyectos pedagogicos, calendario) con consultas a documentos/proyectos/eventos.
 - Transparencia (`/transparencia`): landing, listado filtrable de documentos, detalle de documento con relacionados. Incluye modulo de contratacion (`/transparencia/contratacion`) con listado y detalle de procesos.
 - Atencion al Ciudadano (`/atencion-ciudadano`): landing, contacto, PQRS (formulario, radicado y consulta de estado), tramites filtrables, FAQ filtrables, mapa del sitio y participacion.
@@ -85,7 +85,7 @@ Fecha de corte: 2026-03-28
 - `GET /buscar` -> busqueda global.
 - `GET /sitemap.xml` -> sitemap XML.
 - `GET /institucion` y subrutas:
-  - `/historia`, `/mision-vision`, `/simbolos`, `/equipo-directivo`, `/sedes`, `/pei`, `/manual-convivencia`, `/directorio`.
+  - `/historia`, `/mision-vision`, `/simbolos`, `/equipo-institucional`, `/sedes`, `/pei`, `/manual-convivencia`, `/directorio`.
 - `GET /academico` y subrutas:
   - `/niveles-educativos`, `/modalidad-agropecuaria`, `/planes-area`, `/sistema-evaluacion`, `/proyectos-pedagogicos`, `/calendario-academico`.
 - `GET /proyectos` -> listado filtrable con paginacion.

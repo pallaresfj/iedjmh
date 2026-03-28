@@ -17,7 +17,7 @@ return new class extends Migration
             'institucion-historia' => 'institucion.historia',
             'institucion-mision-vision' => 'institucion.mision-vision',
             'institucion-simbolos' => 'institucion.simbolos',
-            'institucion-equipo-directivo' => 'institucion.equipo-directivo',
+            'institucion-equipo-institucional' => 'institucion.equipo-institucional',
             'academico-niveles-educativos' => 'academico.niveles-educativos',
             'academico-modalidad-agropecuaria' => 'academico.modalidad-agropecuaria',
             'academico-planes-area' => 'academico.planes-area',

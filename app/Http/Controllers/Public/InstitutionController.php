@@ -46,6 +46,7 @@ class InstitutionController extends Controller
                     'title' => $cmsPage?->title ?: $definition['title'],
                     'summary' => $cmsPage?->summary ?: $definition['summary'],
                     'route' => $definition['route'],
+                    'icon' => $definition['icon'] ?? 'article',
                 ];
             })
             ->values();
@@ -70,12 +71,12 @@ class InstitutionController extends Controller
         $lead = $cmsPage?->summary ?: $definition['summary'];
         $symbols = $pageKey === 'simbolos' ? PublicSettings::symbols() : [];
 
-        $directiveDirectory = $pageKey === 'equipo-directivo'
+        $directiveDirectory = $pageKey === 'equipo-institucional'
             ? $this->resolveDirectiveStaffDirectory($request)
             : [
                 'filters' => ['q' => '', 'campus' => ''],
                 'campuses' => collect(),
-                'members' => collect(),
+                'members' => new \Illuminate\Pagination\LengthAwarePaginator([], 0, 5),
                 'has_active_filters' => false,
             ];
 
@@ -106,6 +107,7 @@ class InstitutionController extends Controller
                 'route' => PageMenuCatalog::routeFor('institucion.historia') ?: 'institucion.historia',
                 'slug' => PageMenuCatalog::slugFor('institucion.historia') ?: 'institucion-historia',
                 'menu_binding' => 'institucion.historia',
+                'icon' => 'history_edu',
                 'summary' => 'Trayectoria institucional al servicio de la educacion en Pivijay, Magdalena.',
                 'blocks' => [
                     [
@@ -119,6 +121,7 @@ class InstitutionController extends Controller
                 'route' => PageMenuCatalog::routeFor('institucion.mision-vision') ?: 'institucion.mision-vision',
                 'slug' => PageMenuCatalog::slugFor('institucion.mision-vision') ?: 'institucion-mision-vision',
                 'menu_binding' => 'institucion.mision-vision',
+                'icon' => 'visibility',
                 'summary' => 'Direccion estrategica que orienta el desarrollo academico e institucional.',
                 'blocks' => [
                     [
@@ -136,6 +139,7 @@ class InstitutionController extends Controller
                 'route' => PageMenuCatalog::routeFor('institucion.simbolos') ?: 'institucion.simbolos',
                 'slug' => PageMenuCatalog::slugFor('institucion.simbolos') ?: 'institucion-simbolos',
                 'menu_binding' => 'institucion.simbolos',
+                'icon' => 'award_star',
                 'summary' => 'Elementos de identidad que representan nuestros principios institucionales.',
                 'blocks' => [
                     [
@@ -144,16 +148,17 @@ class InstitutionController extends Controller
                     ],
                 ],
             ],
-            'equipo-directivo' => [
-                'title' => 'Equipo Directivo',
-                'route' => PageMenuCatalog::routeFor('institucion.equipo-directivo') ?: 'institucion.equipo-directivo',
-                'slug' => PageMenuCatalog::slugFor('institucion.equipo-directivo') ?: 'institucion-equipo-directivo',
-                'menu_binding' => 'institucion.equipo-directivo',
+            'equipo-institucional' => [
+                'title' => 'Equipo Institucional',
+                'route' => PageMenuCatalog::routeFor('institucion.equipo-institucional') ?: 'institucion.equipo-institucional',
+                'slug' => PageMenuCatalog::slugFor('institucion.equipo-institucional') ?: 'institucion-equipo-institucional',
+                'menu_binding' => 'institucion.equipo-institucional',
+                'icon' => 'groups',
                 'summary' => 'Equipo responsable de la gestion academica, administrativa y de convivencia.',
                 'blocks' => [
                     [
                         'title' => 'Liderazgo institucional',
-                        'body' => 'El equipo directivo orienta la toma de decisiones, el acompanamiento pedagogico y la articulacion con familias y actores del territorio.',
+                        'body' => 'El equipo institucional orienta la toma de decisiones, el acompanamiento pedagogico y la articulacion con familias y actores del territorio.',
                     ],
                 ],
             ],
@@ -162,6 +167,7 @@ class InstitutionController extends Controller
                 'route' => 'institucion.sedes',
                 'slug' => 'institucion-sedes',
                 'menu_binding' => null,
+                'icon' => 'location_on',
                 'summary' => 'Informacion de nuestras sedes y puntos de atencion.',
                 'blocks' => [
                     [
@@ -175,6 +181,7 @@ class InstitutionController extends Controller
                 'route' => 'institucion.pei',
                 'slug' => 'institucion-pei',
                 'menu_binding' => null,
+                'icon' => 'description',
                 'summary' => 'Proyecto Educativo Institucional y lineamientos pedagogicos.',
                 'blocks' => [
                     [
@@ -188,6 +195,7 @@ class InstitutionController extends Controller
                 'route' => 'institucion.manual-convivencia',
                 'slug' => 'institucion-manual-convivencia',
                 'menu_binding' => null,
+                'icon' => 'handshake',
                 'summary' => 'Normas y acuerdos para la convivencia escolar y la formacion ciudadana.',
                 'blocks' => [
                     [
@@ -201,6 +209,7 @@ class InstitutionController extends Controller
                 'route' => 'institucion.directorio',
                 'slug' => 'institucion-directorio',
                 'menu_binding' => null,
+                'icon' => 'contact_phone',
                 'summary' => 'Canales de contacto institucional para comunidad y ciudadanos.',
                 'blocks' => [
                     [
@@ -339,12 +348,11 @@ class InstitutionController extends Controller
             $filters['campus'] = '';
         }
 
-        $members = collect();
+        $members = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 5);
 
         if ($this->canQueryTable('staff_members')) {
             $query = StaffMember::query()
-                ->published()
-                ->where('staff_group', 'directive');
+                ->published();
 
             if ($hasCampusesTable) {
                 $query->with('campus');
@@ -367,23 +375,25 @@ class InstitutionController extends Controller
                 });
             }
 
-            $members = $query
+            $paginator = $query
                 ->orderBy('sort_order')
                 ->orderBy('full_name')
-                ->get()
-                ->map(function (StaffMember $staffMember) use ($hasCampusesTable): array {
-                    return [
-                        'full_name' => $staffMember->full_name,
-                        'position_title' => $staffMember->position_title,
-                        'department_label' => $staffMember->department_label,
-                        'campus_name' => $hasCampusesTable ? $staffMember->campus?->name : null,
-                        'institutional_email' => $staffMember->institutional_email,
-                        'phone' => $staffMember->phone,
-                        'photo_url' => $this->resolveMediaUrl($staffMember->profile_photo_path),
-                        'initials' => $this->nameInitials($staffMember->full_name),
-                        'contact_url' => $this->buildStaffContactUrl($staffMember),
-                    ];
-                });
+                ->paginate(5)
+                ->withQueryString();
+
+            $members = $paginator->through(function (StaffMember $staffMember) use ($hasCampusesTable): array {
+                return [
+                    'full_name' => $staffMember->full_name,
+                    'position_title' => $staffMember->position_title,
+                    'department_label' => $staffMember->department_label,
+                    'campus_name' => $hasCampusesTable ? $staffMember->campus?->name : null,
+                    'institutional_email' => $staffMember->institutional_email,
+                    'phone' => $staffMember->phone,
+                    'photo_url' => $this->resolveMediaUrl($staffMember->profile_photo_path),
+                    'initials' => $this->nameInitials($staffMember->full_name),
+                    'contact_url' => $this->buildStaffContactUrl($staffMember),
+                ];
+            });
         }
 
         return [

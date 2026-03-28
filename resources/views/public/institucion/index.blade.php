@@ -24,21 +24,15 @@
             </div>
         </x-slot:sidebar>
 
-        <div class="space-y-6">
-            <p class="text-sm leading-relaxed text-ied-gray-700 sm:text-base">
-                Esta seccion concentra la informacion institucional oficial. Cada pagina se conecta al CMS para
-                administrar contenido publicado de forma centralizada.
-            </p>
-
-            <div class="grid gap-4 md:grid-cols-2">
-                @foreach ($cards as $card)
-                    <x-public.institucion.page-card
-                        :title="$card['title']"
-                        :summary="$card['summary']"
-                        :route="$card['route']"
-                    />
-                @endforeach
-            </div>
+        <div class="grid gap-4 md:grid-cols-2">
+            @foreach ($cards as $card)
+                <x-public.institucion.page-card
+                    :title="$card['title']"
+                    :summary="$card['summary']"
+                    :route="$card['route']"
+                    :icon="$card['icon']"
+                />
+            @endforeach
         </div>
     </x-public.internal-page>
 @endsection

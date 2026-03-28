@@ -8,7 +8,7 @@
   - Historia
   - Misión, visión y valores
   - Símbolos institucionales
-  - Equipo directivo
+  - Equipo institucional
   - Sedes
   - PEI
   - Manual de convivencia

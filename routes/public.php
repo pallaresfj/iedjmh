@@ -22,7 +22,7 @@ Route::prefix('institucion')->group(function () {
     Route::get('/historia', [InstitutionController::class, 'page'])->defaults('pageKey', 'historia')->name('institucion.historia');
     Route::get('/mision-vision', [InstitutionController::class, 'page'])->defaults('pageKey', 'mision-vision')->name('institucion.mision-vision');
     Route::get('/simbolos', [InstitutionController::class, 'page'])->defaults('pageKey', 'simbolos')->name('institucion.simbolos');
-    Route::get('/equipo-directivo', [InstitutionController::class, 'page'])->defaults('pageKey', 'equipo-directivo')->name('institucion.equipo-directivo');
+    Route::get('/equipo-institucional', [InstitutionController::class, 'page'])->defaults('pageKey', 'equipo-institucional')->name('institucion.equipo-institucional');
     Route::get('/sedes', [InstitutionController::class, 'page'])->defaults('pageKey', 'sedes')->name('institucion.sedes');
     Route::get('/pei', [InstitutionController::class, 'page'])->defaults('pageKey', 'pei')->name('institucion.pei');
     Route::get('/manual-convivencia', [InstitutionController::class, 'page'])->defaults('pageKey', 'manual-convivencia')->name('institucion.manual-convivencia');

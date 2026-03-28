@@ -48,6 +48,7 @@ class AcademicController extends Controller
                     'title' => $cmsPage?->title ?: $definition['title'],
                     'summary' => $cmsPage?->summary ?: $definition['summary'],
                     'route' => $definition['route'],
+                    'icon' => $definition['icon'] ?? 'article',
                 ];
             })
             ->values();
@@ -106,6 +107,7 @@ class AcademicController extends Controller
                 'route' => PageMenuCatalog::routeFor('academico.niveles-educativos') ?: 'academico.niveles-educativos',
                 'slug' => PageMenuCatalog::slugFor('academico.niveles-educativos') ?: 'academico-niveles-educativos',
                 'menu_binding' => 'academico.niveles-educativos',
+                'icon' => 'school',
                 'summary' => 'Oferta educativa desde preescolar hasta media con enfoque integral.',
                 'blocks' => [
                     [
@@ -119,6 +121,7 @@ class AcademicController extends Controller
                 'route' => PageMenuCatalog::routeFor('academico.modalidad-agropecuaria') ?: 'academico.modalidad-agropecuaria',
                 'slug' => PageMenuCatalog::slugFor('academico.modalidad-agropecuaria') ?: 'academico-modalidad-agropecuaria',
                 'menu_binding' => 'academico.modalidad-agropecuaria',
+                'icon' => 'agriculture',
                 'summary' => 'Formacion tecnica articulada con el contexto rural y productivo del territorio.',
                 'blocks' => [
                     [
@@ -132,6 +135,7 @@ class AcademicController extends Controller
                 'route' => PageMenuCatalog::routeFor('academico.planes-area') ?: 'academico.planes-area',
                 'slug' => PageMenuCatalog::slugFor('academico.planes-area') ?: 'academico-planes-area',
                 'menu_binding' => 'academico.planes-area',
+                'icon' => 'menu_book',
                 'summary' => 'Consulta de planes curriculares, mallas y orientaciones por area.',
                 'blocks' => [
                     [
@@ -145,6 +149,7 @@ class AcademicController extends Controller
                 'route' => PageMenuCatalog::routeFor('academico.sistema-evaluacion') ?: 'academico.sistema-evaluacion',
                 'slug' => PageMenuCatalog::slugFor('academico.sistema-evaluacion') ?: 'academico-sistema-evaluacion',
                 'menu_binding' => 'academico.sistema-evaluacion',
+                'icon' => 'assignment_turned_in',
                 'summary' => 'Criterios y procesos para valorar el aprendizaje y acompanamiento estudiantil.',
                 'blocks' => [
                     [
@@ -158,6 +163,7 @@ class AcademicController extends Controller
                 'route' => 'academico.proyectos-pedagogicos',
                 'slug' => 'academico-proyectos-pedagogicos',
                 'menu_binding' => null,
+                'icon' => 'science',
                 'summary' => 'Iniciativas de aula y de institucion para fortalecer aprendizaje significativo.',
                 'blocks' => [
                     [
@@ -171,6 +177,7 @@ class AcademicController extends Controller
                 'route' => 'academico.calendario-academico',
                 'slug' => 'academico-calendario-academico',
                 'menu_binding' => null,
+                'icon' => 'calendar_month',
                 'summary' => 'Fechas institucionales relevantes, periodos academicos y actividades programadas.',
                 'blocks' => [],
             ],
@@ -179,6 +186,7 @@ class AcademicController extends Controller
                 'route' => 'academico.zona-academica',
                 'slug' => 'academico-zona-academica',
                 'menu_binding' => null,
+                'icon' => 'devices',
                 'summary' => 'Plataformas, recursos y herramientas digitales para estudiantes y docentes.',
                 'blocks' => [
                     [

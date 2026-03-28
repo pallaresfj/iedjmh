@@ -29,11 +29,11 @@ class PageMenuCatalog
             'slug' => 'institucion-simbolos',
             'section' => 'institucion',
         ],
-        'institucion.equipo-directivo' => [
-            'label' => 'Equipo Directivo',
-            'route' => 'institucion.equipo-directivo',
-            'path' => '/institucion/equipo-directivo',
-            'slug' => 'institucion-equipo-directivo',
+        'institucion.equipo-institucional' => [
+            'label' => 'Equipo Institucional',
+            'route' => 'institucion.equipo-institucional',
+            'path' => '/institucion/equipo-institucional',
+            'slug' => 'institucion-equipo-institucional',
             'section' => 'institucion',
         ],
         'academico.niveles-educativos' => [

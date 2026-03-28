@@ -149,8 +149,7 @@
             @endif
 
             @if ($pageKey === 'sedes')
-                <section class="space-y-4 border-t border-ied-gray-200 pt-6">
-                    <h2 class="public-heading text-xl font-semibold text-ied-gray-900">Nuestras sedes</h2>
+                <section class="space-y-5 border-t border-ied-gray-200 pt-6">
                     <div class="grid gap-4 md:grid-cols-2">
                         @foreach ($campuses as $campus)
                             <x-public.institucion.campus-card :campus="$campus" />
@@ -159,10 +158,10 @@
                 </section>
             @endif
 
-            @if ($pageKey === 'equipo-directivo')
+            @if ($pageKey === 'equipo-institucional')
                 <section class="space-y-5 border-t border-ied-gray-200 pt-6">
                     <section class="public-surface p-5 sm:p-6">
-                        <form action="{{ route('institucion.equipo-directivo') }}" method="GET" class="grid gap-3 md:grid-cols-2 xl:grid-cols-4" data-auto-filter-form data-auto-filter-target="#staff-results">
+                        <form action="{{ route('institucion.equipo-institucional') }}" method="GET" class="grid gap-3 md:grid-cols-2 xl:grid-cols-4" data-auto-filter-form data-auto-filter-target="#staff-results">
                             <label class="xl:col-span-2">
                                 <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Buscar</span>
                                 <input
@@ -193,7 +192,7 @@
                                         Aplicar filtros
                                     </button>
                                 </noscript>
-                                <a href="{{ route('institucion.equipo-directivo') }}" data-auto-filter-clear class="inline-flex items-center rounded-full border border-ied-gray-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-ied-gray-700 transition hover:border-ied-gray-400 hover:text-ied-gray-900">
+                                <a href="{{ route('institucion.equipo-institucional') }}" data-auto-filter-clear class="inline-flex items-center rounded-full border border-ied-gray-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-ied-gray-700 transition hover:border-ied-gray-400 hover:text-ied-gray-900">
                                     Limpiar
                                 </a>
                             </div>
@@ -222,7 +221,7 @@
 
                         @if ($directiveStaff->isEmpty())
                             <div class="rounded-xl border border-dashed border-ied-gray-200 bg-ied-gray-100 p-4 text-sm text-ied-gray-700">
-                                No se encontraron integrantes del equipo directivo con los filtros aplicados.
+                                No se encontraron integrantes con los filtros aplicados.
                             </div>
                         @else
                             <div class="space-y-3">
@@ -230,6 +229,12 @@
                                     <x-public.institucion.staff-card :member="$member" />
                                 @endforeach
                             </div>
+
+                            @if ($directiveStaff->hasPages())
+                                <div class="pt-2">
+                                    {{ $directiveStaff->links('vendor.pagination.public') }}
+                                </div>
+                            @endif
                         @endif
                     </section>
                 </section>

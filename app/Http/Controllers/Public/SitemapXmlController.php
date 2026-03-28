@@ -23,7 +23,7 @@ class SitemapXmlController extends Controller
 
         $staticRoutes = [
             'institucion.index', 'institucion.historia', 'institucion.mision-vision',
-            'institucion.simbolos', 'institucion.equipo-directivo', 'institucion.sedes',
+            'institucion.simbolos', 'institucion.equipo-institucional', 'institucion.sedes',
             'institucion.pei', 'institucion.manual-convivencia', 'institucion.directorio',
             'academico.index', 'academico.niveles-educativos', 'academico.modalidad-agropecuaria',
             'academico.planes-area', 'academico.sistema-evaluacion', 'academico.proyectos-pedagogicos',
