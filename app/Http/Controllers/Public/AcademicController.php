@@ -120,7 +120,7 @@ class AcademicController extends Controller
                 'blocks' => [
                     [
                         'title' => 'Preescolar, primaria y bachillerato',
-                        'body' => 'La institucion ofrece atencion educativa por ciclos, fortaleciendo competencias basicas, ciudadanas y tecnico-productivas en cada nivel.',
+                        'body' => 'La institución ofrece atención educativa por ciclos, fortaleciendo competencias básicas, ciudadanas y técnico-productivas en cada nivel.',
                     ],
                 ],
             ],
@@ -130,35 +130,35 @@ class AcademicController extends Controller
                 'slug' => PageMenuCatalog::slugFor('academico.modalidad') ?: 'academico-modalidad',
                 'menu_binding' => 'academico.modalidad',
                 'icon' => $modality['icon'],
-                'summary' => 'Formacion tecnica articulada con el contexto rural y productivo del territorio.',
+                'summary' => 'Formación técnica articulada con el contexto rural y productivo del territorio.',
                 'blocks' => [
                     [
-                        'title' => 'Enfoque tecnico',
-                        'body' => 'La modalidad agropecuaria integra teoria y practica para desarrollar capacidades en produccion sostenible, emprendimiento y cuidado ambiental.',
+                        'title' => 'Enfoque técnico',
+                        'body' => 'La modalidad agropecuaria integra teoría y práctica para desarrollar capacidades en producción sostenible, emprendimiento y cuidado ambiental.',
                     ],
                 ],
             ],
             'planes-area' => [
-                'title' => 'Planes de Area',
+                'title' => 'Planes de Área',
                 'route' => PageMenuCatalog::routeFor('academico.planes-area') ?: 'academico.planes-area',
                 'slug' => PageMenuCatalog::slugFor('academico.planes-area') ?: 'academico-planes-area',
                 'menu_binding' => 'academico.planes-area',
                 'icon' => 'menu_book',
-                'summary' => 'Consulta de planes curriculares, mallas y orientaciones por area.',
+                'summary' => 'Consulta de planes curriculares, mallas y orientaciones por área.',
                 'blocks' => [
                     [
-                        'title' => 'Documentacion curricular',
-                        'body' => 'Publicaciones oficiales de referencia para docentes, estudiantes y familias. Esta informacion se administra desde el CMS.',
+                        'title' => 'Documentación curricular',
+                        'body' => 'Publicaciones oficiales de referencia para docentes, estudiantes y familias. Esta información se administra desde el CMS.',
                     ],
                 ],
             ],
             'sistema-evaluacion' => [
-                'title' => 'Sistema de Evaluacion',
+                'title' => 'Sistema de Evaluación',
                 'route' => PageMenuCatalog::routeFor('academico.sistema-evaluacion') ?: 'academico.sistema-evaluacion',
                 'slug' => PageMenuCatalog::slugFor('academico.sistema-evaluacion') ?: 'academico-sistema-evaluacion',
                 'menu_binding' => 'academico.sistema-evaluacion',
                 'icon' => 'assignment_turned_in',
-                'summary' => 'Criterios y procesos para valorar el aprendizaje y acompanamiento estudiantil.',
+                'summary' => 'Criterios y procesos para valorar el aprendizaje y acompañamiento estudiantil.',
                 'blocks' => [
                     [
                         'title' => 'Evaluación formativa',
@@ -167,30 +167,30 @@ class AcademicController extends Controller
                 ],
             ],
             'proyectos-pedagogicos' => [
-                'title' => 'Proyectos Pedagogicos',
+                'title' => 'Proyectos Pedagógicos',
                 'route' => 'academico.proyectos-pedagogicos',
                 'slug' => 'academico-proyectos-pedagogicos',
                 'menu_binding' => null,
                 'icon' => 'science',
-                'summary' => 'Iniciativas de aula y de institucion para fortalecer aprendizaje significativo.',
+                'summary' => 'Iniciativas de aula y de institución para fortalecer aprendizaje significativo.',
                 'blocks' => [
                     [
                         'title' => 'Aprendizaje basado en proyectos',
-                        'body' => 'Conoce proyectos pedagogicos que articulan competencias academicas, investigacion y solucion de problemas del entorno.',
+                        'body' => 'Conoce proyectos pedagógicos que articulan competencias académicas, investigación y solución de problemas del entorno.',
                     ],
                 ],
             ],
             'calendario-academico' => [
-                'title' => 'Calendario Academico',
+                'title' => 'Calendario Académico',
                 'route' => 'academico.calendario-academico',
                 'slug' => 'academico-calendario-academico',
                 'menu_binding' => null,
                 'icon' => 'calendar_month',
-                'summary' => 'Fechas institucionales relevantes, periodos academicos y actividades programadas.',
+                'summary' => 'Fechas institucionales relevantes, períodos académicos y actividades programadas.',
                 'blocks' => [],
             ],
             'zona-academica' => [
-                'title' => 'Zona Academica',
+                'title' => 'Zona Académica',
                 'route' => 'academico.zona-academica',
                 'slug' => 'academico-zona-academica',
                 'menu_binding' => null,
@@ -198,7 +198,7 @@ class AcademicController extends Controller
                 'summary' => 'Plataformas, recursos y herramientas digitales para estudiantes y docentes.',
                 'blocks' => [
                     [
-                        'title' => 'Recursos academicos en linea',
+                        'title' => 'Recursos académicos en línea',
                         'body' => 'Accede a las plataformas institucionales, recursos descargables y herramientas digitales disponibles para la comunidad educativa.',
                     ],
                 ],

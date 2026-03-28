@@ -9,7 +9,7 @@
         :banner="$banner"
         section-key="academico"
         :replace-header-with-banner="true"
-        :force-banner-title-style="in_array($pageKey, ['niveles-educativos', 'modalidad', 'sistema-evaluacion', 'calendario-academico', 'zona-academica'], true)"
+        :force-banner-title-style="true"
     >
         <x-slot:sidebar>
             <x-public.academico.sidebar :pages="$academicPages" />

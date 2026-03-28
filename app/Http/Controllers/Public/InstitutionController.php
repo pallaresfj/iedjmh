@@ -52,7 +52,7 @@ class InstitutionController extends Controller
             ->values();
 
         return view('public.institucion.index', [
-            'title' => $landingPage?->title ?: 'Institucion',
+            'title' => $landingPage?->title ?: 'Institución',
             'lead' => $landingPage?->summary ?: 'Conoce nuestra historia, lineamientos institucionales, equipo de trabajo y servicios para la comunidad.',
             'banner' => $this->resolvePageBanner($landingPage),
             'institutionPages' => $this->navigationItems($definitions),
@@ -108,34 +108,34 @@ class InstitutionController extends Controller
                 'slug' => PageMenuCatalog::slugFor('institucion.historia') ?: 'institucion-historia',
                 'menu_binding' => 'institucion.historia',
                 'icon' => 'history_edu',
-                'summary' => 'Trayectoria institucional al servicio de la educacion en Pivijay, Magdalena.',
+                'summary' => 'Trayectoria institucional al servicio de la educación en Pivijay, Magdalena.',
                 'blocks' => [
                     [
-                        'title' => 'Resena historica',
-                        'body' => 'Nuestra institucion ha consolidado un proyecto educativo orientado a la formacion integral, con enfasis en valores, liderazgo y compromiso comunitario.',
+                        'title' => 'Reseña histórica',
+                        'body' => 'Nuestra institución ha consolidado un proyecto educativo orientado a la formación integral, con énfasis en valores, liderazgo y compromiso comunitario.',
                     ],
                 ],
             ],
             'mision-vision' => [
-                'title' => 'Mision y Vision',
+                'title' => 'Misión y Visión',
                 'route' => PageMenuCatalog::routeFor('institucion.mision-vision') ?: 'institucion.mision-vision',
                 'slug' => PageMenuCatalog::slugFor('institucion.mision-vision') ?: 'institucion-mision-vision',
                 'menu_binding' => 'institucion.mision-vision',
                 'icon' => 'visibility',
-                'summary' => 'Direccion estrategica que orienta el desarrollo academico e institucional.',
+                'summary' => 'Dirección estratégica que orienta el desarrollo académico e institucional.',
                 'blocks' => [
                     [
-                        'title' => 'Mision',
-                        'body' => 'Formar estudiantes con pensamiento critico, sensibilidad social y competencias para aportar al desarrollo sostenible del territorio.',
+                        'title' => 'Misión',
+                        'body' => 'Formar estudiantes con pensamiento crítico, sensibilidad social y competencias para aportar al desarrollo sostenible del territorio.',
                     ],
                     [
-                        'title' => 'Vision',
-                        'body' => 'Ser una institucion referente en educacion agropecuaria y calidad academica, reconocida por su impacto positivo en la comunidad.',
+                        'title' => 'Visión',
+                        'body' => 'Ser una institución referente en educación agropecuaria y calidad académica, reconocida por su impacto positivo en la comunidad.',
                     ],
                 ],
             ],
             'simbolos' => [
-                'title' => 'Simbolos Institucionales',
+                'title' => 'Símbolos Institucionales',
                 'route' => PageMenuCatalog::routeFor('institucion.simbolos') ?: 'institucion.simbolos',
                 'slug' => PageMenuCatalog::slugFor('institucion.simbolos') ?: 'institucion-simbolos',
                 'menu_binding' => 'institucion.simbolos',
@@ -144,7 +144,7 @@ class InstitutionController extends Controller
                 'blocks' => [
                     [
                         'title' => 'Identidad',
-                        'body' => 'Escudo, bandera e himno expresan la identidad de la institucion y fortalecen el sentido de pertenencia de toda la comunidad educativa.',
+                        'body' => 'Escudo, bandera e himno expresan la identidad de la institución y fortalecen el sentido de pertenencia de toda la comunidad educativa.',
                     ],
                 ],
             ],
@@ -154,11 +154,11 @@ class InstitutionController extends Controller
                 'slug' => PageMenuCatalog::slugFor('institucion.equipo-institucional') ?: 'institucion-equipo-institucional',
                 'menu_binding' => 'institucion.equipo-institucional',
                 'icon' => 'groups',
-                'summary' => 'Equipo responsable de la gestion academica, administrativa y de convivencia.',
+                'summary' => 'Equipo responsable de la gestión académica, administrativa y de convivencia.',
                 'blocks' => [
                     [
                         'title' => 'Liderazgo institucional',
-                        'body' => 'El equipo institucional orienta la toma de decisiones, el acompanamiento pedagogico y la articulacion con familias y actores del territorio.',
+                        'body' => 'El equipo institucional orienta la toma de decisiones, el acompañamiento pedagógico y la articulación con familias y actores del territorio.',
                     ],
                 ],
             ],
@@ -168,11 +168,11 @@ class InstitutionController extends Controller
                 'slug' => 'institucion-sedes',
                 'menu_binding' => null,
                 'icon' => 'location_on',
-                'summary' => 'Informacion de nuestras sedes y puntos de atencion.',
+                'summary' => 'Información de nuestras sedes y puntos de atención.',
                 'blocks' => [
                     [
                         'title' => 'Cobertura institucional',
-                        'body' => 'Consulta ubicacion, datos de contacto y caracteristicas de las sedes que hacen parte de la institucion.',
+                        'body' => 'Consulta ubicación, datos de contacto y características de las sedes que hacen parte de la institución.',
                     ],
                 ],
             ],
@@ -182,11 +182,11 @@ class InstitutionController extends Controller
                 'slug' => 'institucion-pei',
                 'menu_binding' => null,
                 'icon' => 'description',
-                'summary' => 'Proyecto Educativo Institucional y lineamientos pedagogicos.',
+                'summary' => 'Proyecto Educativo Institucional y lineamientos pedagógicos.',
                 'blocks' => [
                     [
                         'title' => 'Proyecto Educativo Institucional',
-                        'body' => 'El PEI define nuestra propuesta pedagogica, principios formativos y estrategias de mejoramiento continuo.',
+                        'body' => 'El PEI define nuestra propuesta pedagógica, principios formativos y estrategias de mejoramiento continuo.',
                     ],
                 ],
             ],
@@ -196,11 +196,11 @@ class InstitutionController extends Controller
                 'slug' => 'institucion-manual-convivencia',
                 'menu_binding' => null,
                 'icon' => 'handshake',
-                'summary' => 'Normas y acuerdos para la convivencia escolar y la formacion ciudadana.',
+                'summary' => 'Normas y acuerdos para la convivencia escolar y la formación ciudadana.',
                 'blocks' => [
                     [
                         'title' => 'Convivencia escolar',
-                        'body' => 'Documento que orienta derechos, deberes y protocolos para fortalecer el respeto, la participacion y el bienestar escolar.',
+                        'body' => 'Documento que orienta derechos, deberes y protocolos para fortalecer el respeto, la participación y el bienestar escolar.',
                     ],
                 ],
             ],
@@ -213,8 +213,8 @@ class InstitutionController extends Controller
                 'summary' => 'Canales de contacto institucional para comunidad y ciudadanos.',
                 'blocks' => [
                     [
-                        'title' => 'Canales de atencion',
-                        'body' => 'Encuentra datos de contacto de areas institucionales y orientacion para solicitudes de informacion.',
+                        'title' => 'Canales de atención',
+                        'body' => 'Encuentra datos de contacto de áreas institucionales y orientación para solicitudes de información.',
                     ],
                 ],
             ],
@@ -293,7 +293,7 @@ class InstitutionController extends Controller
         return collect([
             [
                 'name' => 'Sede Principal',
-                'description' => 'Sede administrativa y academica principal de la institucion.',
+                'description' => 'Sede administrativa y académica principal de la institución.',
                 'address' => $contact['address'],
                 'phone' => $contact['phone'],
                 'email' => $contact['email'],

@@ -9,7 +9,7 @@
         :banner="$banner"
         section-key="institucion"
         :replace-header-with-banner="true"
-        :force-banner-title-style="in_array($pageKey, ['sedes', 'pei', 'manual-convivencia', 'directorio'], true)"
+        :force-banner-title-style="true"
     >
         <x-slot:sidebar>
             <x-public.institucion.sidebar :pages="$institutionPages" />

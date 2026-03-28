@@ -16,14 +16,14 @@ class PageMenuCatalog
             'section' => 'institucion',
         ],
         'institucion.mision-vision' => [
-            'label' => 'Mision y Vision',
+            'label' => 'Misión y Visión',
             'route' => 'institucion.mision-vision',
             'path' => '/institucion/mision-vision',
             'slug' => 'institucion-mision-vision',
             'section' => 'institucion',
         ],
         'institucion.simbolos' => [
-            'label' => 'Simbolos',
+            'label' => 'Símbolos',
             'route' => 'institucion.simbolos',
             'path' => '/institucion/simbolos',
             'slug' => 'institucion-simbolos',
@@ -51,14 +51,14 @@ class PageMenuCatalog
             'section' => 'academico',
         ],
         'academico.planes-area' => [
-            'label' => 'Planes de Area',
+            'label' => 'Planes de Área',
             'route' => 'academico.planes-area',
             'path' => '/academico/planes-area',
             'slug' => 'academico-planes-area',
             'section' => 'academico',
         ],
         'academico.sistema-evaluacion' => [
-            'label' => 'Sistema de Evaluacion',
+            'label' => 'Sistema de Evaluación',
             'route' => 'academico.sistema-evaluacion',
             'path' => '/academico/sistema-evaluacion',
             'slug' => 'academico-sistema-evaluacion',

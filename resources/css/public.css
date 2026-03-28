@@ -945,9 +945,9 @@
     .public-internal-banner {
         @apply relative isolate overflow-hidden;
         background: linear-gradient(
-            118deg,
+            135deg,
             var(--color-ied-primary-dark) 0%,
-            var(--color-ied-primary-dark) 52%,
+            var(--color-ied-primary-dark) 40%,
             var(--color-ied-primary) 100%
         );
     }
@@ -955,29 +955,41 @@
     .public-internal-banner--without-image {
         background:
             radial-gradient(
-                132% 118% at 0% 0%,
-                rgba(var(--color-ied-primary-light-rgb), 0.3) 0%,
-                rgba(var(--color-ied-primary-light-rgb), 0) 52%
+                ellipse 120% 100% at 85% 20%,
+                rgba(var(--color-ied-primary-light-rgb), 0.18) 0%,
+                rgba(var(--color-ied-primary-light-rgb), 0) 50%
+            ),
+            radial-gradient(
+                ellipse 80% 120% at 0% 100%,
+                rgba(var(--color-ied-primary-light-rgb), 0.12) 0%,
+                rgba(var(--color-ied-primary-light-rgb), 0) 50%
             ),
             linear-gradient(
-                118deg,
+                135deg,
                 var(--color-ied-primary-dark) 0%,
-                var(--color-ied-primary-dark) 52%,
+                var(--color-ied-primary-dark) 40%,
                 var(--color-ied-primary) 100%
             );
     }
 
     .public-internal-banner--fallback {
-        background: linear-gradient(
-            118deg,
-            var(--color-ied-primary-dark) 0%,
-            var(--color-ied-primary-dark) 64%,
-            rgba(var(--color-ied-primary-dark-rgb), 0.94) 100%
-        );
+        background:
+            radial-gradient(
+                ellipse 100% 100% at 90% 10%,
+                rgba(var(--color-ied-primary-light-rgb), 0.1) 0%,
+                rgba(var(--color-ied-primary-light-rgb), 0) 50%
+            ),
+            linear-gradient(
+                135deg,
+                var(--color-ied-primary-dark) 0%,
+                var(--color-ied-primary-dark) 55%,
+                rgba(var(--color-ied-primary-dark-rgb), 0.96) 100%
+            );
     }
 
     .public-internal-banner__image {
         @apply absolute inset-0 h-full w-full object-cover;
+        filter: brightness(0.85) saturate(1.1);
     }
 
     .public-internal-banner__overlay {
@@ -987,89 +999,181 @@
     .public-internal-banner--with-image .public-internal-banner__overlay {
         background:
             linear-gradient(
-                92deg,
-                rgba(var(--color-ied-primary-dark-rgb), 0.985) 0%,
-                rgba(var(--color-ied-primary-dark-rgb), 0.95) 34%,
-                rgba(var(--color-ied-primary-rgb), 0.82) 64%,
-                rgba(var(--color-ied-primary-rgb), 0.78) 100%
+                105deg,
+                rgba(var(--color-ied-primary-dark-rgb), 0.97) 0%,
+                rgba(var(--color-ied-primary-dark-rgb), 0.92) 30%,
+                rgba(var(--color-ied-primary-rgb), 0.78) 60%,
+                rgba(var(--color-ied-primary-rgb), 0.55) 100%
             ),
             linear-gradient(
                 180deg,
-                rgba(var(--color-ied-primary-dark-rgb), 0.44) 0%,
-                rgba(var(--color-ied-primary-dark-rgb), 0.72) 100%
-            ),
-            radial-gradient(
-                132% 140% at 0% 0%,
-                rgba(var(--color-ied-primary-light-rgb), 0.16) 0%,
-                rgba(var(--color-ied-primary-light-rgb), 0) 54%
+                rgba(var(--color-ied-primary-dark-rgb), 0.3) 0%,
+                rgba(var(--color-ied-primary-dark-rgb), 0.6) 100%
             );
     }
 
     .public-internal-banner--without-image .public-internal-banner__overlay {
         background:
             linear-gradient(
-                92deg,
-                rgba(var(--color-ied-primary-dark-rgb), 0.84) 0%,
-                rgba(var(--color-ied-primary-dark-rgb), 0.68) 46%,
-                rgba(var(--color-ied-primary-rgb), 0.54) 100%
-            ),
-            radial-gradient(
-                90% 80% at 22% 0%,
-                rgba(var(--color-ied-primary-light-rgb), 0.08) 0%,
-                rgba(var(--color-ied-primary-light-rgb), 0) 58%
+                105deg,
+                rgba(var(--color-ied-primary-dark-rgb), 0.6) 0%,
+                rgba(var(--color-ied-primary-dark-rgb), 0.4) 50%,
+                rgba(var(--color-ied-primary-rgb), 0.3) 100%
             );
     }
 
     .public-internal-banner--fallback .public-internal-banner__overlay {
         background:
             linear-gradient(
-                100deg,
-                rgba(var(--color-ied-primary-dark-rgb), 0.95) 0%,
-                rgba(var(--color-ied-primary-dark-rgb), 0.9) 56%,
-                rgba(var(--color-ied-primary-dark-rgb), 0.82) 100%
-            ),
-            radial-gradient(
-                90% 80% at 22% 0%,
-                rgba(var(--color-ied-primary-light-rgb), 0.07) 0%,
-                rgba(var(--color-ied-primary-light-rgb), 0) 58%
+                105deg,
+                rgba(var(--color-ied-primary-dark-rgb), 0.7) 0%,
+                rgba(var(--color-ied-primary-dark-rgb), 0.6) 50%,
+                rgba(var(--color-ied-primary-dark-rgb), 0.5) 100%
             );
     }
 
+    /* Decorative geometric shapes */
+    .public-internal-banner__decoration {
+        @apply pointer-events-none absolute inset-0 overflow-hidden;
+        z-index: 2;
+    }
+
+    .public-internal-banner__shape {
+        @apply absolute rounded-full;
+        border: 1.5px solid rgba(var(--color-ied-primary-light-rgb), 0.25);
+    }
+
+    .public-internal-banner__shape--1 {
+        width: 26rem;
+        height: 26rem;
+        top: -10rem;
+        right: -4rem;
+        background: radial-gradient(
+            circle,
+            rgba(var(--color-ied-primary-light-rgb), 0.15) 0%,
+            rgba(var(--color-ied-primary-light-rgb), 0.04) 60%,
+            rgba(var(--color-ied-primary-light-rgb), 0) 75%
+        );
+    }
+
+    .public-internal-banner__shape--2 {
+        width: 16rem;
+        height: 16rem;
+        bottom: -6rem;
+        right: 12%;
+        background: radial-gradient(
+            circle,
+            rgba(var(--color-ied-primary-light-rgb), 0.12) 0%,
+            rgba(var(--color-ied-primary-light-rgb), 0.03) 55%,
+            rgba(var(--color-ied-primary-light-rgb), 0) 70%
+        );
+        border-color: rgba(var(--color-ied-primary-light-rgb), 0.2);
+    }
+
+    .public-internal-banner__shape--3 {
+        width: 9rem;
+        height: 9rem;
+        top: 15%;
+        right: 28%;
+        background: radial-gradient(
+            circle,
+            rgba(var(--color-ied-primary-light-rgb), 0.1) 0%,
+            rgba(var(--color-ied-primary-light-rgb), 0.02) 55%,
+            rgba(var(--color-ied-primary-light-rgb), 0) 70%
+        );
+        border-color: rgba(var(--color-ied-primary-light-rgb), 0.18);
+    }
+
+    .public-internal-banner--with-image .public-internal-banner__decoration {
+        opacity: 0.6;
+    }
+
+    /* Bottom accent line */
+    .public-internal-banner__accent-line {
+        @apply absolute bottom-0 left-0 right-0;
+        z-index: 11;
+        height: 3px;
+        background: linear-gradient(
+            90deg,
+            var(--color-ied-primary-light) 0%,
+            var(--color-ied-primary) 40%,
+            rgba(var(--color-ied-primary-light-rgb), 0.4) 100%
+        );
+    }
+
     .public-internal-banner__content {
-        @apply relative z-10 flex w-full min-h-[19rem] items-center py-8 sm:min-h-[22.5rem] sm:py-10 lg:min-h-[25rem] lg:py-12;
+        @apply relative flex w-full min-h-[17rem] items-end py-8 sm:min-h-[20rem] sm:items-center sm:py-10 lg:min-h-[22rem] lg:py-12;
+        z-index: 10;
     }
 
     .public-internal-banner__eyebrow {
-        @apply text-xs font-semibold uppercase tracking-[0.18em] text-emerald-200 sm:text-sm;
+        @apply inline-flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.18em] sm:text-sm;
+        color: rgba(var(--color-ied-primary-light-rgb), 0.9);
+    }
+
+    .public-internal-banner__eyebrow-line {
+        @apply block h-px w-6 sm:w-8;
+        background: linear-gradient(
+            90deg,
+            rgba(var(--color-ied-primary-light-rgb), 0.7) 0%,
+            rgba(var(--color-ied-primary-light-rgb), 0.2) 100%
+        );
     }
 
     .public-internal-banner__title {
         font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
-        letter-spacing: -0.02em;
-        @apply max-w-3xl text-3xl font-extrabold leading-[1.06] text-white sm:text-5xl lg:text-6xl;
+        letter-spacing: -0.025em;
+        @apply max-w-3xl text-3xl font-extrabold leading-[1.08] text-white sm:text-5xl lg:text-6xl;
+        text-shadow: 0 2px 16px rgba(var(--color-ied-primary-dark-rgb), 0.4);
     }
 
     .public-internal-banner__description {
-        @apply max-w-2xl text-base leading-relaxed text-white/85 sm:text-xl;
+        @apply max-w-2xl text-base leading-relaxed sm:text-lg;
+        color: rgba(255, 255, 255, 0.88);
     }
 
     .public-internal-banner__cta {
-        @apply inline-flex items-center justify-center rounded-full px-7 py-3.5 text-sm font-bold transition duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ied-primary-light sm:px-8 sm:py-4 sm:text-base;
-        background-color: #fff;
+        @apply inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-bold transition-all duration-250 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ied-primary-light sm:px-8 sm:py-3.5 sm:text-base;
+        background: linear-gradient(
+            135deg,
+            #ffffff 0%,
+            rgba(255, 255, 255, 0.95) 100%
+        );
         color: var(--color-ied-primary-dark);
-        border: 1px solid rgba(255, 255, 255, 0.85);
-        box-shadow: 0 12px 30px rgba(2, 6, 23, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        box-shadow:
+            0 8px 24px rgba(var(--color-ied-primary-dark-rgb), 0.3),
+            0 2px 8px rgba(0, 0, 0, 0.12);
     }
 
     .public-internal-banner__cta:hover,
     .public-internal-banner__cta:focus-visible {
-        background-color: var(--color-ied-primary-light);
-        color: var(--color-ied-primary-dark);
-        box-shadow: 0 14px 34px rgba(2, 6, 23, 0.38);
+        background: linear-gradient(
+            135deg,
+            var(--color-ied-primary-light) 0%,
+            var(--color-ied-primary) 100%
+        );
+        color: #ffffff;
+        border-color: rgba(var(--color-ied-primary-light-rgb), 0.6);
+        box-shadow:
+            0 12px 32px rgba(var(--color-ied-primary-dark-rgb), 0.4),
+            0 4px 12px rgba(0, 0, 0, 0.15);
+        transform: translateY(-1px);
     }
 
     .public-internal-banner__cta:active {
-        background-color: #f8fafc;
+        transform: translateY(0);
+        box-shadow:
+            0 4px 16px rgba(var(--color-ied-primary-dark-rgb), 0.3),
+            0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .public-internal-banner__cta-arrow {
+        transition: transform 0.2s ease;
+    }
+
+    .public-internal-banner__cta:hover .public-internal-banner__cta-arrow {
+        transform: translateX(2px);
     }
 
     .public-pagination {
@@ -1143,34 +1247,50 @@
             background:
                 linear-gradient(
                     180deg,
-                    rgba(var(--color-ied-primary-dark-rgb), 0.64) 0%,
-                    rgba(var(--color-ied-primary-dark-rgb), 0.88) 38%,
-                    rgba(var(--color-ied-primary-rgb), 0.97) 100%
+                    rgba(var(--color-ied-primary-dark-rgb), 0.6) 0%,
+                    rgba(var(--color-ied-primary-dark-rgb), 0.85) 40%,
+                    rgba(var(--color-ied-primary-rgb), 0.95) 100%
                 ),
                 linear-gradient(
                     90deg,
-                    rgba(var(--color-ied-primary-dark-rgb), 0.92) 0%,
-                    rgba(var(--color-ied-primary-rgb), 0.78) 62%,
-                    rgba(var(--color-ied-primary-rgb), 0.82) 100%
+                    rgba(var(--color-ied-primary-dark-rgb), 0.9) 0%,
+                    rgba(var(--color-ied-primary-rgb), 0.75) 100%
                 );
         }
 
         .public-internal-banner--without-image .public-internal-banner__overlay {
             background: linear-gradient(
                 180deg,
-                rgba(var(--color-ied-primary-dark-rgb), 0.64) 0%,
-                rgba(var(--color-ied-primary-dark-rgb), 0.74) 45%,
-                rgba(var(--color-ied-primary-rgb), 0.82) 100%
+                rgba(var(--color-ied-primary-dark-rgb), 0.55) 0%,
+                rgba(var(--color-ied-primary-dark-rgb), 0.65) 50%,
+                rgba(var(--color-ied-primary-rgb), 0.7) 100%
             );
         }
 
         .public-internal-banner--fallback .public-internal-banner__overlay {
             background: linear-gradient(
                 180deg,
-                rgba(var(--color-ied-primary-dark-rgb), 0.84) 0%,
-                rgba(var(--color-ied-primary-dark-rgb), 0.89) 56%,
-                rgba(var(--color-ied-primary-dark-rgb), 0.92) 100%
+                rgba(var(--color-ied-primary-dark-rgb), 0.7) 0%,
+                rgba(var(--color-ied-primary-dark-rgb), 0.75) 50%,
+                rgba(var(--color-ied-primary-dark-rgb), 0.8) 100%
             );
+        }
+
+        .public-internal-banner__shape--1 {
+            width: 16rem;
+            height: 16rem;
+            top: -8rem;
+            right: -4rem;
+        }
+
+        .public-internal-banner__shape--2 {
+            width: 10rem;
+            height: 10rem;
+            bottom: -5rem;
+        }
+
+        .public-internal-banner__shape--3 {
+            display: none;
         }
     }
 

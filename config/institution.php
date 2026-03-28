@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'name' => 'IED Agropecuaria Jose Maria Herrera',
+    'name' => 'IED Agropecuaria José María Herrera',
     'display_name' => 'IED JOSÉ MARÍA HERRERA',
     'short_name' => 'IEDJMH',
     'city' => 'Pivijay',
@@ -10,41 +10,41 @@ return [
     'phone' => env('INSTITUTION_PHONE'),
     'email' => env('INSTITUTION_EMAIL'),
     'seo' => [
-        'default_description' => 'Sitio institucional oficial de la IED Agropecuaria Jose Maria Herrera de Pivijay, Magdalena.',
+        'default_description' => 'Sitio institucional oficial de la IED Agropecuaria José María Herrera de Pivijay, Magdalena.',
         'default_image' => '/apple-touch-icon.png',
     ],
     'govbar' => [
         'label' => 'GOV.CO',
     ],
     'allies' => [
-        ['label' => 'MinEducacion', 'url' => '#'],
-        ['label' => 'Gobernacion', 'url' => '#'],
-        ['label' => 'Alcaldia Pivijay', 'url' => '#'],
+        ['label' => 'MinEducación', 'url' => '#'],
+        ['label' => 'Gobernación', 'url' => '#'],
+        ['label' => 'Alcaldía Pivijay', 'url' => '#'],
     ],
 
     'navigation' => [
         'primary' => [
             [
-                'label' => 'Institucion',
+                'label' => 'Institución',
                 'route' => 'institucion.index',
                 'children' => [
                     ['label' => 'Historia', 'route' => 'institucion.historia', 'icon' => 'history'],
-                    ['label' => 'Mision y vision', 'route' => 'institucion.mision-vision', 'icon' => 'shield'],
-                    ['label' => 'Simbolos', 'route' => 'institucion.simbolos', 'icon' => 'workspace_premium'],
+                    ['label' => 'Misión y visión', 'route' => 'institucion.mision-vision', 'icon' => 'shield'],
+                    ['label' => 'Símbolos', 'route' => 'institucion.simbolos', 'icon' => 'workspace_premium'],
                     ['label' => 'Equipo institucional', 'route' => 'institucion.equipo-institucional', 'icon' => 'groups'],
                     ['label' => 'Sedes', 'route' => 'institucion.sedes', 'icon' => 'domain'],
                 ],
             ],
             [
-                'label' => 'Academico',
+                'label' => 'Académico',
                 'route' => 'academico.index',
                 'children' => [
                     ['label' => 'Niveles educativos', 'route' => 'academico.niveles-educativos', 'icon' => 'school'],
                     ['label' => 'Modalidad', 'route' => 'academico.modalidad', 'icon' => 'agriculture'],
-                    ['label' => 'Planes de area', 'route' => 'academico.planes-area', 'icon' => 'menu_book'],
-                    ['label' => 'Sistema de evaluacion', 'route' => 'academico.sistema-evaluacion', 'icon' => 'checklist'],
-                    ['label' => 'Proyectos pedagogicos', 'route' => 'academico.proyectos-pedagogicos', 'icon' => 'science'],
-                    ['label' => 'Calendario academico', 'route' => 'academico.calendario-academico', 'icon' => 'calendar_month'],
+                    ['label' => 'Planes de área', 'route' => 'academico.planes-area', 'icon' => 'menu_book'],
+                    ['label' => 'Sistema de evaluación', 'route' => 'academico.sistema-evaluacion', 'icon' => 'checklist'],
+                    ['label' => 'Proyectos pedagógicos', 'route' => 'academico.proyectos-pedagogicos', 'icon' => 'science'],
+                    ['label' => 'Calendario académico', 'route' => 'academico.calendario-academico', 'icon' => 'calendar_month'],
                 ],
             ],
             [
@@ -56,13 +56,13 @@ return [
                 ],
             ],
             [
-                'label' => 'Atencion al Ciudadano',
+                'label' => 'Atención al Ciudadano',
                 'route' => 'atencion.index',
                 'children' => [
-                    ['label' => 'Contactenos', 'route' => 'atencion.contactenos', 'icon' => 'contact_support'],
+                    ['label' => 'Contáctenos', 'route' => 'atencion.contactenos', 'icon' => 'contact_support'],
                     ['label' => 'PQRS', 'route' => 'atencion.pqrs', 'icon' => 'forum'],
                     ['label' => 'Consulta PQRS', 'route' => 'atencion.pqrs.track', 'icon' => 'search'],
-                    ['label' => 'Tramites y servicios', 'route' => 'atencion.tramites', 'icon' => 'assignment'],
+                    ['label' => 'Trámites y servicios', 'route' => 'atencion.tramites', 'icon' => 'assignment'],
                     ['label' => 'Preguntas frecuentes', 'route' => 'atencion.faq', 'icon' => 'help'],
                 ],
             ],
@@ -73,33 +73,33 @@ return [
         ],
         'footer' => [
             ['label' => 'PQRS', 'route' => 'atencion.pqrs'],
-            ['label' => 'Tramites y servicios', 'route' => 'atencion.tramites'],
+            ['label' => 'Trámites y servicios', 'route' => 'atencion.tramites'],
             ['label' => 'Preguntas frecuentes', 'route' => 'atencion.faq'],
             ['label' => 'Mapa del sitio', 'route' => 'atencion.mapa-sitio'],
-            ['label' => 'Participacion', 'route' => 'atencion.participacion'],
+            ['label' => 'Participación', 'route' => 'atencion.participacion'],
         ],
     ],
 
     'sections' => [
         'institucion' => [
-            'title' => 'Institucion',
-            'description' => 'Informacion institucional, direccion estrategica y documentos de identidad institucional.',
+            'title' => 'Institución',
+            'description' => 'Información institucional, dirección estratégica y documentos de identidad institucional.',
         ],
         'academico' => [
-            'title' => 'Academico',
-            'description' => 'Oferta academica, lineamientos pedagogicos y recursos para la comunidad educativa.',
+            'title' => 'Académico',
+            'description' => 'Oferta académica, lineamientos pedagógicos y recursos para la comunidad educativa.',
         ],
         'noticias' => [
             'title' => 'Noticias',
-            'description' => 'Novedades institucionales de interes para estudiantes, familias, egresados y comunidad educativa.',
+            'description' => 'Novedades institucionales de interés para estudiantes, familias, egresados y comunidad educativa.',
         ],
         'transparencia' => [
             'title' => 'Transparencia',
-            'description' => 'Informacion publica institucional para consulta ciudadana y rendicion de cuentas.',
+            'description' => 'Información pública institucional para consulta ciudadana y rendición de cuentas.',
         ],
         'atencion' => [
-            'title' => 'Atencion al Ciudadano',
-            'description' => 'Canales de contacto, PQRS, tramites y orientacion a la ciudadania.',
+            'title' => 'Atención al Ciudadano',
+            'description' => 'Canales de contacto, PQRS, trámites y orientación a la ciudadanía.',
         ],
     ],
 ];
