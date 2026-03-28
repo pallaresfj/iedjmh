@@ -5,6 +5,7 @@ use App\Filament\Resources\AreaPlans\Pages\CreateAreaPlan;
 use App\Filament\Resources\AreaPlans\Pages\EditAreaPlan;
 use App\Filament\Resources\AreaPlans\Pages\ListAreaPlans;
 use App\Models\AreaPlan;
+use App\Models\StaffMember;
 use App\Models\User;
 use Filament\Facades\Filament;
 use Livewire\Livewire;
@@ -18,6 +19,12 @@ beforeEach(function () {
 test('user with area plan permissions can list create edit and delete area plans', function () {
     $role = createRoleWithAreaPlanPermissions('administrador', ['ViewAny', 'View', 'Create', 'Update', 'Delete']);
 
+    $teacherOne = createPublishedTeacher('Docente Uno');
+    $teacherTwo = createPublishedTeacher('Docente Dos');
+    $teacherThree = createPublishedTeacher('Docente Tres');
+    $teacherFour = createPublishedTeacher('Docente Cuatro');
+    $teacherFive = createPublishedTeacher('Docente Cinco');
+
     $user = User::factory()->create([
         'is_admin' => false,
     ]);
@@ -25,12 +32,15 @@ test('user with area plan permissions can list create edit and delete area plans
 
     $existing = AreaPlan::query()->create([
         'area_name' => 'Matematicas',
-        'responsible_teachers' => 'Docente Uno, Docente Dos',
         'icon' => 'calculate',
         'plan_url' => 'https://example.com/plan-matematicas',
         'status' => 'published',
         'sort_order' => 1,
         'published_at' => now(),
+    ]);
+    $existing->responsibleTeachers()->sync([
+        $teacherOne->id => ['sort_order' => 0],
+        $teacherTwo->id => ['sort_order' => 1],
     ]);
 
     $this->actingAs($user)
@@ -41,7 +51,7 @@ test('user with area plan permissions can list create edit and delete area plans
     Livewire::test(CreateAreaPlan::class)
         ->fillForm([
             'area_name' => 'Ciencias Naturales',
-            'responsible_teachers' => 'Docente A, Docente B',
+            'responsibleTeachers' => [$teacherThree->id, $teacherFour->id],
             'icon' => 'science',
             'plan_url' => 'https://example.com/plan-ciencias',
             'status' => 'published',
@@ -57,11 +67,17 @@ test('user with area plan permissions can list create edit and delete area plans
         ->firstOrFail();
 
     expect($created->plan_url)->toBe('https://example.com/plan-ciencias')
-        ->and($created->icon)->toBe('science');
+        ->and($created->icon)->toBe('science')
+        ->and(
+            $created->responsibleTeachers()
+                ->orderByPivot('sort_order')
+                ->pluck('staff_members.id')
+                ->all()
+        )->toBe([$teacherThree->id, $teacherFour->id]);
 
     Livewire::test(EditAreaPlan::class, ['record' => $created->getKey()])
         ->fillForm([
-            'responsible_teachers' => 'Docente A, Docente B, Docente C',
+            'responsibleTeachers' => [$teacherThree->id, $teacherFour->id, $teacherFive->id],
             'status' => 'published',
         ])
         ->call('save')
@@ -70,7 +86,12 @@ test('user with area plan permissions can list create edit and delete area plans
 
     $created->refresh();
 
-    expect($created->responsible_teachers)->toContain('Docente C')
+    expect(
+        $created->responsibleTeachers()
+            ->orderByPivot('sort_order')
+            ->pluck('staff_members.id')
+            ->all()
+    )->toBe([$teacherThree->id, $teacherFour->id, $teacherFive->id])
         ->and(AreaPlanResource::canDelete($created))->toBeTrue();
 
     Livewire::test(ListAreaPlans::class)
@@ -85,6 +106,8 @@ test('user without area plan permissions cannot access area plan resource', func
     $role = Role::findOrCreate('colaborador', 'web');
     $role->syncPermissions([]);
 
+    $teacher = createPublishedTeacher('Docente Social');
+
     $user = User::factory()->create([
         'is_admin' => false,
     ]);
@@ -92,12 +115,14 @@ test('user without area plan permissions cannot access area plan resource', func
 
     $record = AreaPlan::query()->create([
         'area_name' => 'Sociales',
-        'responsible_teachers' => 'Docente Social',
         'icon' => 'history_edu',
         'plan_url' => 'https://example.com/plan-sociales',
         'status' => 'published',
         'sort_order' => 1,
         'published_at' => now(),
+    ]);
+    $record->responsibleTeachers()->sync([
+        $teacher->id => ['sort_order' => 0],
     ]);
 
     $this->actingAs($user)
@@ -128,4 +153,16 @@ function createRoleWithAreaPlanPermissions(string $roleName, array $abilities): 
     $role->syncPermissions($permissions);
 
     return $role;
+}
+
+function createPublishedTeacher(string $fullName): StaffMember
+{
+    return StaffMember::query()->create([
+        'full_name' => $fullName,
+        'position_title' => 'Docente',
+        'staff_group' => 'teacher',
+        'status' => 'published',
+        'published_at' => now(),
+        'sort_order' => 0,
+    ]);
 }

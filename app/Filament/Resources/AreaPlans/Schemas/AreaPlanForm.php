@@ -2,12 +2,14 @@
 
 namespace App\Filament\Resources\AreaPlans\Schemas;
 
+use App\Models\AreaPlan;
 use Closure;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class AreaPlanForm
@@ -28,11 +30,36 @@ class AreaPlanForm
                     ->maxLength(80)
                     ->rule('regex:/^[a-z0-9_]+$/')
                     ->helperText('Usa nombres de Material Symbols en minuscula. Ejemplo: calculate, science, agriculture.'),
-                Textarea::make('responsible_teachers')
+                Select::make('responsibleTeachers')
                     ->label('Docentes responsables')
                     ->required()
-                    ->rows(3)
-                    ->helperText('Escribe los nombres separados por coma.')
+                    ->relationship(
+                        name: 'responsibleTeachers',
+                        titleAttribute: 'full_name',
+                        modifyQueryUsing: fn (Builder $query): Builder => $query
+                            ->where('staff_group', 'teacher')
+                            ->where('status', 'published')
+                            ->orderBy('full_name'),
+                    )
+                    ->multiple()
+                    ->searchable()
+                    ->preload()
+                    ->native(false)
+                    ->saveRelationshipsUsing(static function (Select $component, AreaPlan $record, mixed $state): void {
+                        $teacherIds = collect(Arr::wrap($state))
+                            ->map(static fn (mixed $id): int => (int) $id)
+                            ->filter(static fn (int $id): bool => $id > 0)
+                            ->unique()
+                            ->values();
+
+                        $syncPayload = $teacherIds
+                            ->mapWithKeys(static fn (int $id, int $index): array => [
+                                $id => ['sort_order' => $index],
+                            ])
+                            ->all();
+
+                        $record->responsibleTeachers()->sync($syncPayload);
+                    })
                     ->columnSpanFull(),
                 TextInput::make('plan_url')
                     ->label('Enlace del plan')

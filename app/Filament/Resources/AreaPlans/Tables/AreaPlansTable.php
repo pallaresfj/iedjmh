@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\AreaPlans\Tables;
 
+use App\Models\AreaPlan;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -27,6 +28,10 @@ class AreaPlansTable
                     ->sortable(),
                 TextColumn::make('responsible_teachers')
                     ->label('Docentes')
+                    ->state(fn (AreaPlan $record): string => $record->responsibleTeachers
+                        ->pluck('full_name')
+                        ->join(', '))
+                    ->placeholder('Sin docentes asignados')
                     ->limit(90)
                     ->toggleable(),
                 TextColumn::make('icon')

@@ -47,23 +47,32 @@
 
             @if ($pageKey === 'planes-area')
                 <section class="space-y-5">
-                    @if ($plans->isEmpty())
-                        <div class="rounded-xl border border-dashed border-ied-gray-200 bg-ied-gray-100 p-4 text-sm text-ied-gray-700">
-                            No hay planes de area publicados en este momento.
-                        </div>
-                    @else
-                        <div class="space-y-4">
-                            @foreach ($plans as $item)
-                                <x-public.academico.area-plan-item :item="$item" />
-                            @endforeach
-                        </div>
+                    <form
+                        action="{{ route('academico.planes-area') }}"
+                        method="GET"
+                        data-auto-filter-form
+                        data-auto-filter-target="#area-plans-results"
+                    >
+                        <div id="area-plans-results">
+                            @if ($plans->isEmpty())
+                                <div class="rounded-xl border border-dashed border-ied-gray-200 bg-ied-gray-100 p-4 text-sm text-ied-gray-700">
+                                    No hay planes de area publicados en este momento.
+                                </div>
+                            @else
+                                <div class="space-y-4">
+                                    @foreach ($plans as $item)
+                                        <x-public.academico.area-plan-item :item="$item" />
+                                    @endforeach
+                                </div>
 
-                        @if ($plans instanceof \Illuminate\Contracts\Pagination\Paginator && $plans->hasPages())
-                            <div class="pt-2">
-                                {{ $plans->links('vendor.pagination.public') }}
-                            </div>
-                        @endif
-                    @endif
+                                @if ($plans instanceof \Illuminate\Contracts\Pagination\Paginator && $plans->hasPages())
+                                    <div class="pt-2">
+                                        {{ $plans->links('vendor.pagination.public') }}
+                                    </div>
+                                @endif
+                            @endif
+                        </div>
+                    </form>
                 </section>
             @endif
 

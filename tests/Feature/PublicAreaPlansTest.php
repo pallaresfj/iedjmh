@@ -3,20 +3,28 @@
 use App\Models\AreaPlan;
 use App\Models\Banner;
 use App\Models\Page;
+use App\Models\StaffMember;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
 test('public area plans page renders formatted cards and pagination', function () {
     foreach (range(1, 6) as $index) {
-        AreaPlan::query()->create([
+        $teacherA = createPublishedTeacherForPublicAreaPlanTest("Docente {$index}A");
+        $teacherB = createPublishedTeacherForPublicAreaPlanTest("Docente {$index}B");
+
+        $plan = AreaPlan::query()->create([
             'area_name' => "Area {$index}",
-            'responsible_teachers' => "Docente {$index}A, Docente {$index}B",
             'icon' => 'menu_book',
             'plan_url' => "https://example.com/plan-{$index}",
             'status' => 'published',
             'sort_order' => $index,
             'published_at' => now(),
+        ]);
+
+        $plan->responsibleTeachers()->sync([
+            $teacherA->id => ['sort_order' => 0],
+            $teacherB->id => ['sort_order' => 1],
         ]);
     }
 
@@ -27,6 +35,7 @@ test('public area plans page renders formatted cards and pagination', function (
         ->assertDontSee('Area 6')
         ->assertDontSee('Plan de Area -')
         ->assertSee('Docentes Responsables:')
+        ->assertSee('Docente 1A, Docente 1B')
         ->assertSee('Consultar Plan')
         ->assertSee('page=2', false)
         ->assertSee('data-public-pagination-link', false);
@@ -35,6 +44,21 @@ test('public area plans page renders formatted cards and pagination', function (
         ->assertOk()
         ->assertSee('Area 6')
         ->assertDontSee('Area 1');
+});
+
+test('public area plans page shows fallback when plan has no related teachers', function () {
+    AreaPlan::query()->create([
+        'area_name' => 'Area sin docentes',
+        'icon' => 'menu_book',
+        'plan_url' => 'https://example.com/plan-sin-docentes',
+        'status' => 'published',
+        'sort_order' => 1,
+        'published_at' => now(),
+    ]);
+
+    $this->get(route('academico.planes-area'))
+        ->assertOk()
+        ->assertSee('Por asignar');
 });
 
 test('public area plans page hides cms content blocks', function () {
@@ -87,3 +111,15 @@ test('public area plans page replaces header with linked banner when available',
         ->assertSee('Consulta institucional de planes por area.')
         ->assertDontSee('Seccion institucional');
 });
+
+function createPublishedTeacherForPublicAreaPlanTest(string $fullName): StaffMember
+{
+    return StaffMember::query()->create([
+        'full_name' => $fullName,
+        'position_title' => 'Docente',
+        'staff_group' => 'teacher',
+        'status' => 'published',
+        'published_at' => now(),
+        'sort_order' => 0,
+    ]);
+}

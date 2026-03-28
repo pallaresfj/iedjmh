@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class StaffMember extends Model
@@ -71,6 +72,13 @@ class StaffMember extends Model
     public function updater(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function areaPlans(): BelongsToMany
+    {
+        return $this->belongsToMany(AreaPlan::class, 'area_plan_staff_member')
+            ->withPivot('sort_order')
+            ->withTimestamps();
     }
 
     public function scopePublished(Builder $query): void

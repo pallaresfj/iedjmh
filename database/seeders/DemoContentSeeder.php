@@ -163,8 +163,17 @@ class DemoContentSeeder extends Seeder
         $members = [
             ['full_name' => 'Francisco Pallares', 'position_title' => 'Rector', 'staff_group' => 'directive'],
             ['full_name' => 'Maria Rodriguez', 'position_title' => 'Coordinadora Academica', 'staff_group' => 'directive'],
-            ['full_name' => 'Juan Perez', 'position_title' => 'Docente Ciencias Naturales', 'staff_group' => 'teacher'],
-            ['full_name' => 'Ana Martinez', 'position_title' => 'Docente Matematicas', 'staff_group' => 'teacher'],
+            ['full_name' => 'Claudia Perez', 'position_title' => 'Docente de Matematicas', 'staff_group' => 'teacher'],
+            ['full_name' => 'Ricardo Mendoza', 'position_title' => 'Docente de Matematicas', 'staff_group' => 'teacher'],
+            ['full_name' => 'Sofia Castro', 'position_title' => 'Docente de Matematicas', 'staff_group' => 'teacher'],
+            ['full_name' => 'Luis Gomez', 'position_title' => 'Docente de Ciencias Naturales', 'staff_group' => 'teacher'],
+            ['full_name' => 'Marina Silva', 'position_title' => 'Docente de Ciencias Naturales', 'staff_group' => 'teacher'],
+            ['full_name' => 'Carlos Ruiz', 'position_title' => 'Docente Tecnico Agropecuario', 'staff_group' => 'teacher'],
+            ['full_name' => 'Patricia Jaramillo', 'position_title' => 'Docente Tecnico Agropecuario', 'staff_group' => 'teacher'],
+            ['full_name' => 'Elena White', 'position_title' => 'Docente de Humanidades', 'staff_group' => 'teacher'],
+            ['full_name' => 'Jorge Isaacs', 'position_title' => 'Docente de Ingles', 'staff_group' => 'teacher'],
+            ['full_name' => 'Mateo Holguin', 'position_title' => 'Docente de Ciencias Sociales', 'staff_group' => 'teacher'],
+            ['full_name' => 'Lucia Mendez', 'position_title' => 'Docente de Ciencias Sociales', 'staff_group' => 'teacher'],
             ['full_name' => 'Carlos Gomez', 'position_title' => 'Secretario', 'staff_group' => 'administrative'],
         ];
 
@@ -285,46 +294,68 @@ class DemoContentSeeder extends Seeder
         $plans = [
             [
                 'area_name' => 'Matematicas',
-                'responsible_teachers' => 'Claudia Perez, Ricardo Mendoza, Sofia Castro',
                 'icon' => 'calculate',
                 'plan_url' => 'https://example.com/planes/matematicas',
+                'responsible_teachers' => ['Claudia Perez', 'Ricardo Mendoza', 'Sofia Castro'],
             ],
             [
                 'area_name' => 'Ciencias Naturales',
-                'responsible_teachers' => 'Luis Gomez, Marina Silva',
                 'icon' => 'science',
                 'plan_url' => 'https://example.com/planes/ciencias-naturales',
+                'responsible_teachers' => ['Luis Gomez', 'Marina Silva'],
             ],
             [
                 'area_name' => 'Tecnica Agropecuaria',
-                'responsible_teachers' => 'Carlos Ruiz, Patricia Jaramillo',
                 'icon' => 'agriculture',
                 'plan_url' => 'https://example.com/planes/tecnica-agropecuaria',
+                'responsible_teachers' => ['Carlos Ruiz', 'Patricia Jaramillo'],
             ],
             [
                 'area_name' => 'Humanidades e Ingles',
-                'responsible_teachers' => 'Elena White, Jorge Isaacs',
                 'icon' => 'language',
                 'plan_url' => 'https://example.com/planes/humanidades-ingles',
+                'responsible_teachers' => ['Elena White', 'Jorge Isaacs'],
             ],
             [
                 'area_name' => 'Ciencias Sociales',
-                'responsible_teachers' => 'Mateo Holguin, Lucia Mendez',
                 'icon' => 'history_edu',
                 'plan_url' => 'https://example.com/planes/ciencias-sociales',
+                'responsible_teachers' => ['Mateo Holguin', 'Lucia Mendez'],
             ],
         ];
 
         foreach ($plans as $index => $plan) {
-            AreaPlan::query()->firstOrCreate(
+            $areaPlan = AreaPlan::query()->firstOrCreate(
                 ['area_name' => $plan['area_name']],
                 [
-                    ...$plan,
+                    'area_name' => $plan['area_name'],
+                    'icon' => $plan['icon'],
+                    'plan_url' => $plan['plan_url'],
                     'status' => 'published',
                     'sort_order' => $index,
                     'published_at' => now(),
                 ],
             );
+
+            $teacherIdByName = StaffMember::query()
+                ->where('staff_group', 'teacher')
+                ->where('status', 'published')
+                ->whereIn('full_name', $plan['responsible_teachers'])
+                ->pluck('id', 'full_name');
+
+            $syncPayload = [];
+
+            foreach ($plan['responsible_teachers'] as $teacherIndex => $teacherName) {
+                $teacherId = $teacherIdByName->get($teacherName);
+
+                if (! $teacherId) {
+                    continue;
+                }
+
+                $syncPayload[$teacherId] = ['sort_order' => $teacherIndex];
+            }
+
+            $areaPlan->responsibleTeachers()->sync($syncPayload);
         }
     }
 

@@ -227,17 +227,33 @@ class AcademicController extends Controller
      */
     private function resolveAreaPlans(): Collection|LengthAwarePaginator
     {
-        if ($this->canQueryTable('area_plans')) {
+        if (
+            $this->canQueryTable('area_plans') &&
+            $this->canQueryTable('area_plan_staff_member') &&
+            $this->canQueryTable('staff_members')
+        ) {
             $plans = AreaPlan::query()
                 ->where('status', 'published')
+                ->with([
+                    'responsibleTeachers' => fn ($query) => $query
+                        ->where('staff_group', 'teacher')
+                        ->where('status', 'published')
+                        ->orderByPivot('sort_order')
+                        ->orderBy('full_name'),
+                ])
                 ->orderBy('sort_order')
                 ->orderBy('area_name')
                 ->paginate(5)
                 ->withQueryString()
                 ->through(function (AreaPlan $plan): array {
+                    $responsibleTeachers = $plan->responsibleTeachers
+                        ->pluck('full_name')
+                        ->filter()
+                        ->join(', ');
+
                     return [
                         'area_name' => $plan->area_name,
-                        'responsible_teachers' => $plan->responsible_teachers,
+                        'responsible_teachers' => $responsibleTeachers !== '' ? $responsibleTeachers : 'Por asignar',
                         'icon' => trim((string) $plan->icon) !== '' ? $plan->icon : 'menu_book',
                         'plan_url' => $plan->plan_url,
                     ];
