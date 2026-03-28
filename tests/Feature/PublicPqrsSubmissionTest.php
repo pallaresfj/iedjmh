@@ -31,6 +31,47 @@ test('public pqrs submission stores optional attachment in local disk', function
     Storage::disk('local')->assertExists($pqrs->attachment_path);
 });
 
+test('contact form submission stores pqrs and redirects back to contact page', function () {
+    $response = $this->post(route('atencion.pqrs.store'), [
+        'type' => 'peticion',
+        'origin' => 'contact',
+        'subject' => 'Informacion general',
+        'message' => 'Mensaje lo suficientemente largo para registrar la solicitud desde contacto.',
+        'applicant_name' => 'Paula Gomez',
+        'applicant_email' => 'paula@example.test',
+        'applicant_phone' => '3009876543',
+        'consent_habeas_data' => '1',
+    ]);
+
+    $response
+        ->assertRedirect(route('atencion.contactenos'))
+        ->assertSessionHas('pqrs_success');
+
+    $pqrs = PqrsRequest::query()->firstOrFail();
+
+    expect($pqrs->type)->toBe('peticion')
+        ->and($pqrs->subject)->toBe('Informacion general')
+        ->and($pqrs->applicant_name)->toBe('Paula Gomez')
+        ->and($pqrs->applicant_phone)->toBe('3009876543');
+});
+
+test('public pqrs submission accepts tramite as type', function () {
+    $response = $this->post(route('atencion.pqrs.store'), [
+        'type' => 'tramite',
+        'subject' => 'Solicitud de tramite',
+        'message' => 'Mensaje con contenido suficiente para validar registro de tipo tramite.',
+        'applicant_name' => 'Andrea Rios',
+        'applicant_email' => 'andrea@example.test',
+        'consent_habeas_data' => '1',
+    ]);
+
+    $response
+        ->assertRedirect(route('atencion.pqrs'))
+        ->assertSessionHas('pqrs_success');
+
+    expect(PqrsRequest::query()->firstOrFail()->type)->toBe('tramite');
+});
+
 test('public pqrs submission rejects invalid attachment extension', function () {
     Storage::fake('local');
 

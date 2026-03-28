@@ -161,7 +161,7 @@ class PublicSettings
     }
 
     /**
-     * @return array{address: ?string, phone: ?string, email: ?string, location: ?string, latitude: ?string, longitude: ?string}
+     * @return array{address: ?string, phone: ?string, email: ?string, hours: ?string, location: ?string, latitude: ?string, longitude: ?string}
      */
     public static function contact(): array
     {
@@ -169,6 +169,7 @@ class PublicSettings
             'address' => static::nullableString(static::get('address')),
             'phone' => static::nullableString(static::get('phone')),
             'email' => static::nullableString(static::get('email')),
+            'hours' => static::nullableString(static::get('contact_hours')),
             'location' => static::nullableString(static::get('location')),
             'latitude' => static::nullableCoordinate(static::get('location_latitude')),
             'longitude' => static::nullableCoordinate(static::get('location_longitude')),
@@ -296,6 +297,7 @@ class PublicSettings
             'address' => config('institution.address'),
             'phone' => config('institution.phone'),
             'email' => config('institution.email'),
+            'contact_hours' => null,
             'siee' => config('institution.siee'),
             'aula_virtual' => config('institution.aula_virtual'),
             'logo_path' => config('institution.logo'),

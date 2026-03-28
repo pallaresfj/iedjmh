@@ -35,6 +35,7 @@ class PqrsRequestsTable
                         'reclamo' => 'Reclamo',
                         'sugerencia' => 'Sugerencia',
                         'felicitacion' => 'Felicitacion',
+                        'tramite' => 'Tramite',
                         default => ucfirst($state),
                     }),
                 TextColumn::make('status')
@@ -89,6 +90,7 @@ class PqrsRequestsTable
                         'reclamo' => 'Reclamo',
                         'sugerencia' => 'Sugerencia',
                         'felicitacion' => 'Felicitacion',
+                        'tramite' => 'Tramite',
                     ]),
                 SelectFilter::make('priority')
                     ->label('Prioridad')

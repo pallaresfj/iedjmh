@@ -91,6 +91,11 @@ class SettingForm
                             ->placeholder('contacto@iedjmh.edu.co')
                             ->maxLength(255)
                             ->columnSpan(3),
+                        TextInput::make('contact_hours')
+                            ->label('Horario de atencion')
+                            ->placeholder('Lunes a viernes: 8:00 AM - 3:00 PM')
+                            ->maxLength(255)
+                            ->columnSpan(6),
                         TextInput::make('siee')
                             ->label('SIEE')
                             ->url()

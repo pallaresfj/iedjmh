@@ -38,6 +38,7 @@ class PqrsRequestForm
                                 'reclamo' => 'Reclamo',
                                 'sugerencia' => 'Sugerencia',
                                 'felicitacion' => 'Felicitacion',
+                                'tramite' => 'Tramite',
                             ])
                             ->required()
                             ->native(false),

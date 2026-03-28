@@ -67,6 +67,7 @@ test('contact page uses contact data from settings', function () {
         'address' => 'Carrera 5 # 12-34, Barrio Centro',
         'phone' => '+57 300 111 2233',
         'email' => 'contacto@iedjmh.edu.co',
+        'contact_hours' => 'Lunes a viernes: 8:00 AM - 3:00 PM',
         'location' => 'Pivijay Centro, Magdalena',
         'singleton' => 1,
     ]);
@@ -76,7 +77,11 @@ test('contact page uses contact data from settings', function () {
         ->assertSee('Carrera 5 # 12-34, Barrio Centro')
         ->assertSee('+57 300 111 2233')
         ->assertSee('contacto@iedjmh.edu.co')
+        ->assertSee('Lunes a viernes: 8:00 AM - 3:00 PM')
         ->assertSee('Pivijay Centro, Magdalena')
+        ->assertSee('data-contact-clock-icon', false)
+        ->assertSee('data-contact-submit', false)
+        ->assertSee('Enviar mensaje')
         ->assertDontSee('Direccion desde config')
         ->assertDontSee('3000000000')
         ->assertDontSee('config@iedjmh.edu.co');
@@ -103,7 +108,9 @@ test('contact page falls back to config values when contact settings are empty',
         ->assertSee('Direccion fallback config')
         ->assertSee('3119998877')
         ->assertSee('fallback@iedjmh.edu.co')
-        ->assertSee('Ciudad fallback, Departamento fallback');
+        ->assertSee('Ciudad fallback, Departamento fallback')
+        ->assertSee('Horario de atencion')
+        ->assertSee('No disponible');
 });
 
 test('topbar reads email phone and location from settings contact data', function () {

@@ -50,6 +50,7 @@ class CitizenAttentionController extends Controller
             'content' => $page?->content,
             'attentionPages' => $this->attentionPages(),
             'contact' => PublicSettings::contact(),
+            'contactSubjectOptions' => $this->contactSubjectOptions(),
         ]);
     }
 
@@ -59,7 +60,7 @@ class CitizenAttentionController extends Controller
 
         return view('public.atencion.pqrs', [
             'title' => $page?->title ?: 'PQRS',
-            'lead' => $page?->summary ?: 'Radica peticiones, quejas, reclamos, sugerencias o felicitaciones.',
+            'lead' => $page?->summary ?: 'Radica peticiones, quejas, reclamos, sugerencias, felicitaciones o tramites.',
             'banner' => $this->resolvePageBanner($page),
             'content' => $page?->content,
             'attentionPages' => $this->attentionPages(),
@@ -69,6 +70,7 @@ class CitizenAttentionController extends Controller
                 'reclamo' => 'Reclamo',
                 'sugerencia' => 'Sugerencia',
                 'felicitacion' => 'Felicitacion',
+                'tramite' => 'Tramite',
             ],
         ]);
     }
@@ -78,9 +80,10 @@ class CitizenAttentionController extends Controller
         abort_unless($this->canQueryTable('pqrs_requests'), 404);
 
         $validated = $request->validate([
-            'type' => ['required', 'in:peticion,queja,reclamo,sugerencia,felicitacion'],
+            'type' => ['required', 'in:peticion,queja,reclamo,sugerencia,felicitacion,tramite'],
             'subject' => ['required', 'string', 'max:255'],
             'message' => ['required', 'string', 'min:20', 'max:5000'],
+            'origin' => ['nullable', 'in:contact,pqrs'],
             'website' => ['nullable', 'string', 'max:0'],
             'applicant_name' => ['required', 'string', 'max:255'],
             'applicant_email' => ['nullable', 'email', 'max:255'],
@@ -106,11 +109,11 @@ class CitizenAttentionController extends Controller
             'attachment_path' => $attachmentPath,
             'message' => $validated['message'],
             'applicant_name' => $validated['applicant_name'],
-            'applicant_email' => $validated['applicant_email'] ?: null,
-            'applicant_phone' => $validated['applicant_phone'] ?: null,
-            'applicant_document' => $validated['applicant_document'] ?: null,
-            'applicant_address' => $validated['applicant_address'] ?: null,
-            'municipality' => $validated['municipality'] ?: null,
+            'applicant_email' => $validated['applicant_email'] ?? null,
+            'applicant_phone' => $validated['applicant_phone'] ?? null,
+            'applicant_document' => $validated['applicant_document'] ?? null,
+            'applicant_address' => $validated['applicant_address'] ?? null,
+            'municipality' => $validated['municipality'] ?? null,
             'consent_habeas_data' => true,
             'submitted_at' => now(),
         ]);
@@ -125,8 +128,12 @@ class CitizenAttentionController extends Controller
             ]);
         }
 
+        $redirectRoute = ($validated['origin'] ?? null) === 'contact'
+            ? 'atencion.contactenos'
+            : 'atencion.pqrs';
+
         return redirect()
-            ->route('atencion.pqrs')
+            ->route($redirectRoute)
             ->with('pqrs_success', "Solicitud radicada correctamente. Codigo de seguimiento: {$trackingCode}");
     }
 
@@ -320,6 +327,20 @@ class CitizenAttentionController extends Controller
             ['title' => 'Mapa del sitio', 'route' => 'atencion.mapa-sitio'],
             ['title' => 'Participacion', 'route' => 'atencion.participacion'],
         ]);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function contactSubjectOptions(): array
+    {
+        return [
+            'Informacion general' => 'Informacion general',
+            'Matriculas y admisiones' => 'Matriculas y admisiones',
+            'Certificados y constancias' => 'Certificados y constancias',
+            'Convivencia escolar' => 'Convivencia escolar',
+            'Atencion administrativa' => 'Atencion administrativa',
+        ];
     }
 
     /**
