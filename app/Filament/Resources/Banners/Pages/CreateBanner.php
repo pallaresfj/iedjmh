@@ -15,6 +15,9 @@ class CreateBanner extends CreateRecord
             $data['ends_at'] = null;
         }
 
+        $data['created_by'] = auth()->id();
+        $data['updated_by'] = auth()->id();
+
         return $data;
     }
 

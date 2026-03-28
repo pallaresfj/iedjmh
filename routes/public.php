@@ -37,6 +37,7 @@ Route::prefix('academico')->group(function () {
     Route::get('/sistema-evaluacion', [AcademicController::class, 'page'])->defaults('pageKey', 'sistema-evaluacion')->name('academico.sistema-evaluacion');
     Route::get('/proyectos-pedagogicos', [AcademicController::class, 'page'])->defaults('pageKey', 'proyectos-pedagogicos')->name('academico.proyectos-pedagogicos');
     Route::get('/calendario-academico', [AcademicController::class, 'page'])->defaults('pageKey', 'calendario-academico')->name('academico.calendario-academico');
+    Route::get('/zona-academica', [AcademicController::class, 'page'])->defaults('pageKey', 'zona-academica')->name('academico.zona-academica');
 });
 
 Route::prefix('proyectos')->group(function () {

@@ -18,6 +18,8 @@ class EditBanner extends EditRecord
             $data['ends_at'] = null;
         }
 
+        $data['updated_by'] = auth()->id();
+
         return $data;
     }
 

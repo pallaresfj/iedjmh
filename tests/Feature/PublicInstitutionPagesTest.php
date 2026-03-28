@@ -1,0 +1,135 @@
+<?php
+
+use App\Models\Campus;
+use App\Models\Page;
+use App\Models\StaffMember;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(RefreshDatabase::class);
+
+test('institution landing page loads', function () {
+    $this->get(route('institucion.index'))
+        ->assertOk()
+        ->assertSee('Institucion');
+});
+
+test('institution landing shows navigation cards for all sub-pages', function () {
+    $this->get(route('institucion.index'))
+        ->assertOk()
+        ->assertSee('Historia')
+        ->assertSee('Mision y Vision')
+        ->assertSee('Simbolos')
+        ->assertSee('Equipo Directivo')
+        ->assertSee('Sedes')
+        ->assertSee('PEI');
+});
+
+test('institution history page loads with fallback content', function () {
+    $this->get(route('institucion.historia'))
+        ->assertOk()
+        ->assertSee('Historia');
+});
+
+test('institution history page uses cms content when available', function () {
+    Page::query()->create([
+        'title' => 'Nuestra Historia Institucional',
+        'slug' => 'institucion-historia',
+        'summary' => 'Resumen de la historia.',
+        'content' => '<p>La institucion fue fundada en 1965.</p>',
+        'status' => 'published',
+        'published_at' => now(),
+    ]);
+
+    $this->get(route('institucion.historia'))
+        ->assertOk()
+        ->assertSee('Nuestra Historia Institucional')
+        ->assertSee('La institucion fue fundada en 1965.');
+});
+
+test('institution mision vision page loads', function () {
+    $this->get(route('institucion.mision-vision'))
+        ->assertOk()
+        ->assertSee('Mision y Vision');
+});
+
+test('institution simbolos page loads', function () {
+    $this->get(route('institucion.simbolos'))
+        ->assertOk()
+        ->assertSee('Simbolos');
+});
+
+test('institution equipo directivo page loads', function () {
+    $this->get(route('institucion.equipo-directivo'))
+        ->assertOk()
+        ->assertSee('Equipo Directivo');
+});
+
+test('institution equipo directivo shows published staff members', function () {
+    StaffMember::query()->create([
+        'full_name' => 'Maria Garcia Lopez',
+        'position_title' => 'Rectora',
+        'staff_group' => 'directive',
+        'status' => 'published',
+        'sort_order' => 1,
+    ]);
+
+    StaffMember::query()->create([
+        'full_name' => 'Staff borrador',
+        'position_title' => 'Coordinador',
+        'staff_group' => 'directive',
+        'status' => 'draft',
+    ]);
+
+    $this->get(route('institucion.equipo-directivo'))
+        ->assertOk()
+        ->assertSee('Maria Garcia Lopez')
+        ->assertSee('Rectora')
+        ->assertDontSee('Staff borrador');
+});
+
+test('institution sedes page loads', function () {
+    $this->get(route('institucion.sedes'))
+        ->assertOk()
+        ->assertSee('Sedes');
+});
+
+test('institution sedes shows published campuses', function () {
+    Campus::query()->create([
+        'name' => 'Sede Rural El Bongo',
+        'slug' => 'sede-rural-el-bongo',
+        'description' => 'Sede ubicada en la vereda El Bongo.',
+        'address' => 'Vereda El Bongo',
+        'status' => 'published',
+        'sort_order' => 1,
+    ]);
+
+    Campus::query()->create([
+        'name' => 'Sede borrador',
+        'slug' => 'sede-borrador',
+        'status' => 'draft',
+    ]);
+
+    $this->get(route('institucion.sedes'))
+        ->assertOk()
+        ->assertSee('Sede Rural El Bongo')
+        ->assertSee('Vereda El Bongo')
+        ->assertDontSee('Sede borrador');
+});
+
+test('institution pei page loads', function () {
+    $this->get(route('institucion.pei'))
+        ->assertOk()
+        ->assertSee('PEI');
+});
+
+test('institution manual convivencia page loads', function () {
+    $this->get(route('institucion.manual-convivencia'))
+        ->assertOk()
+        ->assertSee('Manual de Convivencia');
+});
+
+test('institution directorio page loads', function () {
+    $this->get(route('institucion.directorio'))
+        ->assertOk()
+        ->assertSee('Directorio');
+});

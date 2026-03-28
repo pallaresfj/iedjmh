@@ -12,6 +12,20 @@ class EditDocument extends EditRecord
 {
     protected static string $resource = DocumentResource::class;
 
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        if (
+            ($data['status'] ?? null) === 'published'
+            && blank($data['published_at'] ?? $this->record->published_at)
+        ) {
+            $data['published_at'] = now();
+        }
+
+        $data['updated_by'] = auth()->id();
+
+        return $data;
+    }
+
     protected function getHeaderActions(): array
     {
         return [

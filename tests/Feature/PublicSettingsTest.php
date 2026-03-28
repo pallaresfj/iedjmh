@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Storage;
 
 uses(RefreshDatabase::class);
 
-test('legacy academic zone routes return 404', function () {
-    $this->get('/academico/zona-academica')->assertNotFound();
+test('zona academica route is active and legacy standalone route returns 404', function () {
+    $this->get('/academico/zona-academica')->assertOk();
     $this->get('/zona-academica')->assertNotFound();
 });
 
