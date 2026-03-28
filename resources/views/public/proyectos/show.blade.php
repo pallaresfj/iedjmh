@@ -28,7 +28,7 @@
             ->values();
     @endphp
 
-    <x-public.internal-page :title="$project['title']" :lead="$project['summary']" :banner="$banner" section-key="proyectos">
+    <x-public.internal-page :title="$project['title']" :lead="$project['summary']" :banner="$banner" section-key="proyectos" :force-banner-title-style="true">
         <x-slot:sidebar>
             <div class="public-surface p-4 sm:p-5">
                 <p class="public-heading text-sm font-semibold uppercase tracking-wide text-ied-gray-900">Volver</p>

@@ -175,6 +175,75 @@ class PublicSettings
         ];
     }
 
+    /**
+     * @return array{
+     *     flag_intro: string,
+     *     flag_stripes: array<int, array{name: string, description: string, color_hex: string}>,
+     *     shield_intro: string,
+     *     shield_image_url: ?string,
+     *     shield_items: array<int, array{title: string, description: string, icon: string}>,
+     *     hymn_title: string,
+     *     hymn_audio_url: ?string,
+     *     hymn_lyrics: string
+     * }
+     */
+    public static function symbols(): array
+    {
+        $flagStripes = static::normalizeSymbolStripes(static::get('symbols_flag_stripes', []));
+        $shieldItems = static::normalizeSymbolShieldItems(static::get('symbols_shield_items', []));
+
+        return [
+            'flag_intro' => (string) static::get(
+                'symbols_flag_intro',
+                'Nuestra bandera expresa la esperanza y el trabajo. Sus franjas representan biodiversidad, riqueza academica y transparencia.',
+            ),
+            'flag_stripes' => $flagStripes !== [] ? $flagStripes : [
+                [
+                    'name' => 'Verde Bosque',
+                    'description' => 'Representa la biodiversidad regional y el compromiso con el desarrollo agropecuario sostenible.',
+                    'color_hex' => '#2E7D32',
+                ],
+                [
+                    'name' => 'Franja Amarilla',
+                    'description' => 'Simboliza la riqueza intelectual de nuestros estudiantes y la prosperidad de nuestras cosechas.',
+                    'color_hex' => '#FACC15',
+                ],
+                [
+                    'name' => 'Blanco Puro',
+                    'description' => 'Evoca la transparencia, la paz y los valores eticos de nuestra comunidad educativa.',
+                    'color_hex' => '#FFFFFF',
+                ],
+            ],
+            'shield_intro' => (string) static::get(
+                'symbols_shield_intro',
+                'Nuestro escudo resume la vocacion institucional en ciencia, campo y futuro, integrando formacion tecnica, academica y humana.',
+            ),
+            'shield_image_url' => static::mediaUrl(static::nullableString(static::get('symbols_shield_image_path'))),
+            'shield_items' => $shieldItems !== [] ? $shieldItems : [
+                [
+                    'title' => 'Ganado y Campo',
+                    'description' => 'Representa la vocacion pecuaria de Pivijay y el componente tecnico de nuestra formacion.',
+                    'icon' => 'agriculture',
+                ],
+                [
+                    'title' => 'Libro Abierto',
+                    'description' => 'Simboliza el conocimiento academico y la busqueda permanente de la verdad.',
+                    'icon' => 'menu_book',
+                ],
+                [
+                    'title' => 'Naturaleza Viva',
+                    'description' => 'Integra el compromiso ambiental y el respeto por el territorio como base de nuestra identidad.',
+                    'icon' => 'grass',
+                ],
+            ],
+            'hymn_title' => (string) static::get('symbols_hymn_title', 'Himno Institucional'),
+            'hymn_audio_url' => static::mediaUrl(static::nullableString(static::get('symbols_hymn_audio_path'))),
+            'hymn_lyrics' => static::normalizeHymnLyrics(
+                static::nullableString(static::get('symbols_hymn_lyrics'))
+            ),
+        ];
+    }
+
     private static function resolve(): ?Setting
     {
         if (app()->bound('request')) {
@@ -231,6 +300,14 @@ class PublicSettings
             'aula_virtual' => config('institution.aula_virtual'),
             'logo_path' => config('institution.logo'),
             'home_hero_cta_target' => '_self',
+            'symbols_flag_intro' => 'Nuestra bandera expresa la esperanza y el trabajo. Sus franjas representan biodiversidad, riqueza academica y transparencia.',
+            'symbols_flag_stripes' => [],
+            'symbols_shield_intro' => 'Nuestro escudo resume la vocacion institucional en ciencia, campo y futuro, integrando formacion tecnica, academica y humana.',
+            'symbols_shield_image_path' => null,
+            'symbols_shield_items' => [],
+            'symbols_hymn_title' => 'Himno Institucional',
+            'symbols_hymn_audio_path' => null,
+            'symbols_hymn_lyrics' => "Coro\nOh glorioso claustro Herrera,\nfaro de luz y de saber,\nen tus campos se forja el futuro,\ndel hombre que quiere crecer.\n\nEstrofa I\nBajo el cielo de nuestra llanura,\ndonde el verde se funde con paz,\nestudiamos con fe y con cordura,\npara el agro en su luz eficaz.\n\nEstrofa II\nCon las manos labramos la tierra,\ncon el alma buscamos la verdad,\nJose Maria Herrera nos orienta,\na la ciencia y a la libertad.\n\nEstrofa III\nPivijay nos entrega su cuna,\nla institucion nos da la vision,\nno habra nunca mayor fortuna,\nque esta noble educacion.",
             'theme_primary' => static::THEME_COLOR_DEFAULTS['theme_primary'],
             'theme_primary_dark' => static::THEME_COLOR_DEFAULTS['theme_primary_dark'],
             'theme_primary_light' => static::THEME_COLOR_DEFAULTS['theme_primary_light'],
@@ -314,6 +391,99 @@ class PublicSettings
         }
 
         return $normalized;
+    }
+
+    /**
+     * @return array<int, array{name: string, description: string, color_hex: string}>
+     */
+    private static function normalizeSymbolStripes(mixed $stripes): array
+    {
+        if (! is_array($stripes)) {
+            return [];
+        }
+
+        $normalized = [];
+
+        foreach ($stripes as $stripe) {
+            if (! is_array($stripe)) {
+                continue;
+            }
+
+            $name = trim((string) ($stripe['name'] ?? ''));
+            $description = trim((string) ($stripe['description'] ?? ''));
+            $color = static::sanitizeHexColor((string) ($stripe['color_hex'] ?? ''));
+
+            if ($name === '' || $description === '' || $color === null) {
+                continue;
+            }
+
+            $normalized[] = [
+                'name' => $name,
+                'description' => $description,
+                'color_hex' => $color,
+            ];
+        }
+
+        return $normalized;
+    }
+
+    /**
+     * @return array<int, array{title: string, description: string, icon: string}>
+     */
+    private static function normalizeSymbolShieldItems(mixed $items): array
+    {
+        if (! is_array($items)) {
+            return [];
+        }
+
+        $normalized = [];
+
+        foreach ($items as $item) {
+            if (! is_array($item)) {
+                continue;
+            }
+
+            $title = trim((string) ($item['title'] ?? ''));
+            $description = trim((string) ($item['description'] ?? ''));
+            $icon = trim((string) ($item['icon'] ?? 'shield'));
+
+            if ($title === '' || $description === '') {
+                continue;
+            }
+
+            if (! preg_match('/^[a-z0-9_]+$/', $icon)) {
+                $icon = 'shield';
+            }
+
+            $normalized[] = [
+                'title' => $title,
+                'description' => $description,
+                'icon' => $icon,
+            ];
+        }
+
+        return $normalized;
+    }
+
+    private static function normalizeHymnLyrics(?string $value): string
+    {
+        $content = trim((string) ($value ?? ''));
+
+        if ($content === '') {
+            $content = (string) static::fallbackFor('symbols_hymn_lyrics');
+        }
+
+        if (preg_match('/<[^>]+>/', $content) === 1) {
+            $content = preg_replace('/<\s*br\s*\/?>/i', "\n", $content) ?? $content;
+            $content = preg_replace('/<\/\s*(p|div|h[1-6]|li|blockquote|tr|table|ul|ol)\s*>/i', "\n", $content) ?? $content;
+            $content = html_entity_decode(strip_tags($content), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        }
+
+        $content = str_replace(["\r\n", "\r"], "\n", $content);
+        $content = preg_replace("/[ \t]+\n/", "\n", $content) ?? $content;
+        $content = preg_replace("/\n{3,}/", "\n\n", $content) ?? $content;
+
+        return trim($content);
     }
 
     private static function isValidAllyUrl(string $url): bool

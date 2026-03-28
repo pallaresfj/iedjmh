@@ -191,6 +191,96 @@ class SettingForm
                     ])
                     ->columns(3)
                     ->columnSpanFull(),
+                Fieldset::make('Simbolos institucionales')
+                    ->schema([
+                        Textarea::make('symbols_flag_intro')
+                            ->label('Introduccion de bandera')
+                            ->rows(3)
+                            ->maxLength(1200)
+                            ->columnSpanFull(),
+                        Repeater::make('symbols_flag_stripes')
+                            ->label('Franjas de la bandera')
+                            ->defaultItems(0)
+                            ->reorderableWithButtons()
+                            ->addActionLabel('Agregar franja')
+                            ->schema([
+                                TextInput::make('name')
+                                    ->label('Nombre')
+                                    ->required()
+                                    ->maxLength(120),
+                                TextInput::make('color_hex')
+                                    ->label('Color HEX')
+                                    ->required()
+                                    ->placeholder('#2E7D32')
+                                    ->rule('regex:'.self::HEX_COLOR_REGEX)
+                                    ->maxLength(7),
+                                Textarea::make('description')
+                                    ->label('Descripcion')
+                                    ->required()
+                                    ->rows(2)
+                                    ->maxLength(500)
+                                    ->columnSpanFull(),
+                            ])
+                            ->columns(2)
+                            ->columnSpanFull(),
+                        Textarea::make('symbols_shield_intro')
+                            ->label('Introduccion del escudo')
+                            ->rows(3)
+                            ->maxLength(1200)
+                            ->columnSpan(6),
+                        FileUpload::make('symbols_shield_image_path')
+                            ->label('Imagen del escudo')
+                            ->helperText('Recomendado: PNG con fondo transparente.')
+                            ->disk('public')
+                            ->directory('settings/symbols')
+                            ->image()
+                            ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml'])
+                            ->maxSize(4096)
+                            ->columnSpan(6),
+                        Repeater::make('symbols_shield_items')
+                            ->label('Elementos del escudo')
+                            ->defaultItems(0)
+                            ->reorderableWithButtons()
+                            ->addActionLabel('Agregar elemento')
+                            ->schema([
+                                TextInput::make('title')
+                                    ->label('Titulo')
+                                    ->required()
+                                    ->maxLength(120),
+                                TextInput::make('icon')
+                                    ->label('Icono Material')
+                                    ->required()
+                                    ->placeholder('agriculture')
+                                    ->maxLength(60),
+                                Textarea::make('description')
+                                    ->label('Descripcion')
+                                    ->required()
+                                    ->rows(2)
+                                    ->maxLength(500)
+                                    ->columnSpanFull(),
+                            ])
+                            ->columns(2)
+                            ->columnSpanFull(),
+                        TextInput::make('symbols_hymn_title')
+                            ->label('Titulo de himno')
+                            ->maxLength(160)
+                            ->columnSpan(6),
+                        FileUpload::make('symbols_hymn_audio_path')
+                            ->label('Audio del himno')
+                            ->helperText('Acepta MP3, OGG, WAV o M4A.')
+                            ->disk('public')
+                            ->directory('settings/symbols')
+                            ->acceptedFileTypes(['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/mp4', 'audio/x-m4a'])
+                            ->maxSize(10240)
+                            ->columnSpan(6),
+                        Textarea::make('symbols_hymn_lyrics')
+                            ->label('Letra del himno')
+                            ->rows(12)
+                            ->maxLength(12000)
+                            ->columnSpanFull(),
+                    ])
+                    ->columns(12)
+                    ->columnSpanFull(),
                 Fieldset::make('Identidad visual')
                     ->schema([
                         static::colorPicker('theme_primary', 'Primario', self::THEME_DEFAULTS['theme_primary']),

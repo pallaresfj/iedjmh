@@ -3,7 +3,7 @@
 @section('title', $title)
 
 @section('content')
-    <x-public.internal-page :title="$title" :lead="$lead" :banner="$banner" section-key="proyectos" :replace-header-with-banner="true">
+    <x-public.internal-page :title="$title" :lead="$lead" :banner="$banner" section-key="proyectos" :replace-header-with-banner="true" :force-banner-title-style="true">
         <x-slot:sidebar>
             <div class="public-surface p-4 sm:p-5">
                 <p class="public-heading text-sm font-semibold uppercase tracking-wide text-ied-gray-900">Navegacion</p>

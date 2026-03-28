@@ -66,6 +66,10 @@ class InstitutionController extends Controller
 
         $definition = $definitions[$pageKey];
         $cmsPage = $this->publishedPageByBindingOrSlug($definition['menu_binding'] ?? null, $definition['slug']);
+        $title = $cmsPage?->title ?: $definition['title'];
+        $lead = $cmsPage?->summary ?: $definition['summary'];
+        $symbols = $pageKey === 'simbolos' ? PublicSettings::symbols() : [];
+
         $directiveDirectory = $pageKey === 'equipo-directivo'
             ? $this->resolveDirectiveStaffDirectory($request)
             : [
@@ -77,8 +81,8 @@ class InstitutionController extends Controller
 
         return view('public.institucion.page', [
             'pageKey' => $pageKey,
-            'title' => $cmsPage?->title ?: $definition['title'],
-            'lead' => $cmsPage?->summary ?: $definition['summary'],
+            'title' => $title,
+            'lead' => $lead,
             'banner' => $this->resolvePageBanner($cmsPage),
             'blocks' => $this->resolveBlocks($cmsPage, $definition),
             'campuses' => $pageKey === 'sedes' ? $this->resolveCampuses() : collect(),
@@ -87,6 +91,7 @@ class InstitutionController extends Controller
             'directiveStaff' => $directiveDirectory['members'],
             'hasStaffActiveFilters' => $directiveDirectory['has_active_filters'],
             'institutionPages' => $this->navigationItems($definitions),
+            'symbols' => $symbols,
         ]);
     }
 

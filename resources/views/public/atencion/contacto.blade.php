@@ -7,7 +7,7 @@
     @php($locationLongitude = is_numeric($contact['longitude'] ?? null) ? number_format((float) $contact['longitude'], 6, '.', '') : null)
     @php($hasLocationCoordinates = filled($locationLatitude) && filled($locationLongitude))
 
-    <x-public.internal-page :title="$title" :lead="$lead" :banner="$banner" section-key="atencion" :replace-header-with-banner="true">
+    <x-public.internal-page :title="$title" :lead="$lead" :banner="$banner" section-key="atencion" :replace-header-with-banner="true" :force-banner-title-style="true">
         <x-slot:sidebar>
             <x-public.atencion.sidebar :pages="$attentionPages" />
         </x-slot:sidebar>

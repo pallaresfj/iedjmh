@@ -4,6 +4,7 @@ namespace App\Support\Dashboard;
 
 use App\Filament\Resources\Contracts\ContractResource;
 use App\Filament\Resources\Events\EventResource;
+use App\Filament\Resources\PqrsRequests\PqrsRequestResource;
 use App\Filament\Resources\Posts\PostResource;
 use App\Models\Contract;
 use App\Models\Event;
@@ -80,7 +81,7 @@ class AdminDashboardData
                 'description' => 'PQRS pendientes',
                 'icon' => 'heroicon-o-chat-bubble-left-right',
                 'badge_class' => 'agro-badge agro-badge--emerald',
-                'url' => null,
+                'url' => $this->resourceIndexUrl(PqrsRequestResource::class, 'filament.admin.resources.pqrs-requests.index'),
             ],
             [
                 'label' => 'Esta semana',
@@ -163,6 +164,7 @@ class AdminDashboardData
                     'status_label' => $status['label'],
                     'status_badge_class' => $status['badge_class'],
                     'stripe_class' => $status['stripe_class'],
+                    'record_url' => $this->pqrsRecordUrl($request),
                 ];
             });
     }
@@ -323,6 +325,27 @@ class AdminDashboardData
         };
     }
 
+    private function pqrsRecordUrl(PqrsRequest $request): ?string
+    {
+        $editUrl = $this->resourceEditUrl(
+            PqrsRequestResource::class,
+            $request,
+            'filament.admin.resources.pqrs-requests.edit',
+            ['record' => $request],
+        );
+
+        if (filled($editUrl)) {
+            return $editUrl;
+        }
+
+        return $this->resourceViewUrl(
+            PqrsRequestResource::class,
+            $request,
+            'filament.admin.resources.pqrs-requests.view',
+            ['record' => $request],
+        );
+    }
+
     /**
      * @return array{label: string, badge_class: string, stripe_class: string}
      */
@@ -402,6 +425,26 @@ class AdminDashboardData
         return $this->routeIfExists($routeName, $routeParameters);
     }
 
+    /**
+     * @param  array<string, mixed>  $routeParameters
+     */
+    private function resourceViewUrl(
+        string $resourceClass,
+        Model $record,
+        string $routeName,
+        array $routeParameters = [],
+    ): ?string {
+        if (! $this->resourceCanView($resourceClass, $record) || ! $this->resourceHasPage($resourceClass, 'view')) {
+            return null;
+        }
+
+        if (! $this->resourceCanResolveRecord($resourceClass, $record)) {
+            return null;
+        }
+
+        return $this->routeIfExists($routeName, $routeParameters);
+    }
+
     private function resourceCanViewAny(string $resourceClass): bool
     {
         if (! class_exists($resourceClass) || ! method_exists($resourceClass, 'canViewAny')) {
@@ -436,6 +479,19 @@ class AdminDashboardData
 
         try {
             return (bool) $resourceClass::canEdit($record);
+        } catch (Throwable) {
+            return false;
+        }
+    }
+
+    private function resourceCanView(string $resourceClass, Model $record): bool
+    {
+        if (! class_exists($resourceClass) || ! method_exists($resourceClass, 'canView')) {
+            return false;
+        }
+
+        try {
+            return (bool) $resourceClass::canView($record);
         } catch (Throwable) {
             return false;
         }

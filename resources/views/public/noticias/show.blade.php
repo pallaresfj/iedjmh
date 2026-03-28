@@ -7,7 +7,7 @@
 @endif
 
 @section('content')
-    <x-public.internal-page :title="$news['title']" :lead="$news['excerpt']" :banner="$banner" section-key="noticias">
+    <x-public.internal-page :title="$news['title']" :lead="$news['excerpt']" :banner="$banner" section-key="noticias" :force-banner-title-style="true">
         <x-slot:sidebar>
             <div class="public-surface p-4 sm:p-5">
                 <p class="public-heading text-sm font-semibold uppercase tracking-wide text-ied-gray-900">Volver</p>

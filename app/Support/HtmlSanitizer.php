@@ -24,10 +24,24 @@ class HtmlSanitizer
         'ol',
         'li',
         'a',
+        'h1',
         'h2',
         'h3',
         'h4',
+        'h5',
+        'h6',
         'blockquote',
+        'hr',
+        'table',
+        'thead',
+        'tbody',
+        'tfoot',
+        'tr',
+        'th',
+        'td',
+        'figure',
+        'figcaption',
+        'img',
     ];
 
     /**
@@ -35,6 +49,9 @@ class HtmlSanitizer
      */
     private const ALLOWED_ATTRIBUTES = [
         'a' => ['href', 'target', 'rel'],
+        'img' => ['src', 'alt', 'title', 'width', 'height'],
+        'th' => ['colspan', 'rowspan'],
+        'td' => ['colspan', 'rowspan'],
     ];
 
     public static function sanitize(?string $html): ?string
@@ -66,7 +83,7 @@ class HtmlSanitizer
         }
 
         if (! $root) {
-            return strip_tags($html, '<p><br><strong><em><b><i><u><s><ul><ol><li><a><h2><h3><h4><blockquote>');
+            return strip_tags($html, '<p><br><strong><em><b><i><u><s><ul><ol><li><a><h1><h2><h3><h4><h5><h6><blockquote><hr><table><thead><tbody><tfoot><tr><th><td><figure><figcaption><img>');
         }
 
         static::sanitizeNodeChildren($root);
@@ -136,6 +153,26 @@ class HtmlSanitizer
             }
         }
 
+        if (in_array($tag, ['th', 'td'], true)) {
+            static::sanitizePositiveIntegerAttribute($element, 'colspan');
+            static::sanitizePositiveIntegerAttribute($element, 'rowspan');
+        }
+
+        if ($tag === 'img') {
+            $src = trim((string) $element->getAttribute('src'));
+
+            if (! static::isSafeUrl($src)) {
+                static::removeNode($element);
+
+                return;
+            }
+
+            static::sanitizePositiveIntegerAttribute($element, 'width');
+            static::sanitizePositiveIntegerAttribute($element, 'height');
+
+            return;
+        }
+
         if ($tag !== 'a') {
             return;
         }
@@ -160,6 +197,19 @@ class HtmlSanitizer
         }
 
         $element->setAttribute('rel', 'noopener noreferrer');
+    }
+
+    private static function sanitizePositiveIntegerAttribute(DOMElement $element, string $attribute): void
+    {
+        if (! $element->hasAttribute($attribute)) {
+            return;
+        }
+
+        $value = trim((string) $element->getAttribute($attribute));
+
+        if ($value === '' || preg_match('/^[1-9][0-9]*$/', $value) !== 1) {
+            $element->removeAttribute($attribute);
+        }
     }
 
     private static function unwrapNode(DOMElement $element): void

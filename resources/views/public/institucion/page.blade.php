@@ -36,6 +36,111 @@
                 </section>
             @endforeach
 
+            @if ($pageKey === 'simbolos')
+                <section class="space-y-6 border-t border-ied-gray-200 pt-6">
+                    <div class="grid gap-6 lg:grid-cols-2">
+                        <article class="public-surface public-symbols-card p-5 sm:p-6">
+                            <div class="public-symbols-flag-art" aria-hidden="true">
+                                @foreach ($symbols['flag_stripes'] as $stripe)
+                                    <div class="public-symbols-flag-art__stripe" style="background-color: {{ $stripe['color_hex'] }};"></div>
+                                @endforeach
+                            </div>
+
+                            <div class="mt-5 space-y-4 sm:mt-6">
+                                <h2 class="public-symbols-card__title">
+                                    <span class="material-symbols-outlined" aria-hidden="true">flag</span>
+                                    La Bandera
+                                </h2>
+                                <p class="text-sm leading-relaxed text-ied-gray-700 sm:text-base">{{ $symbols['flag_intro'] }}</p>
+
+                                <ul class="space-y-3" aria-label="Significado de los colores de la bandera">
+                                    @foreach ($symbols['flag_stripes'] as $stripe)
+                                        <li class="public-symbols-legend-item">
+                                            <span class="public-symbols-legend-item__swatch" style="background-color: {{ $stripe['color_hex'] }};"></span>
+                                            <div>
+                                                <p class="text-sm font-semibold text-ied-gray-900">{{ $stripe['name'] }}</p>
+                                                <p class="text-xs leading-relaxed text-ied-gray-700 sm:text-sm">{{ $stripe['description'] }}</p>
+                                            </div>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </article>
+
+                        <article class="public-surface public-symbols-card p-5 sm:p-6">
+                            <div class="public-symbols-shield-art">
+                                @if (! empty($symbols['shield_image_url']))
+                                    <img
+                                        src="{{ $symbols['shield_image_url'] }}"
+                                        alt="Escudo institucional"
+                                        class="public-symbols-shield-art__image"
+                                        loading="lazy"
+                                    >
+                                @else
+                                    <div class="public-symbols-shield-art__placeholder" role="status" aria-live="polite">
+                                        Escudo no cargado
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="mt-5 space-y-4 sm:mt-6">
+                                <h2 class="public-symbols-card__title">
+                                    <span class="material-symbols-outlined" aria-hidden="true">shield</span>
+                                    El Escudo
+                                </h2>
+                                <p class="text-sm leading-relaxed text-ied-gray-700 sm:text-base">{{ $symbols['shield_intro'] }}</p>
+
+                                <div class="grid gap-3 sm:grid-cols-2">
+                                    @foreach ($symbols['shield_items'] as $item)
+                                        <article class="public-symbols-shield-item">
+                                            <div class="public-symbols-shield-item__heading">
+                                                <span class="material-symbols-outlined" aria-hidden="true">{{ $item['icon'] }}</span>
+                                                <p class="text-sm font-semibold text-ied-primary-dark">{{ $item['title'] }}</p>
+                                            </div>
+                                            <p class="mt-1 text-xs leading-relaxed text-ied-gray-700">{{ $item['description'] }}</p>
+                                        </article>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+
+                    <section class="public-symbols-hymn" aria-labelledby="symbols-hymn-title">
+                        <div class="public-symbols-hymn__header">
+                            <span class="material-symbols-outlined" aria-hidden="true">music_note</span>
+                            <h2 id="symbols-hymn-title" class="public-symbols-hymn__title">{{ $symbols['hymn_title'] }}</h2>
+                        </div>
+
+                        <div class="public-symbols-audio">
+                            @if (! empty($symbols['hymn_audio_url']))
+                                <audio controls preload="none" class="public-symbols-audio__player" data-symbols-audio-player>
+                                    <source src="{{ $symbols['hymn_audio_url'] }}">
+                                    Tu navegador no soporta la reproduccion de audio.
+                                </audio>
+                            @else
+                                <div class="public-symbols-audio__empty" role="status" aria-live="polite">
+                                    No hay un archivo de audio del himno cargado. Puedes agregarlo desde el panel administrativo.
+                                </div>
+                            @endif
+                        </div>
+
+                        <article class="public-symbols-lyrics public-symbols-lyrics--single">
+                            <h3 class="sr-only">Letra del himno institucional</h3>
+                            @php($hymnStanzas = preg_split('/\R{2,}/u', trim((string) ($symbols['hymn_lyrics'] ?? ''))) ?: [])
+                            <div class="public-symbols-lyrics__content text-sm text-ied-gray-700 sm:text-base">
+                                @forelse ($hymnStanzas as $stanza)
+                                    @if (trim($stanza) !== '')
+                                        <p class="public-symbols-lyrics__stanza">{!! nl2br(e(trim($stanza))) !!}</p>
+                                    @endif
+                                @empty
+                                    <p class="public-symbols-lyrics__stanza">Letra del himno no disponible.</p>
+                                @endforelse
+                            </div>
+                        </article>
+                    </section>
+                </section>
+            @endif
+
             @if ($pageKey === 'sedes')
                 <section class="space-y-4 border-t border-ied-gray-200 pt-6">
                     <h2 class="public-heading text-xl font-semibold text-ied-gray-900">Nuestras sedes</h2>

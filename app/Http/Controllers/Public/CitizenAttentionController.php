@@ -10,6 +10,7 @@ use App\Models\PqrsMessage;
 use App\Models\PqrsRequest;
 use App\Models\Procedure;
 use App\Support\PublicSettings;
+use App\Support\Pqrs\TrackingCodeGenerator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -72,7 +73,7 @@ class CitizenAttentionController extends Controller
         ]);
     }
 
-    public function submitPqrs(Request $request): RedirectResponse
+    public function submitPqrs(Request $request, TrackingCodeGenerator $trackingCodeGenerator): RedirectResponse
     {
         abort_unless($this->canQueryTable('pqrs_requests'), 404);
 
@@ -92,7 +93,7 @@ class CitizenAttentionController extends Controller
             'consent_habeas_data.accepted' => 'Debes aceptar el tratamiento de datos personales para continuar.',
         ]);
 
-        $trackingCode = $this->generateTrackingCode();
+        $trackingCode = $trackingCodeGenerator->generate();
 
         $pqrs = PqrsRequest::query()->create([
             'tracking_code' => $trackingCode,
@@ -453,12 +454,4 @@ class CitizenAttentionController extends Controller
         ]);
     }
 
-    private function generateTrackingCode(): string
-    {
-        do {
-            $code = 'PQRS-'.now()->format('Y').'-'.Str::upper(Str::random(6));
-        } while (PqrsRequest::query()->where('tracking_code', $code)->exists());
-
-        return $code;
-    }
 }

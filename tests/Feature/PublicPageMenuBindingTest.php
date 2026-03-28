@@ -117,6 +117,7 @@ test('linked page banner is rendered above institutional page content', function
     $this->get(route('institucion.historia'))
         ->assertOk()
         ->assertSee('Resumen institucional visible')
+        ->assertSee('public-internal-banner-section public-banner-full-bleed', false)
         ->assertSee('Banner institucional de historia')
         ->assertSee('Mensaje destacado para la pagina de historia.')
         ->assertSee('href="https://example.com/historia"', false)
@@ -162,6 +163,37 @@ test('citizen attention pages render linked banner for the mapped page slug', fu
         ->assertOk()
         ->assertSee('Banner de atencion ciudadana')
         ->assertSee('Informacion destacada para quienes necesitan canales de contacto.');
+});
+
+test('symbols page renders linked banner content when available', function () {
+    $page = Page::query()->create([
+        'title' => 'Simbolos institucionales CMS',
+        'slug' => 'simbolos-institucionales-cms',
+        'menu_binding' => 'institucion.simbolos',
+        'status' => 'published',
+    ]);
+
+    Banner::query()->create([
+        'title' => 'Banner especial de simbolos',
+        'slug' => 'banner-simbolos',
+        'page_id' => $page->id,
+        'subtitle' => 'Identidad institucional',
+        'description' => 'Mensaje destacado de simbolos desde el banner.',
+        'cta_label' => 'Conocer simbolos',
+        'cta_url' => 'https://example.com/simbolos',
+        'target' => '_blank',
+        'status' => 'published',
+    ]);
+
+    $this->get(route('institucion.simbolos'))
+        ->assertOk()
+        ->assertSee('public-internal-banner-section public-banner-full-bleed', false)
+        ->assertSee('Identidad institucional')
+        ->assertSee('Banner especial de simbolos')
+        ->assertSee('Mensaje destacado de simbolos desde el banner.')
+        ->assertSee('Conocer simbolos')
+        ->assertSee('href="https://example.com/simbolos"', false)
+        ->assertSee('target="_blank"', false);
 });
 
 test('news listing page renders linked banner', function () {
@@ -246,7 +278,7 @@ test('cms base page keeps standard header when no linked banner exists', functio
         ->assertSee('Seccion institucional');
 });
 
-test('detail page keeps standard header even when listing banner exists', function () {
+test('detail page hides standard header and keeps listing banner for non cms views', function () {
     $listingPage = Page::query()->create([
         'title' => 'Noticias CMS para detalle',
         'slug' => 'noticias',
@@ -270,7 +302,25 @@ test('detail page keeps standard header even when listing banner exists', functi
 
     $this->get(route('noticias.show', ['slug' => $post->slug]))
         ->assertOk()
-        ->assertSee('Seccion institucional')
+        ->assertSee('public-internal-banner-section public-banner-full-bleed', false)
+        ->assertDontSee('Seccion institucional')
         ->assertSee('Detalle noticia con encabezado')
         ->assertSee('Banner listado noticias');
+});
+
+test('non cms detail page renders dark fallback banner when cms banner is missing', function () {
+    $post = Post::query()->create([
+        'title' => 'Noticia sin banner asociado',
+        'slug' => 'noticia-sin-banner-asociado',
+        'status' => 'published',
+        'content' => '<p>Contenido de prueba</p>',
+        'published_at' => now(),
+    ]);
+
+    $this->get(route('noticias.show', ['slug' => $post->slug]))
+        ->assertOk()
+        ->assertSee('public-internal-banner-section public-banner-full-bleed', false)
+        ->assertSee('public-internal-banner--fallback', false)
+        ->assertDontSee('Seccion institucional')
+        ->assertSee('Noticia sin banner asociado');
 });

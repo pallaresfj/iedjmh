@@ -40,6 +40,14 @@ class Setting extends Model
         'home_hero_cta_url',
         'home_hero_cta_target',
         'home_hero_image_path',
+        'symbols_flag_intro',
+        'symbols_flag_stripes',
+        'symbols_shield_intro',
+        'symbols_shield_image_path',
+        'symbols_shield_items',
+        'symbols_hymn_title',
+        'symbols_hymn_audio_path',
+        'symbols_hymn_lyrics',
         'contracting_manual_document_id',
         'singleton',
     ];
@@ -52,6 +60,12 @@ class Setting extends Model
             'location_longitude' => 'decimal:7',
             'home_hero_description' => 'string',
             'allies' => 'array',
+            'symbols_flag_intro' => 'string',
+            'symbols_flag_stripes' => 'array',
+            'symbols_shield_intro' => 'string',
+            'symbols_shield_image_path' => 'string',
+            'symbols_shield_items' => 'array',
+            'symbols_hymn_lyrics' => 'string',
         ];
     }
 

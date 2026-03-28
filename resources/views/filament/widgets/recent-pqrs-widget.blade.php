@@ -17,6 +17,12 @@
                     <span class="{{ $item['status_badge_class'] }}">
                         {{ $item['status_label'] }}
                     </span>
+
+                    @if (filled($item['record_url']))
+                        <a href="{{ $item['record_url'] }}" class="agro-surface__action">
+                            Revisar
+                        </a>
+                    @endif
                 </article>
             @empty
                 <p class="agro-empty-copy">No hay solicitudes PQRS registradas aun.</p>

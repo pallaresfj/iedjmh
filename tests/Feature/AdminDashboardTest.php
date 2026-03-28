@@ -259,6 +259,17 @@ test('dashboard disables resource links when user lacks permissions', function (
         'published_at' => now()->subDay(),
     ]);
 
+    $pqrs = PqrsRequest::query()->create([
+        'tracking_code' => 'PQRS-2026-DENY-001',
+        'type' => 'peticion',
+        'status' => 'received',
+        'priority' => 'medium',
+        'subject' => 'PQRS sin permisos de acceso',
+        'message' => str_repeat('Sin acceso. ', 4),
+        'applicant_name' => 'Solicitante restringido',
+        'submitted_at' => now()->subHour(),
+    ]);
+
     $postsIndexUrl = route('filament.admin.resources.posts.index');
     $postsCreateUrl = route('filament.admin.resources.posts.create');
     $postEditUrl = route('filament.admin.resources.posts.edit', ['record' => $post]);
@@ -266,6 +277,8 @@ test('dashboard disables resource links when user lacks permissions', function (
     $eventsCreateUrl = route('filament.admin.resources.events.create');
     $contractsIndexUrl = route('filament.admin.resources.contracts.index');
     $contractsCreateUrl = route('filament.admin.resources.contracts.create');
+    $pqrsIndexUrl = route('filament.admin.resources.pqrs-requests.index');
+    $pqrsEditUrl = route('filament.admin.resources.pqrs-requests.edit', ['record' => $pqrs]);
 
     $this->actingAs($user)
         ->get('/admin')
@@ -277,8 +290,45 @@ test('dashboard disables resource links when user lacks permissions', function (
         ->assertDontSee($eventsCreateUrl, false)
         ->assertDontSee($contractsIndexUrl, false)
         ->assertDontSee($contractsCreateUrl, false)
+        ->assertDontSee($pqrsIndexUrl, false)
+        ->assertDontSee($pqrsEditUrl, false)
         ->assertDontSee('Ver calendario completo')
         ->assertDontSee('Ver procesos');
+});
+
+test('dashboard exposes pqrs links when user has pqrs permissions', function () {
+    $role = Role::findOrCreate('colaborador', 'web');
+    $role->syncPermissions([
+        Permission::findOrCreate('ViewAny:PqrsRequest', 'web'),
+        Permission::findOrCreate('View:PqrsRequest', 'web'),
+        Permission::findOrCreate('Update:PqrsRequest', 'web'),
+    ]);
+
+    $user = User::factory()->create([
+        'is_admin' => false,
+    ]);
+    $user->assignRole($role);
+
+    $pqrs = PqrsRequest::query()->create([
+        'tracking_code' => 'PQRS-2026-LINK-001',
+        'type' => 'peticion',
+        'status' => 'received',
+        'priority' => 'medium',
+        'subject' => 'Solicitud con enlace en dashboard',
+        'message' => str_repeat('Mensaje de prueba. ', 4),
+        'applicant_name' => 'Persona con enlace',
+        'submitted_at' => now()->subMinutes(30),
+    ]);
+
+    $pqrsIndexUrl = route('filament.admin.resources.pqrs-requests.index');
+    $pqrsEditUrl = route('filament.admin.resources.pqrs-requests.edit', ['record' => $pqrs]);
+
+    $this->actingAs($user)
+        ->get('/admin')
+        ->assertOk()
+        ->assertSee($pqrsIndexUrl, false)
+        ->assertSee($pqrsEditUrl, false)
+        ->assertSee('Revisar');
 });
 
 test('dashboard shows post create shortcut when user can create posts', function () {

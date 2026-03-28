@@ -5,12 +5,12 @@
 @section('content')
     @php($heroOpensInNewTab = ($hero['cta_target'] ?? '_self') === '_blank')
 
-    <section class="public-home-hero relative flex min-h-[37.5rem] items-center overflow-hidden text-white">
+    <section class="public-home-hero public-banner-full-bleed relative isolate flex w-full min-h-[clamp(34rem,72vh,50rem)] items-center overflow-hidden text-white">
         @if ($hero['image_url'])
             <img
                 src="{{ $hero['image_url'] }}"
                 alt="{{ $hero['title'] }}"
-                class="absolute inset-0 z-0 h-full w-full object-cover opacity-65"
+                class="public-home-hero__media absolute inset-0 z-0 h-full w-full object-cover"
                 loading="eager"
             />
         @else
@@ -19,16 +19,16 @@
 
         <div class="public-home-hero__overlay absolute inset-0 z-10" aria-hidden="true"></div>
 
-        <div class="public-container relative z-20 py-20">
+        <div class="public-container relative z-20 py-20 sm:py-24 lg:py-28">
             <div class="public-content-shell">
-                <div class="max-w-2xl">
-                    <span class="public-home-hero__eyebrow inline-block rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-[0.16em]">
+                <div class="public-home-hero__content max-w-2xl">
+                    <span class="public-home-hero__eyebrow inline-block rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] backdrop-blur-sm">
                         {{ $hero['eyebrow'] }}
                     </span>
-                    <h1 class="public-heading mt-6 text-4xl font-black leading-[1.04] tracking-[-0.03em] text-white sm:text-5xl lg:text-6xl">
+                    <h1 class="public-home-hero__title public-heading mt-6 text-4xl font-black leading-[1.04] tracking-[-0.03em] text-white sm:text-5xl lg:text-6xl xl:text-[4.25rem]">
                         {{ $hero['title'] }}
                     </h1>
-                    <p class="public-home-hero__description mt-5 max-w-xl text-[17px] leading-relaxed sm:text-lg">
+                    <p class="public-home-hero__description mt-5 max-w-xl text-base leading-relaxed sm:text-lg lg:text-xl">
                         {{ $hero['description'] }}
                     </p>
 
@@ -37,7 +37,7 @@
                             href="{{ $hero['cta_url'] }}"
                             target="{{ $heroOpensInNewTab ? '_blank' : '_self' }}"
                             @if ($heroOpensInNewTab) rel="noopener noreferrer" @endif
-                            class="inline-flex items-center gap-2 rounded-full bg-ied-primary px-8 py-4 text-base font-bold text-white shadow-lg shadow-ied-primary/30 transition hover:bg-ied-primary-dark"
+                            class="public-home-hero__cta inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-bold transition"
                         >
                             <span>{{ $hero['cta_label'] }}</span>
                             <span class="material-symbols-outlined !text-[20px]" aria-hidden="true">arrow_forward</span>

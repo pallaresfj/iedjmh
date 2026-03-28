@@ -22,14 +22,25 @@ test('public home renders global public layout elements', function () {
         ->assertSee('Explorar');
 });
 
-test('public home hero uses directional overlay structure', function () {
+test('public home hero renders full width structure with overlay layers', function () {
     $response = $this->get(route('home'));
 
     $response
         ->assertOk()
-        ->assertSee('public-home-hero relative', false)
+        ->assertSee('public-home-hero public-banner-full-bleed', false)
+        ->assertSee('public-home-hero__media', false)
         ->assertSee('public-home-hero__overlay', false)
-        ->assertDontSee('bg-gradient-to-r from-slate-950 via-slate-900/45 to-transparent', false);
+        ->assertSee('public-home-hero__content', false)
+        ->assertSee('public-home-hero__cta', false);
+});
+
+test('public home hero renders fallback headline and cta copy', function () {
+    $response = $this->get(route('home'));
+
+    $response
+        ->assertOk()
+        ->assertSee('Formando lideres para el agro y la vida')
+        ->assertSee('Conoce nuestra matricula 2026');
 });
 
 test('public home renders theme marker and toggle controls', function () {
