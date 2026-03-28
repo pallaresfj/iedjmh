@@ -116,6 +116,7 @@ class SettingForm
                             ->image()
                             ->acceptedFileTypes(['image/png', 'image/svg+xml'])
                             ->maxSize(2048)
+                            ->fetchFileInformation(false)
                             ->deletable()
                             ->openable()
                             ->columnSpan(6),
@@ -194,6 +195,7 @@ class SettingForm
                             ->image()
                             ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp'])
                             ->maxSize(4096)
+                            ->fetchFileInformation(false)
                             ->deletable()
                             ->openable()
                             ->columnSpanFull(),
@@ -245,6 +247,7 @@ class SettingForm
                             ->image()
                             ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml'])
                             ->maxSize(4096)
+                            ->fetchFileInformation(false)
                             ->deletable()
                             ->openable()
                             ->columnSpan(6),
@@ -283,6 +286,7 @@ class SettingForm
                             ->directory('settings/symbols')
                             ->acceptedFileTypes(['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/mp4', 'audio/x-m4a'])
                             ->maxSize(10240)
+                            ->fetchFileInformation(false)
                             ->deletable()
                             ->openable()
                             ->columnSpan(6),
