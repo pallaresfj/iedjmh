@@ -157,7 +157,7 @@ test('project detail shows external reference button and gallery thumbnails', fu
 
     $this->get(route('academico.proyectos-pedagogicos.show', ['slug' => $project->slug]))
         ->assertOk()
-        ->assertSee('Mas informacion')
+        ->assertSee('Mas información')
         ->assertSee('href="https://example.com/proyectos/recurso"', false)
         ->assertSee('target="_blank"', false)
         ->assertSee('rel="noopener noreferrer"', false)
@@ -179,8 +179,8 @@ test('project detail uses gallery image as primary when cover is missing', funct
 
     $this->get(route('academico.proyectos-pedagogicos.show', ['slug' => $project->slug]))
         ->assertOk()
-        ->assertSee('src="/imagenes/proyectos/alterna.jpg"', false)
-        ->assertSee('data-project-gallery-thumbnail', false)
+        ->assertSee('/imagenes/proyectos/alterna.jpg', false)
+        ->assertSee('data-gallery-open', false)
         ->assertSee('data-project-gallery-modal', false);
 });
 
