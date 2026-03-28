@@ -3,7 +3,14 @@
 @section('title', $title)
 
 @section('content')
-    <x-public.internal-page :title="$title" :lead="$lead" :banner="$banner" section-key="academico" :replace-header-with-banner="true">
+    <x-public.internal-page
+        :title="$title"
+        :lead="$lead"
+        :banner="$banner"
+        section-key="academico"
+        :replace-header-with-banner="true"
+        :force-banner-title-style="in_array($pageKey, ['niveles-educativos', 'modalidad-agropecuaria', 'planes-area', 'sistema-evaluacion', 'proyectos-pedagogicos', 'calendario-academico'], true)"
+    >
         <x-slot:sidebar>
             <x-public.academico.sidebar :pages="$academicPages" />
 

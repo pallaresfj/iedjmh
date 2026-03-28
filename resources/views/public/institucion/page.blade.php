@@ -3,7 +3,14 @@
 @section('title', $title)
 
 @section('content')
-    <x-public.internal-page :title="$title" :lead="$lead" :banner="$banner" section-key="institucion" :replace-header-with-banner="true">
+    <x-public.internal-page
+        :title="$title"
+        :lead="$lead"
+        :banner="$banner"
+        section-key="institucion"
+        :replace-header-with-banner="true"
+        :force-banner-title-style="in_array($pageKey, ['sedes', 'pei', 'manual-convivencia', 'directorio'], true)"
+    >
         <x-slot:sidebar>
             <x-public.institucion.sidebar :pages="$institutionPages" />
 

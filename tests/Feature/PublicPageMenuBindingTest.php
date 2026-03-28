@@ -324,3 +324,46 @@ test('non cms detail page renders dark fallback banner when cms banner is missin
         ->assertDontSee('Seccion institucional')
         ->assertSee('Noticia sin banner asociado');
 });
+
+test('selected academic cms routes force banner title style with fallback when cms banner is missing', function () {
+    $routes = [
+        'academico.niveles-educativos',
+        'academico.modalidad-agropecuaria',
+        'academico.planes-area',
+        'academico.sistema-evaluacion',
+        'academico.proyectos-pedagogicos',
+        'academico.calendario-academico',
+    ];
+
+    foreach ($routes as $routeName) {
+        $this->get(route($routeName))
+            ->assertOk()
+            ->assertSee('public-internal-banner-section public-banner-full-bleed', false)
+            ->assertSee('public-internal-banner--fallback', false)
+            ->assertDontSee('Seccion institucional');
+    }
+});
+
+test('selected institution non cms routes force banner title style with fallback when cms banner is missing', function () {
+    $routes = [
+        'institucion.sedes',
+        'institucion.pei',
+        'institucion.manual-convivencia',
+        'institucion.directorio',
+    ];
+
+    foreach ($routes as $routeName) {
+        $this->get(route($routeName))
+            ->assertOk()
+            ->assertSee('public-internal-banner-section public-banner-full-bleed', false)
+            ->assertSee('public-internal-banner--fallback', false)
+            ->assertDontSee('Seccion institucional');
+    }
+});
+
+test('institution cms route outside forced list keeps standard header when no linked banner exists', function () {
+    $this->get(route('institucion.historia'))
+        ->assertOk()
+        ->assertSee('Seccion institucional')
+        ->assertDontSee('public-internal-banner--fallback', false);
+});
