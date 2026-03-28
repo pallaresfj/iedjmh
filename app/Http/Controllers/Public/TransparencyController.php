@@ -36,7 +36,7 @@ class TransparencyController extends Controller
 
         return view('public.transparencia.index', [
             'title' => $landingPage?->title ?: 'Transparencia',
-            'lead' => $landingPage?->summary ?: 'Consulta informacion publica institucional y documentos oficiales para control social y rendicion de cuentas.',
+            'lead' => $landingPage?->summary ?: 'Consulta información pública institucional y documentos oficiales para control social y rendición de cuentas.',
             'banner' => $this->resolvePageBanner($landingPage),
             'categories' => $categories,
             'recentDocuments' => $recentDocuments,

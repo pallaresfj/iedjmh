@@ -10,7 +10,7 @@ uses(RefreshDatabase::class);
 test('citizen attention landing page loads', function () {
     $this->get(route('atencion.index'))
         ->assertOk()
-        ->assertSee('Atencion al Ciudadano');
+        ->assertSee('Atención al Ciudadano');
 });
 
 test('citizen attention landing shows featured faqs', function () {

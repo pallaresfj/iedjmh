@@ -30,8 +30,8 @@ class CitizenAttentionController extends Controller
         $categories = $this->procedureCategories();
 
         return view('public.atencion.index', [
-            'title' => $page?->title ?: 'Atencion al Ciudadano',
-            'lead' => $page?->summary ?: 'Canales institucionales de contacto, PQRS, tramites, participacion y orientacion ciudadana.',
+            'title' => $page?->title ?: 'Atención al Ciudadano',
+            'lead' => $page?->summary ?: 'Canales institucionales de contacto, PQRS, trámites, participación y orientación ciudadana.',
             'banner' => $this->resolvePageBanner($page),
             'content' => $page?->content,
             'attentionPages' => $this->attentionPages(),
@@ -45,8 +45,8 @@ class CitizenAttentionController extends Controller
         $page = $this->publishedPageBySlug('atencion-contactenos');
 
         return view('public.atencion.contacto', [
-            'title' => $page?->title ?: 'Contactenos',
-            'lead' => $page?->summary ?: 'Consulta nuestros canales de atencion institucional y horarios de servicio.',
+            'title' => $page?->title ?: 'Contáctenos',
+            'lead' => $page?->summary ?: 'Consulta nuestros canales de atención institucional y horarios de servicio.',
             'banner' => $this->resolvePageBanner($page),
             'content' => $page?->content,
             'attentionPages' => $this->attentionPages(),
@@ -61,7 +61,7 @@ class CitizenAttentionController extends Controller
 
         return view('public.atencion.pqrs', [
             'title' => $page?->title ?: 'PQRS',
-            'lead' => $page?->summary ?: 'Radica peticiones, quejas, reclamos, sugerencias, felicitaciones o tramites.',
+            'lead' => $page?->summary ?: 'Radica peticiones, quejas, reclamos, sugerencias, felicitaciones o trámites.',
             'banner' => $this->resolvePageBanner($page),
             'content' => $page?->content,
             'attentionPages' => $this->attentionPages(),
@@ -148,7 +148,7 @@ class CitizenAttentionController extends Controller
 
         return view('public.atencion.pqrs-consulta', [
             'title' => 'Consulta PQRS',
-            'lead' => 'Ingresa tu codigo de seguimiento para conocer el estado de tu solicitud.',
+            'lead' => 'Ingresa tu código de seguimiento para conocer el estado de tu solicitud.',
             'banner' => $this->resolvePageBanner($page),
             'attentionPages' => $this->attentionPages(),
             'pqrs' => null,
@@ -189,7 +189,7 @@ class CitizenAttentionController extends Controller
 
         return view('public.atencion.pqrs-consulta', [
             'title' => 'Consulta PQRS',
-            'lead' => 'Ingresa tu codigo de seguimiento para conocer el estado de tu solicitud.',
+            'lead' => 'Ingresa tu código de seguimiento para conocer el estado de tu solicitud.',
             'banner' => $this->resolvePageBanner($page),
             'attentionPages' => $this->attentionPages(),
             'pqrs' => $pqrs,
@@ -270,8 +270,8 @@ class CitizenAttentionController extends Controller
         }
 
         return view('public.atencion.tramites', [
-            'title' => $page?->title ?: 'Tramites y Servicios',
-            'lead' => $page?->summary ?: 'Consulta requisitos, costos, canales y tiempos de respuesta de tramites institucionales.',
+            'title' => $page?->title ?: 'Trámites y Servicios',
+            'lead' => $page?->summary ?: 'Consulta requisitos, costos, canales y tiempos de respuesta de trámites institucionales.',
             'banner' => $this->resolvePageBanner($page),
             'content' => $page?->content,
             'attentionPages' => $this->attentionPages(),
@@ -338,7 +338,7 @@ class CitizenAttentionController extends Controller
 
         return view('public.atencion.faq', [
             'title' => $page?->title ?: 'Preguntas Frecuentes',
-            'lead' => $page?->summary ?: 'Respuestas rapidas a consultas comunes de estudiantes, familias y ciudadanos.',
+            'lead' => $page?->summary ?: 'Respuestas rápidas a consultas comunes de estudiantes, familias y ciudadanos.',
             'banner' => $this->resolvePageBanner($page),
             'content' => $page?->content,
             'attentionPages' => $this->attentionPages(),
@@ -382,10 +382,10 @@ class CitizenAttentionController extends Controller
     {
         return collect([
             ['title' => 'Landing Atencion', 'route' => 'atencion.index'],
-            ['title' => 'Contactenos', 'route' => 'atencion.contactenos'],
+            ['title' => 'Contáctenos', 'route' => 'atencion.contactenos'],
             ['title' => 'PQRS', 'route' => 'atencion.pqrs'],
             ['title' => 'Consulta PQRS', 'route' => 'atencion.pqrs.track'],
-            ['title' => 'Tramites y servicios', 'route' => 'atencion.tramites'],
+            ['title' => 'Trámites y servicios', 'route' => 'atencion.tramites'],
             ['title' => 'Preguntas frecuentes', 'route' => 'atencion.faq'],
             ['title' => 'Mapa del sitio', 'route' => 'atencion.mapa-sitio'],
             ['title' => 'Participacion', 'route' => 'atencion.participacion'],
@@ -532,7 +532,7 @@ class CitizenAttentionController extends Controller
                 ],
             ],
             [
-                'title' => 'Atencion al Ciudadano',
+                'title' => 'Atención al Ciudadano',
                 'items' => $this->attentionPages()->map(fn (array $item): array => [
                     'label' => $item['title'],
                     'route' => $item['route'],

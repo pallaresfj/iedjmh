@@ -131,7 +131,7 @@ class ContractingController extends Controller
         }
 
         return view('public.transparencia.contratacion.index', [
-            'title' => $page?->title ?: 'Contratacion y Transparencia',
+            'title' => $page?->title ?: 'Contratación y Transparencia',
             'lead' => $page?->summary ?: 'Consulta ofertas de contratos FSE, adjudicaciones, documentos soporte y directorio de contratistas adjudicados.',
             'banner' => $this->resolvePageBanner($page),
             'categories' => $this->resolveDocumentCategories(),

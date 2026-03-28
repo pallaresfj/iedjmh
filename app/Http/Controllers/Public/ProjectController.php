@@ -80,8 +80,8 @@ class ProjectController extends Controller
         }
 
         return view('public.proyectos.index', [
-            'title' => $listingPage?->title ?: 'Proyectos Pedagogicos',
-            'lead' => $listingPage?->summary ?: 'Iniciativas de aula y de institucion para fortalecer aprendizaje significativo.',
+            'title' => $listingPage?->title ?: 'Proyectos Pedagógicos',
+            'lead' => $listingPage?->summary ?: 'Iniciativas de aula y de institución para fortalecer aprendizaje significativo.',
             'banner' => $this->resolvePageBanner($listingPage),
             'content' => $listingPage?->content,
             'featuredProject' => $featuredProject,

@@ -10,7 +10,7 @@
             <div class="public-surface p-4 sm:p-5">
                 <p class="public-heading text-sm font-semibold uppercase tracking-wide text-ied-gray-900">Canales</p>
                 <ul class="mt-3 space-y-2 text-sm text-ied-gray-700">
-                    <li><a href="{{ route('atencion.contactenos') }}" class="text-ied-primary-dark hover:text-ied-primary">Contactenos</a></li>
+                    <li><a href="{{ route('atencion.contactenos') }}" class="text-ied-primary-dark hover:text-ied-primary">Contáctenos</a></li>
                     <li><a href="{{ route('atencion.tramites') }}" class="text-ied-primary-dark hover:text-ied-primary">Tramites</a></li>
                 </ul>
             </div>

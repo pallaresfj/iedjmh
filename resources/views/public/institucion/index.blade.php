@@ -17,7 +17,7 @@
                     </li>
                     <li>
                         <a href="{{ route('atencion.index') }}" class="text-ied-primary-dark hover:text-ied-primary">
-                            Atencion al Ciudadano
+                            Atención al Ciudadano
                         </a>
                     </li>
                 </ul>
