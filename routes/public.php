@@ -35,14 +35,10 @@ Route::prefix('academico')->group(function () {
     Route::get('/modalidad', [AcademicController::class, 'page'])->defaults('pageKey', 'modalidad')->name('academico.modalidad');
     Route::get('/planes-area', [AcademicController::class, 'page'])->defaults('pageKey', 'planes-area')->name('academico.planes-area');
     Route::get('/sistema-evaluacion', [AcademicController::class, 'page'])->defaults('pageKey', 'sistema-evaluacion')->name('academico.sistema-evaluacion');
-    Route::get('/proyectos-pedagogicos', [AcademicController::class, 'page'])->defaults('pageKey', 'proyectos-pedagogicos')->name('academico.proyectos-pedagogicos');
+    Route::get('/proyectos-pedagogicos', [ProjectController::class, 'index'])->name('academico.proyectos-pedagogicos');
+    Route::get('/proyectos-pedagogicos/{slug}', [ProjectController::class, 'show'])->name('academico.proyectos-pedagogicos.show');
     Route::get('/calendario-academico', [AcademicController::class, 'page'])->defaults('pageKey', 'calendario-academico')->name('academico.calendario-academico');
     Route::get('/zona-academica', [AcademicController::class, 'page'])->defaults('pageKey', 'zona-academica')->name('academico.zona-academica');
-});
-
-Route::prefix('proyectos')->group(function () {
-    Route::get('/', [ProjectController::class, 'index'])->name('proyectos.index');
-    Route::get('/{slug}', [ProjectController::class, 'show'])->name('proyectos.show');
 });
 
 Route::prefix('noticias')->group(function () {

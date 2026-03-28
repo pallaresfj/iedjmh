@@ -254,7 +254,7 @@ class HomeController extends Controller
             'subtitle' => 'Conoce de cerca nuestro enfoque tecnico agropecuario.',
             'description' => 'Espacio de aprendizaje practico para fortalecer competencias en produccion sostenible, trabajo colaborativo y emprendimiento rural.',
             'cta_label' => 'Conoce nuestros proyectos',
-            'cta_url' => route('proyectos.index'),
+            'cta_url' => route('academico.proyectos-pedagogicos'),
             'gallery' => [
                 'https://lh3.googleusercontent.com/aida-public/AB6AXuBp5Jf5GiM_ORrSUAg9AHZcRDIPObAgv8VB2zTDvbKbakIKmZb9CeCRUOQIsvvWcMC2LDJPSjKdhLyBy2dhjzlCBPL6Q1DWg8CPhKeFH5a00y5q-4t-nhgI0igs62ok1Z7FSogCLbtJEvq6WFjCXbjdyPk0g16xdt_X12g5RlHsVjXC4j0lXkE3rsEfedsoLEJt9k4AjGEy84dVjEdTu0mcYxptkS8fh7FFkomGrXZ9iq77kRRM6b1huAy2jcCRoz-bE2D1wHzxlaQk',
                 'https://lh3.googleusercontent.com/aida-public/AB6AXuBI98FibxKjA9PEzq3JTDeHU3RDuo2wTAYbWM6lUGZq6j-0_NVChu_uTaug0fn2g56rJjt-Bzcyet-GDDm7dlzkbEXzP6vEK7HIyZh5ba-0dPW_Df2d1O1D0kBmNRTVjpGYgpR0qQbtLujgyJKmZVukUk5FT91cVL6nJEYQ9RmDdKoc3k3I59aATmuQiERcZ8SvqF5EneIL3ID_aWPzpjkuQkKGcQLzTTY8ts4Qo-gbgULJgkmHtHuEJOZZ1_P8RBMH19TKbCw8Ry1I',
@@ -305,7 +305,7 @@ class HomeController extends Controller
                 ? Str::words(strip_tags((string) $project->description), 72)
                 : $fallback['description'],
             'cta_label' => $fallback['cta_label'],
-            'cta_url' => route('proyectos.index'),
+            'cta_url' => route('academico.proyectos-pedagogicos'),
             'gallery' => $gallery->all(),
         ];
     }

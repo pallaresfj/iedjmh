@@ -19,8 +19,8 @@ class ProjectController extends Controller
 
     public function index(Request $request): View
     {
-        $sectionConfig = config('institution.sections.proyectos', []);
-        $listingPage = $this->publishedPageBySlug('proyectos');
+        $sectionConfig = config('institution.sections.academico', []);
+        $listingPage = $this->publishedPageBySlug('academico-proyectos-pedagogicos');
         $sortOptions = $this->sortOptions();
         $filters = $this->extractFilters($request, $sortOptions);
 
@@ -80,8 +80,8 @@ class ProjectController extends Controller
         }
 
         return view('public.proyectos.index', [
-            'title' => $listingPage?->title ?: ($sectionConfig['title'] ?? 'Proyectos'),
-            'lead' => $listingPage?->summary ?: ($sectionConfig['description'] ?? 'Consulta iniciativas institucionales de impacto pedagogico, ambiental y comunitario.'),
+            'title' => $listingPage?->title ?: 'Proyectos Pedagogicos',
+            'lead' => $listingPage?->summary ?: 'Iniciativas de aula y de institucion para fortalecer aprendizaje significativo.',
             'banner' => $this->resolvePageBanner($listingPage),
             'content' => $listingPage?->content,
             'featuredProject' => $featuredProject,
@@ -89,13 +89,14 @@ class ProjectController extends Controller
             'filters' => $filters,
             'categories' => $categories,
             'sortOptions' => $sortOptions,
+            'academicPages' => $this->academicNavigationItems(),
         ]);
     }
 
     public function show(string $slug): View
     {
         abort_unless($this->canQueryTable('projects'), 404);
-        $listingPage = $this->publishedPageBySlug('proyectos');
+        $listingPage = $this->publishedPageBySlug('academico-proyectos-pedagogicos');
 
         /** @var Project $project */
         $project = $this->publishedProjectsQuery()
@@ -117,6 +118,7 @@ class ProjectController extends Controller
             'project' => $this->mapProject($project, includeDescription: true),
             'related' => $related,
             'banner' => $this->resolvePageBanner($listingPage),
+            'academicPages' => $this->academicNavigationItems(),
         ]);
     }
 
@@ -220,6 +222,20 @@ class ProjectController extends Controller
     }
 
     /**
+     * @return Collection<int, array{key: string, title: string, route: string}>
+     */
+    private function academicNavigationItems(): Collection
+    {
+        return collect(app(AcademicController::class)->publicPageDefinitions())
+            ->map(fn (array $definition, string $key): array => [
+                'key' => $key,
+                'title' => $definition['title'],
+                'route' => $definition['route'],
+            ])
+            ->values();
+    }
+
+    /**
      * @return array<string, mixed>
      */
     private function mapProject(Project $project, bool $includeDescription = false): array
@@ -242,7 +258,7 @@ class ProjectController extends Controller
             'external_url' => $this->sanitizeExternalUrl($project->external_url),
             'gallery_images' => $galleryImages,
             'published_at' => $project->published_at?->translatedFormat('d M Y'),
-            'detail_url' => route('proyectos.show', ['slug' => $project->slug]),
+            'detail_url' => route('academico.proyectos-pedagogicos.show', ['slug' => $project->slug]),
             'categories' => $project->categories
                 ->map(fn (Category $category): array => [
                     'name' => $category->name,

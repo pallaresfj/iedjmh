@@ -8,7 +8,6 @@ use App\Models\AreaPlan;
 use App\Models\Document;
 use App\Models\Event;
 use App\Models\Page;
-use App\Models\Project;
 use App\Models\Setting;
 use App\Support\PageMenuCatalog;
 use App\Support\PublicSettings;
@@ -24,7 +23,7 @@ class AcademicController extends Controller
 
     public function index(): View
     {
-        $definitions = $this->pageDefinitions();
+        $definitions = $this->publicPageDefinitions();
         $bindings = collect($definitions)->pluck('menu_binding')->filter()->all();
         $publishedPagesByBinding = $this->publishedPagesByMenuBinding($bindings);
         $slugs = collect($definitions)->pluck('slug')->prepend('academico')->all();
@@ -55,8 +54,8 @@ class AcademicController extends Controller
             ->values();
 
         return view('public.academico.index', [
-            'title' => $landingPage?->title ?: 'Academico',
-            'lead' => $landingPage?->summary ?: 'Informacion curricular, recursos pedagogicos y servicios academicos para estudiantes y familias.',
+            'title' => $landingPage?->title ?: 'Académico',
+            'lead' => $landingPage?->summary ?: 'Información curricular, recursos pedagógicos y servicios académicos para estudiantes y familias.',
             'banner' => $this->resolvePageBanner($landingPage),
             'academicPages' => $this->navigationItems($definitions),
             'cards' => $cards,
@@ -65,7 +64,7 @@ class AcademicController extends Controller
 
     public function page(Request $request, string $pageKey): View
     {
-        $definitions = $this->pageDefinitions();
+        $definitions = $this->publicPageDefinitions();
         abort_unless(array_key_exists($pageKey, $definitions), 404);
 
         $definition = $definitions[$pageKey];
@@ -81,6 +80,10 @@ class AcademicController extends Controller
                 ],
             ];
 
+        $siee = $pageKey === 'sistema-evaluacion'
+            ? $this->resolveSieeResources()
+            : ['document_url' => null, 'platform_url' => null, 'platform_name' => null];
+
         return view('public.academico.page', [
             'pageKey' => $pageKey,
             'title' => $cmsPage?->title ?: $definition['title'],
@@ -89,18 +92,20 @@ class AcademicController extends Controller
             'blocks' => $this->resolveBlocks($cmsPage, $definition),
             'academicPages' => $this->navigationItems($definitions),
             'plans' => $pageKey === 'planes-area' ? $this->resolveAreaPlans() : collect(),
-            'projects' => $pageKey === 'proyectos-pedagogicos' ? $this->resolvePedagogicalProjects() : collect(),
             'academicZone' => $pageKey === 'zona-academica' ? $this->resolveAcademicZoneResources() : ['platforms' => collect(), 'documents' => collect()],
             'calendarEvents' => $calendar['events'],
             'calendarMonths' => $calendar['months'],
             'calendarFilters' => $calendar['filters'],
+            'sieeDocumentUrl' => $siee['document_url'],
+            'sieePlatformUrl' => $siee['platform_url'],
+            'sieePlatformName' => $siee['platform_name'],
         ]);
     }
 
     /**
      * @return array<string, array<string, mixed>>
      */
-    private function pageDefinitions(): array
+    public function publicPageDefinitions(): array
     {
         $modality = PublicSettings::academicModality();
 
@@ -156,8 +161,8 @@ class AcademicController extends Controller
                 'summary' => 'Criterios y procesos para valorar el aprendizaje y acompanamiento estudiantil.',
                 'blocks' => [
                     [
-                        'title' => 'Evaluacion formativa',
-                        'body' => 'El sistema de evaluacion institucional define criterios de desempeno, estrategias de seguimiento y rutas de mejoramiento academico.',
+                        'title' => 'Evaluación formativa',
+                        'body' => 'El sistema de evaluación institucional define criterios de desempeño, estrategias de seguimiento y rutas de mejoramiento académico.',
                     ],
                 ],
             ],
@@ -292,59 +297,6 @@ class AcademicController extends Controller
         }
 
         return collect();
-    }
-
-    /**
-     * @return Collection<int, array<string, string|null>>
-     */
-    private function resolvePedagogicalProjects(): Collection
-    {
-        if ($this->canQueryTable('projects')) {
-            $projects = Project::query()
-                ->where('status', 'published')
-                ->where(function ($query): void {
-                    $query->whereHas('categories', function ($categoryQuery): void {
-                        $categoryQuery->whereIn('slug', ['proyectos-pedagogicos', 'academico-proyectos-pedagogicos']);
-                    })->orWhereDoesntHave('categories');
-                })
-                ->orderByDesc('is_featured')
-                ->orderBy('sort_order')
-                ->latest('published_at')
-                ->limit(6)
-                ->get()
-                ->map(function (Project $project): array {
-                    $period = trim(collect([
-                        $project->starts_on?->translatedFormat('M Y'),
-                        $project->ends_on?->translatedFormat('M Y'),
-                    ])->filter()->join(' - '));
-
-                    return [
-                        'title' => $project->title,
-                        'summary' => $project->summary ?: Str::limit(strip_tags((string) $project->description), 140),
-                        'period' => $period ?: null,
-                        'image_url' => $this->resolveMediaUrl($project->cover_image_path),
-                    ];
-                });
-
-            if ($projects->isNotEmpty()) {
-                return $projects;
-            }
-        }
-
-        return collect([
-            [
-                'title' => 'Semillero de investigacion escolar',
-                'summary' => 'Proyecto interdisciplinar para fortalecer pensamiento cientifico en estudiantes.',
-                'period' => null,
-                'image_url' => null,
-            ],
-            [
-                'title' => 'Huerta pedagogica y sostenibilidad',
-                'summary' => 'Estrategia de aprendizaje practico sobre produccion limpia y seguridad alimentaria.',
-                'period' => null,
-                'image_url' => null,
-            ],
-        ]);
     }
 
     /**
@@ -503,6 +455,35 @@ class AcademicController extends Controller
             'months' => collect(),
             'filters' => $filters,
         ];
+    }
+
+    /**
+     * @return array{document_url: string|null, platform_url: string|null, platform_name: string|null}
+     */
+    private function resolveSieeResources(): array
+    {
+        $result = ['document_url' => null, 'platform_url' => null, 'platform_name' => null];
+
+        if (! $this->canQueryTable('settings')) {
+            return $result;
+        }
+
+        $settings = Setting::singleton();
+
+        if ($settings->siee_document_id) {
+            $document = $settings->sieeDocument;
+
+            if ($document && $document->status === 'published') {
+                $result['document_url'] = $this->resolveDocumentUrl($document);
+            }
+        }
+
+        if (filled($settings->siee)) {
+            $result['platform_url'] = $settings->siee;
+            $result['platform_name'] = filled($settings->siee_name) ? $settings->siee_name : 'SIEE';
+        }
+
+        return $result;
     }
 
     private function resolveDocumentUrl(Document $document): ?string

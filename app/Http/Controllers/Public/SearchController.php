@@ -170,7 +170,7 @@ class SearchController extends Controller
                 'type' => 'Proyecto',
                 'title' => $item->title,
                 'excerpt' => Str::limit(strip_tags((string) ($item->summary ?: $item->description)), 150),
-                'url' => route('proyectos.show', $item->slug),
+                'url' => route('academico.proyectos-pedagogicos.show', $item->slug),
                 'date' => $item->published_at?->translatedFormat('d M Y'),
             ]);
     }

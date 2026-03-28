@@ -28,15 +28,17 @@
             ->values();
     @endphp
 
-    <x-public.internal-page :title="$project['title']" :lead="$project['summary']" :banner="$banner" section-key="proyectos" :force-banner-title-style="true">
+    <x-public.internal-page :title="$project['title']" :lead="$project['summary']" :banner="$banner" section-key="academico" :force-banner-title-style="true">
         <x-slot:sidebar>
+            <x-public.academico.sidebar :pages="$academicPages" />
+
             <div class="public-surface p-4 sm:p-5">
                 <p class="public-heading text-sm font-semibold uppercase tracking-wide text-ied-gray-900">Volver</p>
-                <a href="{{ route('proyectos.index') }}" class="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-ied-primary-dark hover:text-ied-primary">
+                <a href="{{ route('academico.proyectos-pedagogicos') }}" class="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-ied-primary-dark hover:text-ied-primary">
                     <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                         <path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H6.06l3.72 3.72a.75.75 0 11-1.06 1.06l-5-5a.75.75 0 010-1.06l5-5a.75.75 0 011.06 1.06L6.06 9.25h10.19A.75.75 0 0117 10z" clip-rule="evenodd" />
                     </svg>
-                    Listado de proyectos
+                    Proyectos Pedagógicos
                 </a>
             </div>
         </x-slot:sidebar>

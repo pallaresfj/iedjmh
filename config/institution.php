@@ -43,6 +43,7 @@ return [
                     ['label' => 'Modalidad', 'route' => 'academico.modalidad', 'icon' => 'agriculture'],
                     ['label' => 'Planes de area', 'route' => 'academico.planes-area', 'icon' => 'menu_book'],
                     ['label' => 'Sistema de evaluacion', 'route' => 'academico.sistema-evaluacion', 'icon' => 'checklist'],
+                    ['label' => 'Proyectos pedagogicos', 'route' => 'academico.proyectos-pedagogicos', 'icon' => 'science'],
                     ['label' => 'Calendario academico', 'route' => 'academico.calendario-academico', 'icon' => 'calendar_month'],
                 ],
             ],
@@ -66,10 +67,6 @@ return [
                 ],
             ],
             [
-                'label' => 'Proyectos',
-                'route' => 'proyectos.index',
-            ],
-            [
                 'label' => 'Noticias',
                 'route' => 'noticias.index',
             ],
@@ -91,10 +88,6 @@ return [
         'academico' => [
             'title' => 'Academico',
             'description' => 'Oferta academica, lineamientos pedagogicos y recursos para la comunidad educativa.',
-        ],
-        'proyectos' => [
-            'title' => 'Proyectos',
-            'description' => 'Iniciativas institucionales de impacto pedagogico, ambiental y comunitario.',
         ],
         'noticias' => [
             'title' => 'Noticias',

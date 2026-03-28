@@ -35,7 +35,7 @@ test('projects page lists published projects', function () {
         'is_featured' => true,
     ]);
 
-    $this->get(route('proyectos.index'))
+    $this->get(route('academico.proyectos-pedagogicos'))
         ->assertOk()
         ->assertSee('Proyecto destacado')
         ->assertSee($featured->title)
@@ -61,12 +61,12 @@ test('project detail page renders published project and hides draft project', fu
         'status' => 'draft',
     ]);
 
-    $this->get(route('proyectos.show', ['slug' => $publishedProject->slug]))
+    $this->get(route('academico.proyectos-pedagogicos.show', ['slug' => $publishedProject->slug]))
         ->assertOk()
         ->assertSee($publishedProject->title)
         ->assertSee($publishedProject->description);
 
-    $this->get(route('proyectos.show', ['slug' => $draftProject->slug]))
+    $this->get(route('academico.proyectos-pedagogicos.show', ['slug' => $draftProject->slug]))
         ->assertNotFound();
 });
 
@@ -103,12 +103,12 @@ test('projects filters by search and category', function () {
     ]);
     $regularProject->categories()->attach($innovacion->id);
 
-    $this->get(route('proyectos.index', ['q' => 'suelos']))
+    $this->get(route('academico.proyectos-pedagogicos', ['q' => 'suelos']))
         ->assertOk()
         ->assertSee($regularProject->title)
         ->assertDontSee($featuredProject->title);
 
-    $this->get(route('proyectos.index', ['category' => 'sostenibilidad']))
+    $this->get(route('academico.proyectos-pedagogicos', ['category' => 'sostenibilidad']))
         ->assertOk()
         ->assertSee($featuredProject->title)
         ->assertDontSee($regularProject->title);
@@ -125,7 +125,7 @@ test('projects page renders accessible image urls stored on local disk', functio
         'cover_image_path' => 'projects/proyecto-prueba.jpg',
     ]);
 
-    $response = $this->get(route('proyectos.index'))->assertOk();
+    $response = $this->get(route('academico.proyectos-pedagogicos'))->assertOk();
     $content = $response->getContent();
 
     expect($content)->toBeString();
@@ -155,7 +155,7 @@ test('project detail shows external reference button and gallery thumbnails', fu
         ],
     ]);
 
-    $this->get(route('proyectos.show', ['slug' => $project->slug]))
+    $this->get(route('academico.proyectos-pedagogicos.show', ['slug' => $project->slug]))
         ->assertOk()
         ->assertSee('Mas informacion')
         ->assertSee('href="https://example.com/proyectos/recurso"', false)
@@ -177,7 +177,7 @@ test('project detail uses gallery image as primary when cover is missing', funct
         ],
     ]);
 
-    $this->get(route('proyectos.show', ['slug' => $project->slug]))
+    $this->get(route('academico.proyectos-pedagogicos.show', ['slug' => $project->slug]))
         ->assertOk()
         ->assertSee('src="/imagenes/proyectos/alterna.jpg"', false)
         ->assertSee('data-project-gallery-thumbnail', false)
@@ -253,7 +253,7 @@ test('project detail renders html description content', function () {
         'published_at' => now(),
     ]);
 
-    $this->get(route('proyectos.show', ['slug' => $project->slug]))
+    $this->get(route('academico.proyectos-pedagogicos.show', ['slug' => $project->slug]))
         ->assertOk()
         ->assertSee('<strong>HTML</strong>', false);
 });
@@ -286,5 +286,5 @@ test('home featured project uses project gallery images and dynamic content', fu
         ->assertSee('/imagenes/proyectos/galeria-3.jpg', false)
         ->assertSee('/imagenes/proyectos/galeria-4.jpg', false)
         ->assertDontSee('/imagenes/proyectos/portada-no-usar.jpg', false)
-        ->assertSee(route('proyectos.index'), false);
+        ->assertSee(route('academico.proyectos-pedagogicos'), false);
 });

@@ -3,22 +3,18 @@
 @section('title', $title)
 
 @section('content')
-    <x-public.internal-page :title="$title" :lead="$lead" :banner="$banner" section-key="proyectos" :replace-header-with-banner="true" :force-banner-title-style="true">
+    <x-public.internal-page :title="$title" :lead="$lead" :banner="$banner" section-key="academico" :replace-header-with-banner="true" :force-banner-title-style="true">
         <x-slot:sidebar>
+            <x-public.academico.sidebar :pages="$academicPages" />
+
             <div class="public-surface p-4 sm:p-5">
-                <p class="public-heading text-sm font-semibold uppercase tracking-wide text-ied-gray-900">Navegacion</p>
-                <ul class="mt-3 space-y-1 text-sm">
-                    <li>
-                        <a href="{{ route('home') }}" class="block rounded-md px-3 py-2 text-ied-gray-700 transition hover:bg-ied-gray-100 hover:text-ied-primary-dark">
-                            Inicio
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('academico.proyectos-pedagogicos') }}" class="block rounded-md px-3 py-2 text-ied-gray-700 transition hover:bg-ied-gray-100 hover:text-ied-primary-dark">
-                            Proyectos pedagogicos
-                        </a>
-                    </li>
-                </ul>
+                <p class="public-heading text-sm font-semibold uppercase tracking-wide text-ied-gray-900">Volver</p>
+                <a href="{{ route('academico.index') }}" class="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-ied-primary-dark hover:text-ied-primary">
+                    <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H6.06l3.72 3.72a.75.75 0 11-1.06 1.06l-5-5a.75.75 0 010-1.06l5-5a.75.75 0 011.06 1.06L6.06 9.25h10.19A.75.75 0 0117 10z" clip-rule="evenodd" />
+                    </svg>
+                    Landing Académico
+                </a>
             </div>
         </x-slot:sidebar>
 
@@ -30,7 +26,7 @@
             @endif
 
             <section class="public-surface p-5 sm:p-6">
-                <form action="{{ route('proyectos.index') }}" method="GET" class="grid gap-3 md:grid-cols-2 xl:grid-cols-4" data-auto-filter-form data-auto-filter-target="#projects-results">
+                <form action="{{ route('academico.proyectos-pedagogicos') }}" method="GET" class="grid gap-3 md:grid-cols-2 xl:grid-cols-4" data-auto-filter-form data-auto-filter-target="#projects-results">
                     <label class="xl:col-span-2">
                         <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Buscar</span>
                         <input
@@ -75,7 +71,7 @@
                                 Aplicar filtros
                             </button>
                         </noscript>
-                        <a href="{{ route('proyectos.index') }}" data-auto-filter-clear class="inline-flex items-center rounded-full border border-ied-gray-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-ied-gray-700 transition hover:border-ied-gray-400 hover:text-ied-gray-900">
+                        <a href="{{ route('academico.proyectos-pedagogicos') }}" data-auto-filter-clear class="inline-flex items-center rounded-full border border-ied-gray-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-ied-gray-700 transition hover:border-ied-gray-400 hover:text-ied-gray-900">
                             Limpiar
                         </a>
                     </div>

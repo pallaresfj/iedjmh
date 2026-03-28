@@ -131,11 +131,21 @@ class SettingForm
                             ->columns(12),
                         Tab::make('Plataformas y transparencia')
                             ->schema([
+                                TextInput::make('siee_name')
+                                    ->label('Nombre SIEE')
+                                    ->maxLength(120)
+                                    ->placeholder('SIEE')
+                                    ->columnSpan(6),
                                 TextInput::make('siee')
                                     ->label('SIEE')
                                     ->url()
                                     ->placeholder('https://...')
                                     ->maxLength(2048)
+                                    ->columnSpan(6),
+                                TextInput::make('aula_virtual_name')
+                                    ->label('Nombre Aula Virtual')
+                                    ->maxLength(120)
+                                    ->placeholder('Aula Virtual')
                                     ->columnSpan(6),
                                 TextInput::make('aula_virtual')
                                     ->label('Aula Virtual')
@@ -143,6 +153,20 @@ class SettingForm
                                     ->placeholder('https://...')
                                     ->maxLength(2048)
                                     ->columnSpan(6),
+                                Select::make('siee_document_id')
+                                    ->label('Documento SIEE')
+                                    ->relationship(
+                                        name: 'sieeDocument',
+                                        titleAttribute: 'title',
+                                        modifyQueryUsing: fn (Builder $query): Builder => $query
+                                            ->where('status', 'published')
+                                            ->orderByDesc('published_at')
+                                            ->orderBy('title'),
+                                    )
+                                    ->searchable()
+                                    ->preload()
+                                    ->placeholder('Selecciona un documento SIEE')
+                                    ->columnSpan(12),
                                 Select::make('contracting_manual_document_id')
                                     ->label('Manual de contratacion (documento)')
                                     ->relationship(

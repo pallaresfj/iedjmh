@@ -24,7 +24,10 @@ class Setting extends Model
         'email',
         'contact_hours',
         'siee',
+        'siee_name',
         'aula_virtual',
+        'aula_virtual_name',
+        'siee_document_id',
         'logo_path',
         'allies',
         'theme_primary',
@@ -75,6 +78,11 @@ class Setting extends Model
     public function contractingManualDocument(): BelongsTo
     {
         return $this->belongsTo(Document::class, 'contracting_manual_document_id');
+    }
+
+    public function sieeDocument(): BelongsTo
+    {
+        return $this->belongsTo(Document::class, 'siee_document_id');
     }
 
     public static function singleton(): self

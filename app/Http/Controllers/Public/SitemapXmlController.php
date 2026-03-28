@@ -28,7 +28,7 @@ class SitemapXmlController extends Controller
             'academico.index', 'academico.niveles-educativos', 'academico.modalidad',
             'academico.planes-area', 'academico.sistema-evaluacion', 'academico.proyectos-pedagogicos',
             'academico.calendario-academico',
-            'proyectos.index', 'noticias.index',
+            'noticias.index',
             'transparencia.index', 'transparencia.documentos', 'transparencia.contratacion.index',
             'atencion.index', 'atencion.contactenos', 'atencion.pqrs', 'atencion.pqrs.track',
             'atencion.tramites', 'atencion.faq', 'atencion.mapa-sitio', 'atencion.participacion',
@@ -61,7 +61,7 @@ class SitemapXmlController extends Controller
                 ->get(['slug', 'updated_at'])
                 ->each(function (Project $project) use ($urls): void {
                     $urls->push($this->entry(
-                        route('proyectos.show', $project->slug),
+                        route('academico.proyectos-pedagogicos.show', $project->slug),
                         $project->updated_at,
                         'monthly',
                         '0.6',
