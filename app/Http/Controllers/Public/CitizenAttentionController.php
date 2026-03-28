@@ -9,8 +9,9 @@ use App\Models\Faq;
 use App\Models\PqrsMessage;
 use App\Models\PqrsRequest;
 use App\Models\Procedure;
-use App\Support\PublicSettings;
+use App\Notifications\PqrsReceivedNotification;
 use App\Support\Pqrs\TrackingCodeGenerator;
+use App\Support\PublicSettings;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -128,6 +129,10 @@ class CitizenAttentionController extends Controller
             ]);
         }
 
+        if (filled($pqrs->applicant_email)) {
+            $pqrs->notify(new PqrsReceivedNotification($pqrs));
+        }
+
         $redirectRoute = ($validated['origin'] ?? null) === 'contact'
             ? 'atencion.contactenos'
             : 'atencion.pqrs';
@@ -135,6 +140,63 @@ class CitizenAttentionController extends Controller
         return redirect()
             ->route($redirectRoute)
             ->with('pqrs_success', "Solicitud radicada correctamente. Codigo de seguimiento: {$trackingCode}");
+    }
+
+    public function trackPqrs(): View
+    {
+        $page = $this->publishedPageBySlug('atencion-pqrs');
+
+        return view('public.atencion.pqrs-consulta', [
+            'title' => 'Consulta PQRS',
+            'lead' => 'Ingresa tu codigo de seguimiento para conocer el estado de tu solicitud.',
+            'banner' => $this->resolvePageBanner($page),
+            'attentionPages' => $this->attentionPages(),
+            'pqrs' => null,
+            'messages' => collect(),
+        ]);
+    }
+
+    public function showPqrsStatus(Request $request): View
+    {
+        $page = $this->publishedPageBySlug('atencion-pqrs');
+
+        $validated = $request->validate([
+            'tracking_code' => ['required', 'string', 'max:50'],
+            'applicant_email' => ['required', 'email', 'max:255'],
+        ]);
+
+        $pqrs = null;
+        $messages = collect();
+
+        if ($this->canQueryTable('pqrs_requests')) {
+            $pqrs = PqrsRequest::query()
+                ->where('tracking_code', $validated['tracking_code'])
+                ->where('applicant_email', $validated['applicant_email'])
+                ->first();
+
+            if ($pqrs && $this->canQueryTable('pqrs_messages')) {
+                $messages = $pqrs->messages()
+                    ->where('is_internal', false)
+                    ->orderBy('created_at')
+                    ->get()
+                    ->map(fn (PqrsMessage $msg): array => [
+                        'author' => $msg->author_name ?? 'Institucion',
+                        'message' => $msg->message,
+                        'date' => $msg->created_at?->translatedFormat('d M Y H:i'),
+                    ]);
+            }
+        }
+
+        return view('public.atencion.pqrs-consulta', [
+            'title' => 'Consulta PQRS',
+            'lead' => 'Ingresa tu codigo de seguimiento para conocer el estado de tu solicitud.',
+            'banner' => $this->resolvePageBanner($page),
+            'attentionPages' => $this->attentionPages(),
+            'pqrs' => $pqrs,
+            'messages' => $messages,
+            'trackingCode' => $validated['tracking_code'],
+            'applicantEmail' => $validated['applicant_email'],
+        ]);
     }
 
     public function procedures(Request $request): View
@@ -322,6 +384,7 @@ class CitizenAttentionController extends Controller
             ['title' => 'Landing Atencion', 'route' => 'atencion.index'],
             ['title' => 'Contactenos', 'route' => 'atencion.contactenos'],
             ['title' => 'PQRS', 'route' => 'atencion.pqrs'],
+            ['title' => 'Consulta PQRS', 'route' => 'atencion.pqrs.track'],
             ['title' => 'Tramites y servicios', 'route' => 'atencion.tramites'],
             ['title' => 'Preguntas frecuentes', 'route' => 'atencion.faq'],
             ['title' => 'Mapa del sitio', 'route' => 'atencion.mapa-sitio'],
@@ -477,5 +540,4 @@ class CitizenAttentionController extends Controller
             ],
         ]);
     }
-
 }

@@ -1,9 +1,9 @@
 <?php
 
 use App\Models\Contract;
+use App\Models\Contractor;
 use App\Models\ContractParticipant;
 use App\Models\ContractType;
-use App\Models\Contractor;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

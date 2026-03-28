@@ -23,9 +23,17 @@
                 </section>
             @endif
 
+            <section class="rounded-xl border border-ied-gray-200 bg-ied-gray-100 p-4 text-sm text-ied-gray-700">
+                <p>
+                    <strong>¿Ya radicaste una solicitud?</strong>
+                    <a href="{{ route('atencion.pqrs.track') }}" class="font-semibold text-ied-primary-dark underline hover:text-ied-primary">Consulta el estado aqui</a>
+                </p>
+            </section>
+
             @if (session('pqrs_success'))
                 <section class="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
                     {{ session('pqrs_success') }}
+                    <a href="{{ route('atencion.pqrs.track') }}" class="mt-2 inline-block font-semibold text-emerald-700 underline hover:text-emerald-900">Consultar estado de mi solicitud</a>
                 </section>
             @endif
 

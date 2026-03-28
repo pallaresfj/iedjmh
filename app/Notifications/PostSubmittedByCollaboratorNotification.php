@@ -26,7 +26,7 @@ class PostSubmittedByCollaboratorNotification extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage())
+        return (new MailMessage)
             ->subject('Nueva noticia enviada por colaborador')
             ->greeting('Hola,')
             ->line("{$this->submittedBy->name} envio una noticia para revision.")

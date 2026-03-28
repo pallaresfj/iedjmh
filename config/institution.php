@@ -60,6 +60,7 @@ return [
                 'children' => [
                     ['label' => 'Contactenos', 'route' => 'atencion.contactenos', 'icon' => 'contact_support'],
                     ['label' => 'PQRS', 'route' => 'atencion.pqrs', 'icon' => 'forum'],
+                    ['label' => 'Consulta PQRS', 'route' => 'atencion.pqrs.track', 'icon' => 'search'],
                     ['label' => 'Tramites y servicios', 'route' => 'atencion.tramites', 'icon' => 'assignment'],
                     ['label' => 'Preguntas frecuentes', 'route' => 'atencion.faq', 'icon' => 'help'],
                 ],

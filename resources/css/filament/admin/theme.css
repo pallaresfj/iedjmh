@@ -5,8 +5,6 @@
 
 @theme {
     --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
-    --color-agro-primary: #2e7f31;
-    --color-agro-primary-dark: #14532d;
     --color-agro-surface: #ffffff;
     --color-agro-surface-muted: #f4f7f4;
     --color-agro-ink: #0f172a;
@@ -19,7 +17,7 @@
     }
 
     .fi-main {
-        background-image: radial-gradient(circle at top right, rgba(46, 127, 49, 0.08), transparent 48%);
+        background-image: radial-gradient(circle at top right, color-mix(in srgb, var(--color-ied-primary) 8%, transparent), transparent 48%);
     }
 }
 
@@ -37,11 +35,22 @@
     }
 
     .fi-sidebar-item:not(.fi-active) > .fi-sidebar-item-btn {
-        @apply hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-white;
+        @apply hover:text-slate-900 dark:hover:text-white;
+        &:hover {
+            background-color: color-mix(in srgb, var(--color-ied-accent) 15%, transparent);
+        }
+    }
+
+    :is(.dark .fi-sidebar-item:not(.fi-active) > .fi-sidebar-item-btn):hover {
+        background-color: color-mix(in srgb, var(--color-ied-accent) 20%, transparent);
     }
 
     .fi-sidebar-item:not(.fi-active) > .fi-sidebar-item-btn > .fi-sidebar-item-icon {
         @apply text-slate-500 dark:text-slate-400;
+    }
+
+    .fi-sidebar-item:not(.fi-active) > .fi-sidebar-item-btn:hover > .fi-sidebar-item-icon {
+        color: var(--color-ied-accent);
     }
 
     .fi-sidebar-item:not(.fi-active) > .fi-sidebar-item-btn > .fi-sidebar-item-label {
@@ -49,7 +58,11 @@
     }
 
     .fi-sidebar-item.fi-active .fi-sidebar-item-btn {
-        @apply bg-emerald-700 text-white shadow-lg;
+        background-color: var(--color-ied-primary);
+        @apply text-white shadow-lg;
+        &:hover {
+            background-color: var(--color-ied-primary-dark);
+        }
     }
 
     .fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-sidebar-item-icon {

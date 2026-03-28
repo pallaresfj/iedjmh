@@ -6,10 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Notifications\Notifiable;
 
 class PqrsRequest extends Model
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
+
+    public function routeNotificationForMail(): ?string
+    {
+        return $this->applicant_email;
+    }
 
     protected $fillable = [
         'tracking_code',

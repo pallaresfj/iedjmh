@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Settings\Pages;
 
 use App\Filament\Resources\Settings\SettingResource;
+use App\Support\PublicSettings;
 use Filament\Resources\Pages\EditRecord;
 
 class EditSetting extends EditRecord
@@ -12,6 +13,11 @@ class EditSetting extends EditRecord
     protected function getHeaderActions(): array
     {
         return [];
+    }
+
+    protected function afterSave(): void
+    {
+        PublicSettings::clearCache();
     }
 
     protected function getRedirectUrl(): string

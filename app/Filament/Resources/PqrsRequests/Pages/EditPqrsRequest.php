@@ -12,6 +12,7 @@ class EditPqrsRequest extends EditRecord
      * @var array<int, string>
      */
     private const CLOSED_STATUSES = ['resolved', 'closed', 'resuelto', 'cerrado', 'finalizado'];
+
     /**
      * @var array<int, string>
      */

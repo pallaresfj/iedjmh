@@ -8,10 +8,14 @@ use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\InstitutionController;
 use App\Http\Controllers\Public\NewsController;
 use App\Http\Controllers\Public\ProjectController;
+use App\Http\Controllers\Public\SearchController;
+use App\Http\Controllers\Public\SitemapXmlController;
 use App\Http\Controllers\Public\TransparencyController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
+Route::get('/buscar', SearchController::class)->name('buscar');
+Route::get('/sitemap.xml', SitemapXmlController::class)->name('sitemap.xml');
 
 Route::prefix('institucion')->group(function () {
     Route::get('/', [InstitutionController::class, 'index'])->name('institucion.index');
@@ -64,6 +68,10 @@ Route::prefix('atencion-ciudadano')->group(function () {
     Route::post('/pqrs', [CitizenAttentionController::class, 'submitPqrs'])
         ->middleware('throttle:pqrs')
         ->name('atencion.pqrs.store');
+    Route::get('/pqrs/consulta', [CitizenAttentionController::class, 'trackPqrs'])->name('atencion.pqrs.track');
+    Route::post('/pqrs/consulta', [CitizenAttentionController::class, 'showPqrsStatus'])
+        ->middleware('throttle:pqrs')
+        ->name('atencion.pqrs.status');
     Route::get('/tramites-servicios', [CitizenAttentionController::class, 'procedures'])->name('atencion.tramites');
     Route::get('/preguntas-frecuentes', [CitizenAttentionController::class, 'faqs'])->name('atencion.faq');
     Route::get('/mapa-sitio', [CitizenAttentionController::class, 'sitemap'])->name('atencion.mapa-sitio');

@@ -116,6 +116,8 @@ class SettingForm
                             ->image()
                             ->acceptedFileTypes(['image/png', 'image/svg+xml'])
                             ->maxSize(2048)
+                            ->deletable()
+                            ->openable()
                             ->columnSpan(6),
                         Select::make('contracting_manual_document_id')
                             ->label('Manual de contratacion (documento)')
@@ -192,6 +194,8 @@ class SettingForm
                             ->image()
                             ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp'])
                             ->maxSize(4096)
+                            ->deletable()
+                            ->openable()
                             ->columnSpanFull(),
                     ])
                     ->columns(3)
@@ -241,6 +245,8 @@ class SettingForm
                             ->image()
                             ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml'])
                             ->maxSize(4096)
+                            ->deletable()
+                            ->openable()
                             ->columnSpan(6),
                         Repeater::make('symbols_shield_items')
                             ->label('Elementos del escudo')
@@ -277,6 +283,8 @@ class SettingForm
                             ->directory('settings/symbols')
                             ->acceptedFileTypes(['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/mp4', 'audio/x-m4a'])
                             ->maxSize(10240)
+                            ->deletable()
+                            ->openable()
                             ->columnSpan(6),
                         Textarea::make('symbols_hymn_lyrics')
                             ->label('Letra del himno')

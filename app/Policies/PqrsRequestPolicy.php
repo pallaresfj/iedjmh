@@ -12,7 +12,7 @@ class PqrsRequestPolicy
 {
     use HandlesAuthorization;
 
-    public function before(AuthUser $authUser, string $ability): bool|null
+    public function before(AuthUser $authUser, string $ability): ?bool
     {
         if (($authUser->is_admin ?? false) === true) {
             return true;

@@ -65,7 +65,6 @@ class Setting extends Model
             'symbols_flag_intro' => 'string',
             'symbols_flag_stripes' => 'array',
             'symbols_shield_intro' => 'string',
-            'symbols_shield_image_path' => 'string',
             'symbols_shield_items' => 'array',
             'symbols_hymn_lyrics' => 'string',
         ];

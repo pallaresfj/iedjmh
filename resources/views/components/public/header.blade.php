@@ -50,6 +50,9 @@
                 <a href="{{ route('atencion.index') }}" class="public-header__action public-header__action--primary rounded-full bg-ied-primary px-5 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-ied-primary-dark">
                     Matriculas
                 </a>
+                <a href="{{ route('buscar') }}" class="public-header__action grid size-9 place-items-center rounded-full border-2 border-ied-primary/20 text-ied-primary transition hover:bg-ied-primary/10" aria-label="Buscar en el sitio">
+                    <span class="material-symbols-outlined !text-[18px]" aria-hidden="true">search</span>
+                </a>
             </div>
         </div>
     </div>

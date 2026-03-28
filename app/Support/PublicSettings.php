@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use App\Models\Setting;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -270,6 +271,13 @@ class PublicSettings
         return static::$setting;
     }
 
+    public static function clearCache(): void
+    {
+        Cache::forget('public_settings_singleton');
+        static::$resolved = false;
+        static::$setting = null;
+    }
+
     private static function query(): ?Setting
     {
         try {
@@ -277,9 +285,23 @@ class PublicSettings
                 return null;
             }
 
-            return Setting::query()
-                ->where('singleton', 1)
-                ->first();
+            /** @var array<string, mixed>|null $attributes */
+            $attributes = Cache::remember('public_settings_singleton', 300, function (): ?array {
+                $setting = Setting::query()
+                    ->where('singleton', 1)
+                    ->first();
+
+                return $setting?->getAttributes();
+            });
+
+            if (! is_array($attributes) || $attributes === []) {
+                return null;
+            }
+
+            $setting = new Setting;
+            $setting->setRawAttributes($attributes, true);
+
+            return $setting;
         } catch (Throwable) {
             return null;
         }

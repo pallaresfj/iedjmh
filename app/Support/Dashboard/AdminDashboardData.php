@@ -4,8 +4,8 @@ namespace App\Support\Dashboard;
 
 use App\Filament\Resources\Contracts\ContractResource;
 use App\Filament\Resources\Events\EventResource;
-use App\Filament\Resources\PqrsRequests\PqrsRequestResource;
 use App\Filament\Resources\Posts\PostResource;
+use App\Filament\Resources\PqrsRequests\PqrsRequestResource;
 use App\Models\Contract;
 use App\Models\Event;
 use App\Models\Post;
