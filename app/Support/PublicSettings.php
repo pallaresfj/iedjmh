@@ -178,6 +178,24 @@ class PublicSettings
     }
 
     /**
+     * @return array{label: string, icon: string}
+     */
+    public static function academicModality(): array
+    {
+        $label = static::nullableString(static::get('academic_modality_label', 'Modalidad')) ?? 'Modalidad';
+        $icon = static::nullableString(static::get('academic_modality_icon', 'agriculture')) ?? 'agriculture';
+
+        if (! preg_match('/^[a-z0-9_]+$/', $icon)) {
+            $icon = 'agriculture';
+        }
+
+        return [
+            'label' => $label,
+            'icon' => $icon,
+        ];
+    }
+
+    /**
      * @return array{
      *     flag_intro: string,
      *     flag_stripes: array<int, array{name: string, description: string, color_hex: string}>,
@@ -313,6 +331,8 @@ class PublicSettings
             'institution_name' => config('institution.display_name', config('institution.name', 'IED JOSÉ MARÍA HERRERA')),
             'dane' => config('institution.dane'),
             'nit' => config('institution.nit'),
+            'academic_modality_label' => 'Modalidad',
+            'academic_modality_icon' => 'agriculture',
             'location' => collect([config('institution.city'), config('institution.department')])->filter()->join(', '),
             'location_latitude' => null,
             'location_longitude' => null,

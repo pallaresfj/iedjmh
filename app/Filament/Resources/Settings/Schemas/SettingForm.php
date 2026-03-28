@@ -55,6 +55,17 @@ class SettingForm
                                     ->label('NIT')
                                     ->maxLength(100)
                                     ->columnSpan(3),
+                                TextInput::make('academic_modality_label')
+                                    ->label('Modalidad')
+                                    ->maxLength(120)
+                                    ->placeholder('Modalidad')
+                                    ->columnSpan(6),
+                                TextInput::make('academic_modality_icon')
+                                    ->label('Icono Modalidad')
+                                    ->helperText('Nombre de icono Material Symbols. Ejemplo: agriculture.')
+                                    ->maxLength(60)
+                                    ->placeholder('agriculture')
+                                    ->columnSpan(6),
                                 FileUpload::make('logo_path')
                                     ->label('Logo institucional')
                                     ->helperText('Admite formato PNG o SVG.')

@@ -32,7 +32,7 @@ Route::prefix('institucion')->group(function () {
 Route::prefix('academico')->group(function () {
     Route::get('/', [AcademicController::class, 'index'])->name('academico.index');
     Route::get('/niveles-educativos', [AcademicController::class, 'page'])->defaults('pageKey', 'niveles-educativos')->name('academico.niveles-educativos');
-    Route::get('/modalidad-agropecuaria', [AcademicController::class, 'page'])->defaults('pageKey', 'modalidad-agropecuaria')->name('academico.modalidad-agropecuaria');
+    Route::get('/modalidad', [AcademicController::class, 'page'])->defaults('pageKey', 'modalidad')->name('academico.modalidad');
     Route::get('/planes-area', [AcademicController::class, 'page'])->defaults('pageKey', 'planes-area')->name('academico.planes-area');
     Route::get('/sistema-evaluacion', [AcademicController::class, 'page'])->defaults('pageKey', 'sistema-evaluacion')->name('academico.sistema-evaluacion');
     Route::get('/proyectos-pedagogicos', [AcademicController::class, 'page'])->defaults('pageKey', 'proyectos-pedagogicos')->name('academico.proyectos-pedagogicos');

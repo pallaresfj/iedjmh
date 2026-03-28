@@ -43,11 +43,11 @@ class PageMenuCatalog
             'slug' => 'academico-niveles-educativos',
             'section' => 'academico',
         ],
-        'academico.modalidad-agropecuaria' => [
-            'label' => 'Modalidad Agropecuaria',
-            'route' => 'academico.modalidad-agropecuaria',
-            'path' => '/academico/modalidad-agropecuaria',
-            'slug' => 'academico-modalidad-agropecuaria',
+        'academico.modalidad' => [
+            'label' => 'Modalidad',
+            'route' => 'academico.modalidad',
+            'path' => '/academico/modalidad',
+            'slug' => 'academico-modalidad',
             'section' => 'academico',
         ],
         'academico.planes-area' => [

@@ -16,7 +16,7 @@
 ### Niveles educativos
 Descripción de preescolar, primaria y bachillerato.
 
-### Modalidad agropecuaria
+### Modalidad
 Descripción del enfoque agroista.
 
 ## Proyectos

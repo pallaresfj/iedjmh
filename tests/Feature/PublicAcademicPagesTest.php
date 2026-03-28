@@ -2,6 +2,7 @@
 
 use App\Models\Page;
 use App\Models\Project;
+use App\Models\Setting;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -11,7 +12,7 @@ test('academic landing page loads and shows navigation cards', function () {
         ->assertOk()
         ->assertSee('Academico')
         ->assertSee('Niveles Educativos')
-        ->assertSee('Modalidad Agropecuaria')
+        ->assertSee('Modalidad')
         ->assertSee('Planes de Area')
         ->assertSee('Sistema de Evaluacion')
         ->assertSee('Proyectos Pedagogicos')
@@ -25,10 +26,32 @@ test('academic niveles educativos page loads', function () {
         ->assertSee('Niveles Educativos');
 });
 
-test('academic modalidad agropecuaria page loads', function () {
-    $this->get(route('academico.modalidad-agropecuaria'))
+test('academic modalidad page loads', function () {
+    $this->get(route('academico.modalidad'))
         ->assertOk()
-        ->assertSee('Modalidad Agropecuaria');
+        ->assertSee('Modalidad');
+});
+
+test('academic modalidad legacy route returns 404', function () {
+    $this->get('/academico/modalidad-agropecuaria')
+        ->assertNotFound();
+});
+
+test('academic module uses modality label and icon from settings', function () {
+    Setting::query()->create([
+        'singleton' => 1,
+        'academic_modality_label' => 'Modalidad Tecnica',
+        'academic_modality_icon' => 'eco',
+    ]);
+
+    $this->get(route('academico.index'))
+        ->assertOk()
+        ->assertSee('Modalidad Tecnica')
+        ->assertSee('>eco<', false);
+
+    $this->get(route('academico.niveles-educativos'))
+        ->assertOk()
+        ->assertSee('Modalidad Tecnica');
 });
 
 test('academic planes de area page loads', function () {

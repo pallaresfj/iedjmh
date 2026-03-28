@@ -516,7 +516,7 @@ class CitizenAttentionController extends Controller
                 'items' => [
                     ['label' => 'Academico', 'route' => 'academico.index'],
                     ['label' => 'Niveles Educativos', 'route' => 'academico.niveles-educativos'],
-                    ['label' => 'Modalidad Agropecuaria', 'route' => 'academico.modalidad-agropecuaria'],
+                    ['label' => PublicSettings::academicModality()['label'], 'route' => 'academico.modalidad'],
                     ['label' => 'Planes de Area', 'route' => 'academico.planes-area'],
                     ['label' => 'Sistema de Evaluacion', 'route' => 'academico.sistema-evaluacion'],
                     ['label' => 'Proyectos Pedagogicos', 'route' => 'academico.proyectos-pedagogicos'],

@@ -11,6 +11,7 @@ use App\Models\Page;
 use App\Models\Project;
 use App\Models\Setting;
 use App\Support\PageMenuCatalog;
+use App\Support\PublicSettings;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -101,6 +102,8 @@ class AcademicController extends Controller
      */
     private function pageDefinitions(): array
     {
+        $modality = PublicSettings::academicModality();
+
         return [
             'niveles-educativos' => [
                 'title' => 'Niveles Educativos',
@@ -116,12 +119,12 @@ class AcademicController extends Controller
                     ],
                 ],
             ],
-            'modalidad-agropecuaria' => [
-                'title' => 'Modalidad Agropecuaria',
-                'route' => PageMenuCatalog::routeFor('academico.modalidad-agropecuaria') ?: 'academico.modalidad-agropecuaria',
-                'slug' => PageMenuCatalog::slugFor('academico.modalidad-agropecuaria') ?: 'academico-modalidad-agropecuaria',
-                'menu_binding' => 'academico.modalidad-agropecuaria',
-                'icon' => 'agriculture',
+            'modalidad' => [
+                'title' => $modality['label'],
+                'route' => PageMenuCatalog::routeFor('academico.modalidad') ?: 'academico.modalidad',
+                'slug' => PageMenuCatalog::slugFor('academico.modalidad') ?: 'academico-modalidad',
+                'menu_binding' => 'academico.modalidad',
+                'icon' => $modality['icon'],
                 'summary' => 'Formacion tecnica articulada con el contexto rural y productivo del territorio.',
                 'blocks' => [
                     [

@@ -87,7 +87,7 @@ Fecha de corte: 2026-03-28
 - `GET /institucion` y subrutas:
   - `/historia`, `/mision-vision`, `/simbolos`, `/equipo-institucional`, `/sedes`, `/pei`, `/manual-convivencia`, `/directorio`.
 - `GET /academico` y subrutas:
-  - `/niveles-educativos`, `/modalidad-agropecuaria`, `/planes-area`, `/sistema-evaluacion`, `/proyectos-pedagogicos`, `/calendario-academico`.
+  - `/niveles-educativos`, `/modalidad`, `/planes-area`, `/sistema-evaluacion`, `/proyectos-pedagogicos`, `/calendario-academico`.
 - `GET /proyectos` -> listado filtrable con paginacion.
 - `GET /proyectos/{slug}` -> detalle de proyecto.
 - `GET /noticias` -> listado filtrable con paginacion.

@@ -95,7 +95,7 @@ class DemoContentSeeder extends Seeder
             ['slug' => 'pei', 'title' => 'Proyecto Educativo Institucional', 'menu_binding' => 'institucion.pei'],
             ['slug' => 'manual-convivencia', 'title' => 'Manual de Convivencia', 'menu_binding' => 'institucion.manual-convivencia'],
             ['slug' => 'niveles-educativos', 'title' => 'Niveles Educativos', 'menu_binding' => 'academico.niveles-educativos'],
-            ['slug' => 'modalidad-agropecuaria', 'title' => 'Modalidad Agropecuaria', 'menu_binding' => 'academico.modalidad-agropecuaria'],
+            ['slug' => 'academico-modalidad', 'title' => 'Modalidad', 'menu_binding' => 'academico.modalidad'],
             ['slug' => 'academico-planes-area', 'title' => 'Planes de Area', 'menu_binding' => 'academico.planes-area'],
             ['slug' => 'calendario-academico', 'title' => 'Calendario Academico', 'menu_binding' => 'academico.calendario-academico'],
         ];

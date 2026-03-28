@@ -25,7 +25,7 @@ class SitemapXmlController extends Controller
             'institucion.index', 'institucion.historia', 'institucion.mision-vision',
             'institucion.simbolos', 'institucion.equipo-institucional', 'institucion.sedes',
             'institucion.pei', 'institucion.manual-convivencia', 'institucion.directorio',
-            'academico.index', 'academico.niveles-educativos', 'academico.modalidad-agropecuaria',
+            'academico.index', 'academico.niveles-educativos', 'academico.modalidad',
             'academico.planes-area', 'academico.sistema-evaluacion', 'academico.proyectos-pedagogicos',
             'academico.calendario-academico',
             'proyectos.index', 'noticias.index',

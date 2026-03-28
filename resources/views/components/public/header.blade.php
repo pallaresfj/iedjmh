@@ -2,7 +2,33 @@
     'homeThemeable' => false,
 ])
 
-@php($menuItems = config('institution.navigation.primary', []))
+@php($modality = \App\Support\PublicSettings::academicModality())
+@php(
+    $menuItems = collect(config('institution.navigation.primary', []))
+        ->map(function (array $item) use ($modality): array {
+            $children = collect($item['children'] ?? [])
+                ->map(function (array $child) use ($modality): array {
+                    if (($child['route'] ?? null) !== 'academico.modalidad') {
+                        return $child;
+                    }
+
+                    $child['label'] = $modality['label'];
+                    $child['icon'] = $modality['icon'];
+
+                    return $child;
+                })
+                ->values()
+                ->all();
+
+            if ($children !== []) {
+                $item['children'] = $children;
+            }
+
+            return $item;
+        })
+        ->values()
+        ->all()
+)
 @php($institutionName = \App\Support\PublicSettings::get('institution_name', config('institution.display_name', config('institution.name', 'IED JOSÉ MARÍA HERRERA'))))
 @php($logoUrl = \App\Support\PublicSettings::mediaUrl(\App\Support\PublicSettings::get('logo_path')))
 @php($institutionDane = \App\Support\PublicSettings::get('dane', ''))

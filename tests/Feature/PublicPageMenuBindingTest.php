@@ -331,7 +331,7 @@ test('non cms detail page renders dark fallback banner when cms banner is missin
 test('selected academic cms routes force banner title style with fallback when cms banner is missing', function () {
     $routes = [
         'academico.niveles-educativos',
-        'academico.modalidad-agropecuaria',
+        'academico.modalidad',
         'academico.sistema-evaluacion',
         'academico.proyectos-pedagogicos',
         'academico.calendario-academico',

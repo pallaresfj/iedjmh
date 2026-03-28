@@ -55,6 +55,21 @@ test('home header uses institution settings and renders external platform links'
         ->toMatch('/href="https:\/\/aliado-settings\.example\.edu"[^>]*target="_blank"[^>]*rel="noopener noreferrer"/');
 });
 
+test('home header uses configurable academic modality submenu label and icon', function () {
+    Setting::query()->create([
+        'singleton' => 1,
+        'institution_name' => 'IED Navegacion',
+        'academic_modality_label' => 'Modalidad Tecnica',
+        'academic_modality_icon' => 'eco',
+    ]);
+
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertSee(route('academico.modalidad'))
+        ->assertSee('Modalidad Tecnica')
+        ->assertSee('>eco<', false);
+});
+
 test('contact page uses contact data from settings', function () {
     config()->set('institution.address', 'Direccion desde config');
     config()->set('institution.phone', '3000000000');

@@ -14,6 +14,8 @@ class Setting extends Model
         'institution_name',
         'dane',
         'nit',
+        'academic_modality_label',
+        'academic_modality_icon',
         'location',
         'location_latitude',
         'location_longitude',

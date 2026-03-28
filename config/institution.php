@@ -40,7 +40,7 @@ return [
                 'route' => 'academico.index',
                 'children' => [
                     ['label' => 'Niveles educativos', 'route' => 'academico.niveles-educativos', 'icon' => 'school'],
-                    ['label' => 'Modalidad agropecuaria', 'route' => 'academico.modalidad-agropecuaria', 'icon' => 'agriculture'],
+                    ['label' => 'Modalidad', 'route' => 'academico.modalidad', 'icon' => 'agriculture'],
                     ['label' => 'Planes de area', 'route' => 'academico.planes-area', 'icon' => 'menu_book'],
                     ['label' => 'Sistema de evaluacion', 'route' => 'academico.sistema-evaluacion', 'icon' => 'checklist'],
                     ['label' => 'Calendario academico', 'route' => 'academico.calendario-academico', 'icon' => 'calendar_month'],

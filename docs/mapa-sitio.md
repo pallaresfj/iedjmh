@@ -16,7 +16,7 @@
 
 - Académico
   - Niveles educativos
-  - Modalidad agropecuaria
+  - Modalidad
   - Planes de área
   - Sistema de evaluación
   - Proyectos pedagógicos
