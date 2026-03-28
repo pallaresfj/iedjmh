@@ -35,7 +35,7 @@
                     Completa este formulario para registrar tu solicitud. Recibiras un codigo de seguimiento.
                 </p>
 
-                <form action="{{ route('atencion.pqrs.store') }}" method="POST" class="mt-5 grid gap-4 md:grid-cols-2">
+                <form action="{{ route('atencion.pqrs.store') }}" method="POST" enctype="multipart/form-data" class="mt-5 grid gap-4 md:grid-cols-2">
                     @csrf
 
                     <div class="hidden" aria-hidden="true">
@@ -68,6 +68,18 @@
                             class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
                         >
                         @error('subject')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
+                    </label>
+
+                    <label>
+                        <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Adjunto</span>
+                        <input
+                            type="file"
+                            name="attachment"
+                            accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                            class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 file:mr-3 file:rounded-md file:border-0 file:bg-ied-primary/10 file:px-3 file:py-1.5 file:font-semibold file:text-ied-primary-dark focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
+                        >
+                        <span class="mt-1 block text-xs text-ied-gray-500">PDF o DOCX, maximo 2 MB.</span>
+                        @error('attachment')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
                     </label>
 
                     <label>

@@ -88,12 +88,14 @@ class CitizenAttentionController extends Controller
             'applicant_document' => ['nullable', 'string', 'max:120'],
             'applicant_address' => ['nullable', 'string', 'max:255'],
             'municipality' => ['nullable', 'string', 'max:120'],
+            'attachment' => ['nullable', 'file', 'mimes:pdf,docx', 'max:2048'],
             'consent_habeas_data' => ['accepted'],
         ], [
             'consent_habeas_data.accepted' => 'Debes aceptar el tratamiento de datos personales para continuar.',
         ]);
 
         $trackingCode = $trackingCodeGenerator->generate();
+        $attachmentPath = $request->file('attachment')?->store('pqrs-attachments', 'local');
 
         $pqrs = PqrsRequest::query()->create([
             'tracking_code' => $trackingCode,
@@ -101,6 +103,7 @@ class CitizenAttentionController extends Controller
             'status' => 'received',
             'priority' => 'medium',
             'subject' => $validated['subject'],
+            'attachment_path' => $attachmentPath,
             'message' => $validated['message'],
             'applicant_name' => $validated['applicant_name'],
             'applicant_email' => $validated['applicant_email'] ?: null,

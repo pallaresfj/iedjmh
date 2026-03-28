@@ -17,6 +17,7 @@ class PqrsRequest extends Model
         'status',
         'priority',
         'subject',
+        'attachment_path',
         'message',
         'applicant_name',
         'applicant_email',
