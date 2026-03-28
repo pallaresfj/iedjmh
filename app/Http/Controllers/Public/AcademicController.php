@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Public\Concerns\ResolvesPublicContent;
-use App\Models\Document;
+use App\Models\AreaPlan;
 use App\Models\Event;
 use App\Models\Page;
 use App\Models\Project;
@@ -213,53 +213,42 @@ class AcademicController extends Controller
     }
 
     /**
-     * @return Collection<int, array<string, string|null>>
+     * @return Collection<int, array{
+     *     area_name: string,
+     *     responsible_teachers: string,
+     *     icon: string,
+     *     plan_url: string
+     * }>|LengthAwarePaginator<int, array{
+     *     area_name: string,
+     *     responsible_teachers: string,
+     *     icon: string,
+     *     plan_url: string
+     * }>
      */
-    private function resolveAreaPlans(): Collection
+    private function resolveAreaPlans(): Collection|LengthAwarePaginator
     {
-        if ($this->canQueryTable('documents')) {
-            $documents = Document::query()
+        if ($this->canQueryTable('area_plans')) {
+            $plans = AreaPlan::query()
                 ->where('status', 'published')
-                ->where(function ($query): void {
-                    $query->whereHas('categories', function ($categoryQuery): void {
-                        $categoryQuery->whereIn('slug', ['planes-de-area', 'academico-planes-area']);
-                    })->orWhereDoesntHave('categories');
-                })
-                ->orderByDesc('document_date')
-                ->orderByDesc('published_at')
-                ->limit(8)
-                ->get()
-                ->map(function (Document $document): array {
+                ->orderBy('sort_order')
+                ->orderBy('area_name')
+                ->paginate(5)
+                ->withQueryString()
+                ->through(function (AreaPlan $plan): array {
                     return [
-                        'title' => $document->title,
-                        'summary' => $document->summary ?: Str::limit(strip_tags((string) $document->description), 140),
-                        'date' => $document->document_date?->translatedFormat('d M Y'),
-                        'number' => $document->document_number,
-                        'url' => $this->resolveDocumentUrl($document),
+                        'area_name' => $plan->area_name,
+                        'responsible_teachers' => $plan->responsible_teachers,
+                        'icon' => trim((string) $plan->icon) !== '' ? $plan->icon : 'menu_book',
+                        'plan_url' => $plan->plan_url,
                     ];
                 });
 
-            if ($documents->isNotEmpty()) {
-                return $documents;
+            if ($plans->isNotEmpty() || request()->query('page')) {
+                return $plans;
             }
         }
 
-        return collect([
-            [
-                'title' => 'Plan de area - Ciencias Naturales',
-                'summary' => 'Orientaciones curriculares, competencias y actividades por grado.',
-                'date' => null,
-                'number' => null,
-                'url' => null,
-            ],
-            [
-                'title' => 'Plan de area - Matematicas',
-                'summary' => 'Referentes de aprendizaje y rutas metodologicas institucionales.',
-                'date' => null,
-                'number' => null,
-                'url' => null,
-            ],
-        ]);
+        return collect();
     }
 
     /**
@@ -425,18 +414,5 @@ class AcademicController extends Controller
             'months' => collect(),
             'filters' => $filters,
         ];
-    }
-
-    private function resolveDocumentUrl(Document $document): ?string
-    {
-        if ($document->external_url) {
-            return $document->external_url;
-        }
-
-        if (! $document->file_path) {
-            return null;
-        }
-
-        return $this->resolveMediaUrl($document->file_path);
     }
 }

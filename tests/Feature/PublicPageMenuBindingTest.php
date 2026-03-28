@@ -59,17 +59,20 @@ test('institution page keeps legacy slug compatibility when menu binding is null
 });
 
 test('academic planes area route resolves published page by menu binding', function () {
-    Page::query()->create([
-        'title' => 'Planes personalizados',
-        'slug' => 'planes-personalizados',
-        'menu_binding' => 'academico.planes-area',
-        'status' => 'published',
-        'content' => '<p>Planes de area administrados desde CMS</p>',
-    ]);
+    Page::query()->updateOrCreate(
+        ['menu_binding' => 'academico.planes-area'],
+        [
+            'title' => 'Planes personalizados',
+            'slug' => 'academico-planes-area',
+            'status' => 'published',
+            'content' => '<p>Planes de area administrados desde CMS</p>',
+        ],
+    );
 
     $this->get(route('academico.planes-area'))
         ->assertOk()
-        ->assertSee('Planes de area administrados desde CMS');
+        ->assertSee('Planes personalizados')
+        ->assertDontSee('Planes de area administrados desde CMS');
 });
 
 test('menu binding is unique in pages table', function () {
@@ -329,7 +332,6 @@ test('selected academic cms routes force banner title style with fallback when c
     $routes = [
         'academico.niveles-educativos',
         'academico.modalidad-agropecuaria',
-        'academico.planes-area',
         'academico.sistema-evaluacion',
         'academico.proyectos-pedagogicos',
         'academico.calendario-academico',
@@ -342,6 +344,13 @@ test('selected academic cms routes force banner title style with fallback when c
             ->assertSee('public-internal-banner--fallback', false)
             ->assertDontSee('Seccion institucional');
     }
+});
+
+test('academic planes area keeps standard header when no linked banner exists', function () {
+    $this->get(route('academico.planes-area'))
+        ->assertOk()
+        ->assertSee('Seccion institucional')
+        ->assertDontSee('public-internal-banner--fallback', false);
 });
 
 test('selected institution non cms routes force banner title style with fallback when cms banner is missing', function () {

@@ -9,7 +9,7 @@
         :banner="$banner"
         section-key="academico"
         :replace-header-with-banner="true"
-        :force-banner-title-style="in_array($pageKey, ['niveles-educativos', 'modalidad-agropecuaria', 'planes-area', 'sistema-evaluacion', 'proyectos-pedagogicos', 'calendario-academico'], true)"
+        :force-banner-title-style="in_array($pageKey, ['niveles-educativos', 'modalidad-agropecuaria', 'sistema-evaluacion', 'proyectos-pedagogicos', 'calendario-academico'], true)"
     >
         <x-slot:sidebar>
             <x-public.academico.sidebar :pages="$academicPages" />
@@ -26,31 +26,44 @@
         </x-slot:sidebar>
 
         <div class="space-y-6">
-            @foreach ($blocks as $block)
-                <section class="space-y-3">
-                    @if (! empty($block['title']))
-                        <h2 class="public-heading text-xl font-semibold text-ied-gray-900">{{ $block['title'] }}</h2>
-                    @endif
-                    @if (! empty($block['is_html']))
-                        <div class="public-rich-content text-sm leading-relaxed text-ied-gray-700 sm:text-base">
-                            {!! $block['body'] !!}
-                        </div>
-                    @else
-                        <div class="text-sm leading-relaxed text-ied-gray-700 sm:text-base">
-                            {!! nl2br(e($block['body'])) !!}
-                        </div>
-                    @endif
-                </section>
-            @endforeach
+            @if ($pageKey !== 'planes-area')
+                @foreach ($blocks as $block)
+                    <section class="space-y-3">
+                        @if (! empty($block['title']))
+                            <h2 class="public-heading text-xl font-semibold text-ied-gray-900">{{ $block['title'] }}</h2>
+                        @endif
+                        @if (! empty($block['is_html']))
+                            <div class="public-rich-content text-sm leading-relaxed text-ied-gray-700 sm:text-base">
+                                {!! $block['body'] !!}
+                            </div>
+                        @else
+                            <div class="text-sm leading-relaxed text-ied-gray-700 sm:text-base">
+                                {!! nl2br(e($block['body'])) !!}
+                            </div>
+                        @endif
+                    </section>
+                @endforeach
+            @endif
 
             @if ($pageKey === 'planes-area')
-                <section class="space-y-4 border-t border-ied-gray-200 pt-6">
-                    <h2 class="public-heading text-xl font-semibold text-ied-gray-900">Planes disponibles</h2>
-                    <div class="grid gap-4 md:grid-cols-2">
-                        @foreach ($plans as $item)
-                            <x-public.academico.document-item :item="$item" />
-                        @endforeach
-                    </div>
+                <section class="space-y-5">
+                    @if ($plans->isEmpty())
+                        <div class="rounded-xl border border-dashed border-ied-gray-200 bg-ied-gray-100 p-4 text-sm text-ied-gray-700">
+                            No hay planes de area publicados en este momento.
+                        </div>
+                    @else
+                        <div class="space-y-4">
+                            @foreach ($plans as $item)
+                                <x-public.academico.area-plan-item :item="$item" />
+                            @endforeach
+                        </div>
+
+                        @if ($plans instanceof \Illuminate\Contracts\Pagination\Paginator && $plans->hasPages())
+                            <div class="pt-2">
+                                {{ $plans->links('vendor.pagination.public') }}
+                            </div>
+                        @endif
+                    @endif
                 </section>
             @endif
 

@@ -22,6 +22,7 @@ class ShieldRolesAndUsersSeeder extends Seeder
      * @var array<int, string>
      */
     private const CONTENT_SUBJECTS = [
+        'AreaPlan',
         'Banner',
         'Category',
         'Campus',

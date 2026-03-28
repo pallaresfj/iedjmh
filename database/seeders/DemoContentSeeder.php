@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\AreaPlan;
 use App\Models\Banner;
 use App\Models\Campus;
 use App\Models\Category;
@@ -40,6 +41,7 @@ class DemoContentSeeder extends Seeder
         $this->seedPosts($admin);
         $this->seedEvents($admin);
         $this->seedProjects($admin);
+        $this->seedAreaPlans();
         $this->seedDocuments($admin);
         $this->seedFaqs($admin);
         $this->seedProcedures($admin);
@@ -94,6 +96,7 @@ class DemoContentSeeder extends Seeder
             ['slug' => 'manual-convivencia', 'title' => 'Manual de Convivencia', 'menu_binding' => 'institucion.manual-convivencia'],
             ['slug' => 'niveles-educativos', 'title' => 'Niveles Educativos', 'menu_binding' => 'academico.niveles-educativos'],
             ['slug' => 'modalidad-agropecuaria', 'title' => 'Modalidad Agropecuaria', 'menu_binding' => 'academico.modalidad-agropecuaria'],
+            ['slug' => 'academico-planes-area', 'title' => 'Planes de Area', 'menu_binding' => 'academico.planes-area'],
             ['slug' => 'calendario-academico', 'title' => 'Calendario Academico', 'menu_binding' => 'academico.calendario-academico'],
         ];
 
@@ -274,6 +277,54 @@ class DemoContentSeeder extends Seeder
             if ($category) {
                 $created->categories()->syncWithoutDetaching([$category->id]);
             }
+        }
+    }
+
+    private function seedAreaPlans(): void
+    {
+        $plans = [
+            [
+                'area_name' => 'Matematicas',
+                'responsible_teachers' => 'Claudia Perez, Ricardo Mendoza, Sofia Castro',
+                'icon' => 'calculate',
+                'plan_url' => 'https://example.com/planes/matematicas',
+            ],
+            [
+                'area_name' => 'Ciencias Naturales',
+                'responsible_teachers' => 'Luis Gomez, Marina Silva',
+                'icon' => 'science',
+                'plan_url' => 'https://example.com/planes/ciencias-naturales',
+            ],
+            [
+                'area_name' => 'Tecnica Agropecuaria',
+                'responsible_teachers' => 'Carlos Ruiz, Patricia Jaramillo',
+                'icon' => 'agriculture',
+                'plan_url' => 'https://example.com/planes/tecnica-agropecuaria',
+            ],
+            [
+                'area_name' => 'Humanidades e Ingles',
+                'responsible_teachers' => 'Elena White, Jorge Isaacs',
+                'icon' => 'language',
+                'plan_url' => 'https://example.com/planes/humanidades-ingles',
+            ],
+            [
+                'area_name' => 'Ciencias Sociales',
+                'responsible_teachers' => 'Mateo Holguin, Lucia Mendez',
+                'icon' => 'history_edu',
+                'plan_url' => 'https://example.com/planes/ciencias-sociales',
+            ],
+        ];
+
+        foreach ($plans as $index => $plan) {
+            AreaPlan::query()->firstOrCreate(
+                ['area_name' => $plan['area_name']],
+                [
+                    ...$plan,
+                    'status' => 'published',
+                    'sort_order' => $index,
+                    'published_at' => now(),
+                ],
+            );
         }
     }
 
