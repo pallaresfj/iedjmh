@@ -13,7 +13,7 @@
             </div>
 
             <div class="min-w-0">
-                <h3 class="public-heading text-lg font-extrabold leading-tight tracking-[-0.03em] text-ied-gray-900 sm:text-[2rem]">
+                <h3 class="public-heading text-lg font-bold leading-tight tracking-[-0.01em] text-ied-gray-900 sm:text-xl">
                     {{ $item['area_name'] }}
                 </h3>
                 <p class="mt-1 break-words text-xs leading-relaxed text-ied-gray-700 [overflow-wrap:anywhere] sm:text-sm">

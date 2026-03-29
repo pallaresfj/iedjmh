@@ -6,6 +6,43 @@
     <x-public.internal-page :title="$title" :lead="$lead" :banner="$banner" section-key="transparencia" :replace-header-with-banner="true" :force-banner-title-style="true">
         <x-slot:sidebar>
             <x-public.transparencia.sidebar :categories="$categories" active-section="contratacion" />
+
+            <x-public.filter-panel :action="route('transparencia.contratacion.index')" target="#contracts-results">
+                <label>
+                    <span class="public-filter-label">Buscar</span>
+                    <input type="text" name="q" value="{{ $filters['q'] }}" placeholder="ID proceso, objeto o contratista" class="public-filter-input">
+                </label>
+
+                <label>
+                    <span class="public-filter-label">Vigencia</span>
+                    <select name="fiscal_year" class="public-filter-input">
+                        <option value="">Todas</option>
+                        @foreach ($years as $year)
+                            <option value="{{ $year }}" @selected($filters['fiscal_year'] === $year)>{{ $year }}</option>
+                        @endforeach
+                    </select>
+                </label>
+
+                <label>
+                    <span class="public-filter-label">Estado</span>
+                    <select name="process_status" class="public-filter-input">
+                        <option value="">Todos</option>
+                        @foreach ($statusOptions as $value => $label)
+                            <option value="{{ $value }}" @selected($filters['process_status'] === $value)>{{ $label }}</option>
+                        @endforeach
+                    </select>
+                </label>
+
+                <label>
+                    <span class="public-filter-label">Tipo de contrato</span>
+                    <select name="type" class="public-filter-input">
+                        <option value="">Todos</option>
+                        @foreach ($types as $type)
+                            <option value="{{ $type['slug'] }}" @selected($filters['type'] === $type['slug'])>{{ $type['name'] }}</option>
+                        @endforeach
+                    </select>
+                </label>
+            </x-public.filter-panel>
         </x-slot:sidebar>
 
         <div class="space-y-6">
@@ -23,71 +60,6 @@
                     </div>
                 </section>
             @endif
-
-            <section class="public-surface p-5 sm:p-6">
-                <form action="{{ route('transparencia.contratacion.index') }}" method="GET" class="grid gap-3 md:grid-cols-2 xl:grid-cols-5" data-auto-filter-form data-auto-filter-target="#contracts-results">
-                    <label class="xl:col-span-2">
-                        <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Buscar</span>
-                        <input
-                            type="text"
-                            name="q"
-                            value="{{ $filters['q'] }}"
-                            placeholder="ID proceso, objeto o contratista"
-                            class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
-                        >
-                    </label>
-
-                    <label>
-                        <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Vigencia</span>
-                        <select
-                            name="fiscal_year"
-                            class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
-                        >
-                            <option value="">Todas</option>
-                            @foreach ($years as $year)
-                                <option value="{{ $year }}" @selected($filters['fiscal_year'] === $year)>{{ $year }}</option>
-                            @endforeach
-                        </select>
-                    </label>
-
-                    <label>
-                        <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Estado</span>
-                        <select
-                            name="process_status"
-                            class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
-                        >
-                            <option value="">Todos</option>
-                            @foreach ($statusOptions as $value => $label)
-                                <option value="{{ $value }}" @selected($filters['process_status'] === $value)>{{ $label }}</option>
-                            @endforeach
-                        </select>
-                    </label>
-
-                    <label>
-                        <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Tipo de contrato</span>
-                        <select
-                            name="type"
-                            class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
-                        >
-                            <option value="">Todos</option>
-                            @foreach ($types as $type)
-                                <option value="{{ $type['slug'] }}" @selected($filters['type'] === $type['slug'])>{{ $type['name'] }}</option>
-                            @endforeach
-                        </select>
-                    </label>
-
-                    <div class="flex items-end gap-2 md:col-span-2 xl:col-span-5">
-                        <noscript>
-                            <button type="submit" class="inline-flex items-center rounded-full bg-ied-primary px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-ied-primary-dark">
-                                Aplicar filtros
-                            </button>
-                        </noscript>
-                        <a href="{{ route('transparencia.contratacion.index') }}" data-auto-filter-clear class="inline-flex items-center rounded-full border border-ied-gray-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-ied-gray-700 transition hover:border-ied-gray-400 hover:text-ied-gray-900">
-                            Limpiar
-                        </a>
-                    </div>
-                </form>
-            </section>
 
             <section id="contracts-results" class="space-y-4">
                 <div class="flex flex-wrap items-center justify-between gap-2">

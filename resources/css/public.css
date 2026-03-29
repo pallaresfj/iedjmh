@@ -938,6 +938,27 @@
         color: var(--public-text);
     }
 
+    /* ── Filter panel (sidebar) ── */
+
+    .public-filter-panel .public-filter-input {
+        @apply w-full rounded-xl border bg-white px-3.5 py-2.5 text-sm outline-none transition;
+        border-color: var(--public-border);
+        color: var(--public-text);
+    }
+
+    .public-filter-panel .public-filter-input:focus {
+        @apply border-ied-primary ring-2 ring-ied-primary/20;
+    }
+
+    .public-filter-panel label + label .public-filter-label {
+        @apply mt-4;
+    }
+
+    .public-filter-panel .public-filter-label {
+        @apply mb-2 block text-xs font-semibold uppercase tracking-widest;
+        color: var(--public-text-muted, theme(colors.ied-gray.700));
+    }
+
     .public-internal-banner-section {
         @apply py-0;
     }
@@ -1085,7 +1106,40 @@
     }
 
     .public-internal-banner--with-image .public-internal-banner__decoration {
-        opacity: 0.6;
+        opacity: 1;
+    }
+
+    .public-internal-banner--with-image .public-internal-banner__shape {
+        border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .public-internal-banner--with-image .public-internal-banner__shape--1 {
+        background: radial-gradient(
+            circle,
+            rgba(255, 255, 255, 0.1) 0%,
+            rgba(255, 255, 255, 0.03) 60%,
+            rgba(255, 255, 255, 0) 75%
+        );
+    }
+
+    .public-internal-banner--with-image .public-internal-banner__shape--2 {
+        background: radial-gradient(
+            circle,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0.02) 55%,
+            rgba(255, 255, 255, 0) 70%
+        );
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .public-internal-banner--with-image .public-internal-banner__shape--3 {
+        background: radial-gradient(
+            circle,
+            rgba(255, 255, 255, 0.06) 0%,
+            rgba(255, 255, 255, 0.015) 55%,
+            rgba(255, 255, 255, 0) 70%
+        );
+        border-color: rgba(255, 255, 255, 0.09);
     }
 
     /* Bottom accent line */

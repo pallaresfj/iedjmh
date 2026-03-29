@@ -315,18 +315,35 @@
             @if ($related->isNotEmpty())
                 <section class="space-y-4 border-t border-ied-gray-200 pt-6">
                     <h2 class="public-heading text-xl font-semibold text-ied-gray-900">Proyectos relacionados</h2>
-                    <div class="grid gap-4 md:grid-cols-2">
+                    <div @class([
+                        'grid gap-4',
+                        'md:grid-cols-2' => $related->count() >= 2,
+                    ])>
                         @foreach ($related as $item)
-                            <article class="rounded-2xl border border-ied-gray-200 bg-white p-5">
-                                @if ($item['is_featured'])
-                                    <span class="inline-flex rounded-full bg-ied-primary-light/20 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-ied-primary-dark">Destacado</span>
+                            <article class="public-surface overflow-hidden">
+                                @if (! empty($item['image_url']))
+                                    <img src="{{ $item['image_url'] }}" alt="{{ $item['title'] }}" class="h-40 w-full object-cover" loading="lazy" />
+                                @else
+                                    <div class="h-40 w-full bg-linear-to-br from-ied-primary-light/35 via-ied-primary/15 to-ied-gray-100"></div>
                                 @endif
-                                <h3 class="public-heading mt-2 text-lg font-semibold text-ied-gray-900">
-                                    <a href="{{ $item['detail_url'] }}" class="transition hover:text-ied-primary-dark">{{ $item['title'] }}</a>
-                                </h3>
-                                @if (! empty($item['summary']))
-                                    <p class="mt-2 text-sm leading-relaxed text-ied-gray-600">{{ $item['summary'] }}</p>
-                                @endif
+
+                                <div class="p-5">
+                                    @if ($item['is_featured'])
+                                        <span class="inline-flex rounded-full bg-ied-primary/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-ied-primary-dark">Destacado</span>
+                                    @endif
+
+                                    <h3 class="public-heading mt-2 text-lg font-semibold text-ied-gray-900">
+                                        <a href="{{ $item['detail_url'] }}" class="transition hover:text-ied-primary-dark">{{ $item['title'] }}</a>
+                                    </h3>
+
+                                    @if (! empty($item['summary']))
+                                        <p class="mt-2 text-sm leading-relaxed text-ied-gray-700">{{ $item['summary'] }}</p>
+                                    @endif
+
+                                    @if (! empty($item['period']))
+                                        <p class="mt-3 text-xs font-medium uppercase tracking-wide text-ied-primary-dark">{{ $item['period'] }}</p>
+                                    @endif
+                                </div>
                             </article>
                         @endforeach
                     </div>

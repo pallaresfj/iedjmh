@@ -62,7 +62,7 @@ class ProjectController extends Controller
             $this->applySort($baseQuery, $filters['sort']);
 
             $projects = $baseQuery
-                ->paginate(9)
+                ->paginate(3)
                 ->withQueryString()
                 ->through(fn (Project $project): array => $this->mapProject($project));
 
@@ -110,7 +110,7 @@ class ProjectController extends Controller
             ->orderByDesc('is_featured')
             ->orderBy('sort_order')
             ->orderByDesc('published_at')
-            ->limit(4)
+            ->limit(2)
             ->get()
             ->map(fn (Project $relatedProject): array => $this->mapProject($relatedProject));
 

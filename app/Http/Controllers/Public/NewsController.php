@@ -85,7 +85,7 @@ class NewsController extends Controller
             $this->applySort($query, $filters['sort']);
 
             $items = $query
-                ->paginate(9)
+                ->paginate(3)
                 ->withQueryString()
                 ->through(fn (Post $post): array => $this->mapPost($post));
         }

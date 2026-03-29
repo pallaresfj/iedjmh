@@ -14,6 +14,25 @@
         <x-slot:sidebar>
             <x-public.institucion.sidebar :pages="$institutionPages" />
 
+            @if ($pageKey === 'equipo-institucional')
+                <x-public.filter-panel :action="route('institucion.equipo-institucional')" target="#staff-results">
+                    <label>
+                        <span class="public-filter-label">Buscar</span>
+                        <input type="text" name="q" value="{{ $staffFilters['q'] }}" placeholder="Buscar por nombre o cargo..." class="public-filter-input">
+                    </label>
+
+                    <label>
+                        <span class="public-filter-label">Sede</span>
+                        <select name="campus" class="public-filter-input">
+                            <option value="">Todas las Sedes</option>
+                            @foreach ($staffCampuses as $campus)
+                                <option value="{{ $campus['slug'] }}" @selected($staffFilters['campus'] === $campus['slug'])>{{ $campus['name'] }}</option>
+                            @endforeach
+                        </select>
+                    </label>
+                </x-public.filter-panel>
+            @endif
+
             <div class="public-surface p-4 sm:p-5">
                 <p class="public-heading text-sm font-semibold uppercase tracking-wide text-ied-gray-900">Volver</p>
                 <a href="{{ route('institucion.index') }}" class="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-ied-primary-dark hover:text-ied-primary">
@@ -160,45 +179,6 @@
 
             @if ($pageKey === 'equipo-institucional')
                 <section class="space-y-5 border-t border-ied-gray-200 pt-6">
-                    <section class="public-surface p-5 sm:p-6">
-                        <form action="{{ route('institucion.equipo-institucional') }}" method="GET" class="grid gap-3 md:grid-cols-2 xl:grid-cols-4" data-auto-filter-form data-auto-filter-target="#staff-results">
-                            <label class="xl:col-span-2">
-                                <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Buscar</span>
-                                <input
-                                    type="text"
-                                    name="q"
-                                    value="{{ $staffFilters['q'] }}"
-                                    placeholder="Buscar por nombre o cargo..."
-                                    class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
-                                >
-                            </label>
-
-                            <label>
-                                <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Sede</span>
-                                <select
-                                    name="campus"
-                                    class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
-                                >
-                                    <option value="">Todas las Sedes</option>
-                                    @foreach ($staffCampuses as $campus)
-                                        <option value="{{ $campus['slug'] }}" @selected($staffFilters['campus'] === $campus['slug'])>{{ $campus['name'] }}</option>
-                                    @endforeach
-                                </select>
-                            </label>
-
-                            <div class="flex items-end gap-2 md:col-span-2 xl:col-span-4">
-                                <noscript>
-                                    <button type="submit" class="inline-flex items-center rounded-full bg-ied-primary px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-ied-primary-dark">
-                                        Aplicar filtros
-                                    </button>
-                                </noscript>
-                                <a href="{{ route('institucion.equipo-institucional') }}" data-auto-filter-clear class="inline-flex items-center rounded-full border border-ied-gray-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-ied-gray-700 transition hover:border-ied-gray-400 hover:text-ied-gray-900">
-                                    Limpiar
-                                </a>
-                            </div>
-                        </form>
-                    </section>
-
                     <section id="staff-results" class="space-y-4">
                         @if ($hasStaffActiveFilters)
                             <div class="rounded-xl border border-ied-gray-200 bg-white p-3">
