@@ -15,9 +15,9 @@ class PqrsRequestFactory extends Factory
         return [
             'tracking_code' => strtoupper(fake()->unique()->bothify('PQRS-####-????')),
             'type' => fake()->randomElement(['peticion', 'queja', 'reclamo', 'sugerencia', 'felicitacion']),
+            'is_anonymous' => false,
             'status' => 'pendiente',
             'priority' => fake()->randomElement(['baja', 'media', 'alta']),
-            'subject' => fake()->sentence(),
             'message' => fake()->paragraphs(2, true),
             'attachment_path' => null,
             'applicant_name' => fake()->name(),
@@ -25,7 +25,6 @@ class PqrsRequestFactory extends Factory
             'applicant_phone' => fake()->optional()->phoneNumber(),
             'applicant_document' => fake()->numerify('##########'),
             'applicant_address' => fake()->optional()->address(),
-            'municipality' => 'Pivijay',
             'consent_habeas_data' => true,
             'submitted_at' => now(),
             'resolved_at' => null,

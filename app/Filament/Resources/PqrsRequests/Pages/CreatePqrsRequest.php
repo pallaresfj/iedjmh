@@ -22,6 +22,11 @@ class CreatePqrsRequest extends CreateRecord
         $data['created_by'] = auth()->id();
         $data['updated_by'] = auth()->id();
 
+        if ((bool) ($data['is_anonymous'] ?? false)) {
+            $data['applicant_name'] = null;
+            $data['applicant_document'] = null;
+        }
+
         if (in_array((string) ($data['status'] ?? ''), self::CLOSED_STATUSES, true) && blank($data['resolved_at'] ?? null)) {
             $data['resolved_at'] = now();
         }

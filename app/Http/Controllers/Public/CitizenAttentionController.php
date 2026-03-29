@@ -51,7 +51,6 @@ class CitizenAttentionController extends Controller
             'content' => $page?->content,
             'attentionPages' => $this->attentionPages(),
             'contact' => PublicSettings::contact(),
-            'contactSubjectOptions' => $this->contactSubjectOptions(),
         ]);
     }
 
@@ -82,39 +81,38 @@ class CitizenAttentionController extends Controller
 
         $validated = $request->validate([
             'type' => ['required', 'in:peticion,queja,reclamo,sugerencia,felicitacion,tramite'],
-            'subject' => ['required', 'string', 'max:255'],
             'message' => ['required', 'string', 'min:20', 'max:5000'],
             'origin' => ['nullable', 'in:contact,pqrs'],
             'website' => ['nullable', 'string', 'max:0'],
-            'applicant_name' => ['required', 'string', 'max:255'],
-            'applicant_email' => ['nullable', 'email', 'max:255'],
+            'is_anonymous' => ['nullable', 'boolean'],
+            'applicant_name' => ['required_unless:is_anonymous,1', 'nullable', 'string', 'max:255'],
+            'applicant_email' => ['required', 'email:rfc', 'max:255'],
             'applicant_phone' => ['nullable', 'string', 'max:80'],
             'applicant_document' => ['nullable', 'string', 'max:120'],
             'applicant_address' => ['nullable', 'string', 'max:255'],
-            'municipality' => ['nullable', 'string', 'max:120'],
             'attachment' => ['nullable', 'file', 'mimes:pdf,docx', 'max:2048'],
             'consent_habeas_data' => ['accepted'],
         ], [
             'consent_habeas_data.accepted' => 'Debes aceptar el tratamiento de datos personales para continuar.',
         ]);
 
+        $isAnonymous = (bool) ($validated['is_anonymous'] ?? false);
         $trackingCode = $trackingCodeGenerator->generate();
         $attachmentPath = $request->file('attachment')?->store('pqrs-attachments', 'local');
 
         $pqrs = PqrsRequest::query()->create([
             'tracking_code' => $trackingCode,
             'type' => $validated['type'],
+            'is_anonymous' => $isAnonymous,
             'status' => 'received',
             'priority' => 'medium',
-            'subject' => $validated['subject'],
             'attachment_path' => $attachmentPath,
             'message' => $validated['message'],
-            'applicant_name' => $validated['applicant_name'],
-            'applicant_email' => $validated['applicant_email'] ?? null,
+            'applicant_name' => $isAnonymous ? null : ($validated['applicant_name'] ?? null),
+            'applicant_email' => $validated['applicant_email'],
             'applicant_phone' => $validated['applicant_phone'] ?? null,
-            'applicant_document' => $validated['applicant_document'] ?? null,
+            'applicant_document' => $isAnonymous ? null : ($validated['applicant_document'] ?? null),
             'applicant_address' => $validated['applicant_address'] ?? null,
-            'municipality' => $validated['municipality'] ?? null,
             'consent_habeas_data' => true,
             'submitted_at' => now(),
         ]);
@@ -122,16 +120,14 @@ class CitizenAttentionController extends Controller
         if ($this->canQueryTable('pqrs_messages')) {
             PqrsMessage::query()->create([
                 'pqrs_request_id' => $pqrs->id,
-                'author_name' => $pqrs->applicant_name,
+                'author_name' => $pqrs->is_anonymous ? 'Anonimo' : $pqrs->applicant_name,
                 'author_email' => $pqrs->applicant_email,
                 'message' => $pqrs->message,
                 'is_internal' => false,
             ]);
         }
 
-        if (filled($pqrs->applicant_email)) {
-            $pqrs->notify(new PqrsReceivedNotification($pqrs));
-        }
+        $pqrs->notify(new PqrsReceivedNotification($pqrs));
 
         $redirectRoute = ($validated['origin'] ?? null) === 'contact'
             ? 'atencion.contactenos'
@@ -390,20 +386,6 @@ class CitizenAttentionController extends Controller
             ['title' => 'Mapa del sitio', 'route' => 'atencion.mapa-sitio'],
             ['title' => 'Participacion', 'route' => 'atencion.participacion'],
         ]);
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    private function contactSubjectOptions(): array
-    {
-        return [
-            'Informacion general' => 'Informacion general',
-            'Matriculas y admisiones' => 'Matriculas y admisiones',
-            'Certificados y constancias' => 'Certificados y constancias',
-            'Convivencia escolar' => 'Convivencia escolar',
-            'Atencion administrativa' => 'Atencion administrativa',
-        ];
     }
 
     /**

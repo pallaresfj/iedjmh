@@ -103,8 +103,12 @@
                                 </dd>
                             </div>
                             <div>
-                                <dt class="font-semibold text-ied-gray-700">Asunto</dt>
-                                <dd class="text-ied-gray-900">{{ $pqrs->subject }}</dd>
+                                <dt class="font-semibold text-ied-gray-700">Modalidad</dt>
+                                <dd class="text-ied-gray-900">{{ $pqrs->is_anonymous ? 'Anonima' : 'Identificada' }}</dd>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <dt class="font-semibold text-ied-gray-700">Resumen del mensaje</dt>
+                                <dd class="text-ied-gray-900">{{ \Illuminate\Support\Str::limit($pqrs->message, 180) }}</dd>
                             </div>
                             <div>
                                 <dt class="font-semibold text-ied-gray-700">Fecha de radicacion</dt>

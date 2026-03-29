@@ -24,9 +24,13 @@ class PqrsResponseNotification extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
+        $applicantLabel = filled($this->pqrsRequest->applicant_name)
+            ? (string) $this->pqrsRequest->applicant_name
+            : 'Ciudadano/a';
+
         return (new MailMessage)
             ->subject("Actualizacion de tu solicitud PQRS - {$this->pqrsRequest->tracking_code}")
-            ->greeting("Hola {$this->pqrsRequest->applicant_name},")
+            ->greeting("Hola {$applicantLabel},")
             ->line("Tu solicitud con codigo **{$this->pqrsRequest->tracking_code}** tiene una nueva respuesta.")
             ->line('---')
             ->line($this->pqrsMessage->message)

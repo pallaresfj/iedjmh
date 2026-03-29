@@ -137,6 +137,7 @@
 
                         <input type="hidden" name="type" value="peticion" />
                         <input type="hidden" name="origin" value="contact" />
+                        <input type="hidden" name="is_anonymous" value="0" />
 
                         <label>
                             <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Nombre completo</span>
@@ -160,6 +161,7 @@
                                     type="email"
                                     name="applicant_email"
                                     value="{{ old('applicant_email') }}"
+                                    required
                                     maxlength="255"
                                     autocomplete="email"
                                     placeholder="nombre@ejemplo.com"
@@ -182,20 +184,6 @@
                                 @error('applicant_phone')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
                             </label>
                         </div>
-
-                        <label>
-                            <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Asunto del mensaje</span>
-                            <select
-                                name="subject"
-                                required
-                                class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2.5 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
-                            >
-                                @foreach ($contactSubjectOptions as $value => $label)
-                                    <option value="{{ $value }}" @selected(old('subject', 'Informacion general') === $value)>{{ $label }}</option>
-                                @endforeach
-                            </select>
-                            @error('subject')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
-                        </label>
 
                         <label>
                             <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Tu mensaje</span>

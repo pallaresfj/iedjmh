@@ -23,7 +23,7 @@ class PqrsRequestForm
             ->columns(1)
             ->components([
                 Grid::make()
-                    ->columns(4)
+                    ->columns(5)
                     ->schema([
                         TextInput::make('tracking_code')
                             ->label('Radicado')
@@ -42,6 +42,12 @@ class PqrsRequestForm
                             ])
                             ->required()
                             ->native(false),
+                        Toggle::make('is_anonymous')
+                            ->label('Anonima')
+                            ->live()
+                            ->inline(false)
+                            ->default(false)
+                            ->disabledOn('edit'),
                         Select::make('status')
                             ->label('Estado')
                             ->options([
@@ -90,21 +96,24 @@ class PqrsRequestForm
                     ->schema([
                         TextInput::make('applicant_name')
                             ->label('Solicitante')
-                            ->required()
+                            ->required(fn (Get $get): bool => ! (bool) $get('is_anonymous'))
+                            ->hidden(fn (Get $get): bool => (bool) $get('is_anonymous'))
                             ->disabledOn('edit')
                             ->maxLength(255),
                         TextInput::make('applicant_document')
                             ->label('Documento')
+                            ->hidden(fn (Get $get): bool => (bool) $get('is_anonymous'))
                             ->disabledOn('edit')
                             ->maxLength(120),
                         TextInput::make('applicant_email')
                             ->label('Correo')
                             ->email()
+                            ->required()
                             ->disabledOn('edit')
                             ->maxLength(255),
                     ]),
                 Grid::make()
-                    ->columns(3)
+                    ->columns(2)
                     ->schema([
                         TextInput::make('applicant_phone')
                             ->label('Telefono')
@@ -114,19 +123,10 @@ class PqrsRequestForm
                             ->label('Direccion')
                             ->disabledOn('edit')
                             ->maxLength(255),
-                        TextInput::make('municipality')
-                            ->label('Municipio')
-                            ->disabledOn('edit')
-                            ->maxLength(120),
                     ]),
                 Grid::make()
                     ->columns(2)
                     ->schema([
-                        TextInput::make('subject')
-                            ->label('Asunto')
-                            ->required()
-                            ->disabledOn('edit')
-                            ->maxLength(255),
                         Placeholder::make('attachment_display')
                             ->label('Adjunto')
                             ->content(function (Get $get): HtmlString|string {

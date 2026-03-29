@@ -43,7 +43,7 @@
                     Completa este formulario para registrar tu solicitud. Recibiras un codigo de seguimiento.
                 </p>
 
-                <form action="{{ route('atencion.pqrs.store') }}" method="POST" enctype="multipart/form-data" class="mt-5 grid gap-4 md:grid-cols-2">
+                <form action="{{ route('atencion.pqrs.store') }}" method="POST" enctype="multipart/form-data" class="mt-5 grid gap-4 md:grid-cols-2" data-pqrs-form>
                     @csrf
 
                     <div class="hidden" aria-hidden="true">
@@ -51,6 +51,9 @@
                         <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
                     </div>
 
+                    <input type="hidden" name="is_anonymous" value="0">
+
+                    {{-- Fila 1: Tipo y Modalidad --}}
                     <label>
                         <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Tipo de solicitud</span>
                         <select
@@ -65,43 +68,52 @@
                         @error('type')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
                     </label>
 
-                    <label>
-                        <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Asunto</span>
-                        <input
-                            type="text"
-                            name="subject"
-                            value="{{ old('subject') }}"
-                            required
-                            maxlength="255"
-                            class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
-                        >
-                        @error('subject')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
+                    <label class="rounded-lg border border-ied-gray-200 bg-white px-3 py-2.5">
+                        <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Modalidad</span>
+                        <span class="inline-flex items-center gap-3">
+                            <input
+                                type="checkbox"
+                                name="is_anonymous"
+                                value="1"
+                                role="switch"
+                                @checked(old('is_anonymous'))
+                                class="h-5 w-10 rounded-full border-ied-gray-300 text-ied-primary focus:ring-ied-primary/30"
+                                data-anonymous-toggle
+                            >
+                            <span class="text-sm text-ied-gray-800">Anonimo</span>
+                        </span>
+                        @error('is_anonymous')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
                     </label>
 
-                    <label>
-                        <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Adjunto</span>
-                        <input
-                            type="file"
-                            name="attachment"
-                            accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                            class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 file:mr-3 file:rounded-md file:border-0 file:bg-ied-primary/10 file:px-3 file:py-1.5 file:font-semibold file:text-ied-primary-dark focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
-                        >
-                        <span class="mt-1 block text-xs text-ied-gray-500">PDF o DOCX, maximo 2 MB.</span>
-                        @error('attachment')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
-                    </label>
+                    {{-- Fila 2: Nombre y correo --}}
+                    <div class="space-y-4" data-anonymous-identity>
+                        <label class="block">
+                            <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Nombre completo</span>
+                            <input
+                                type="text"
+                                name="applicant_name"
+                                value="{{ old('applicant_name') }}"
+                                required
+                                maxlength="255"
+                                data-anonymous-name
+                                class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
+                            >
+                            @error('applicant_name')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
+                        </label>
 
-                    <label>
-                        <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Nombre completo</span>
-                        <input
-                            type="text"
-                            name="applicant_name"
-                            value="{{ old('applicant_name') }}"
-                            required
-                            maxlength="255"
-                            class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
-                        >
-                        @error('applicant_name')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
-                    </label>
+                        <label class="block">
+                            <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Documento</span>
+                            <input
+                                type="text"
+                                name="applicant_document"
+                                value="{{ old('applicant_document') }}"
+                                maxlength="120"
+                                data-anonymous-document
+                                class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
+                            >
+                            @error('applicant_document')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
+                        </label>
+                    </div>
 
                     <label>
                         <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Correo electronico</span>
@@ -109,9 +121,23 @@
                             type="email"
                             name="applicant_email"
                             value="{{ old('applicant_email') }}"
+                            required
                             class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
                         >
                         @error('applicant_email')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
+                    </label>
+
+                    {{-- Fila 3: Direccion y telefono --}}
+                    <label>
+                        <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Direccion</span>
+                        <input
+                            type="text"
+                            name="applicant_address"
+                            value="{{ old('applicant_address') }}"
+                            maxlength="255"
+                            class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
+                        >
+                        @error('applicant_address')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
                     </label>
 
                     <label>
@@ -126,42 +152,7 @@
                         @error('applicant_phone')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
                     </label>
 
-                    <label>
-                        <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Documento</span>
-                        <input
-                            type="text"
-                            name="applicant_document"
-                            value="{{ old('applicant_document') }}"
-                            maxlength="120"
-                            class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
-                        >
-                        @error('applicant_document')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
-                    </label>
-
-                    <label>
-                        <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Municipio</span>
-                        <input
-                            type="text"
-                            name="municipality"
-                            value="{{ old('municipality') }}"
-                            maxlength="120"
-                            class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
-                        >
-                        @error('municipality')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
-                    </label>
-
-                    <label class="md:col-span-2">
-                        <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Direccion</span>
-                        <input
-                            type="text"
-                            name="applicant_address"
-                            value="{{ old('applicant_address') }}"
-                            maxlength="255"
-                            class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
-                        >
-                        @error('applicant_address')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
-                    </label>
-
+                    {{-- Fila 4: Mensaje --}}
                     <label class="md:col-span-2">
                         <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Mensaje</span>
                         <textarea
@@ -174,6 +165,20 @@
                         @error('message')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
                     </label>
 
+                    {{-- Fila 5: Carga de archivos --}}
+                    <label class="md:col-span-2">
+                        <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Adjunto</span>
+                        <input
+                            type="file"
+                            name="attachment"
+                            accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                            class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 file:mr-3 file:rounded-md file:border-0 file:bg-ied-primary/10 file:px-3 file:py-1.5 file:font-semibold file:text-ied-primary-dark focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
+                        >
+                        <span class="mt-1 block text-xs text-ied-gray-500">PDF o DOCX, maximo 2 MB.</span>
+                        @error('attachment')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
+                    </label>
+
+                    {{-- Fila 6: Tratamiento de datos --}}
                     <label class="md:col-span-2 inline-flex items-start gap-2 text-sm text-ied-gray-700">
                         <input type="checkbox" name="consent_habeas_data" value="1" @checked(old('consent_habeas_data')) class="mt-1 rounded border-ied-gray-300 text-ied-primary focus:ring-ied-primary/30">
                         <span>
@@ -192,3 +197,41 @@
         </div>
     </x-public.internal-page>
 @endsection
+
+@push('scripts')
+    <script>
+        (() => {
+            const form = document.querySelector('[data-pqrs-form]');
+
+            if (!form) {
+                return;
+            }
+
+            const anonymousToggle = form.querySelector('[data-anonymous-toggle]');
+            const identityGroup = form.querySelector('[data-anonymous-identity]');
+            const nameInput = form.querySelector('[data-anonymous-name]');
+            const documentInput = form.querySelector('[data-anonymous-document]');
+
+            if (!anonymousToggle || !identityGroup || !nameInput || !documentInput) {
+                return;
+            }
+
+            const syncAnonymousState = () => {
+                const isAnonymous = anonymousToggle.checked;
+
+                identityGroup.classList.toggle('hidden', isAnonymous);
+                nameInput.required = !isAnonymous;
+                nameInput.disabled = isAnonymous;
+                documentInput.disabled = isAnonymous;
+
+                if (isAnonymous) {
+                    nameInput.value = '';
+                    documentInput.value = '';
+                }
+            };
+
+            anonymousToggle.addEventListener('change', syncAnonymousState);
+            syncAnonymousState();
+        })();
+    </script>
+@endpush

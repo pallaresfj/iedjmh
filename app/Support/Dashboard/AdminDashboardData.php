@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 use Throwable;
 
 class AdminDashboardData
@@ -156,10 +157,11 @@ class AdminDashboardData
             ->map(function (PqrsRequest $request): array {
                 $status = $this->pqrsStatusData((string) $request->status);
                 $submittedAt = $request->submitted_at?->timezone('America/Bogota');
+                $summary = Str::limit((string) $request->message, 72);
 
                 return [
-                    'subject' => $request->subject,
-                    'applicant' => $request->applicant_name,
+                    'summary' => $summary,
+                    'applicant' => filled($request->applicant_name) ? $request->applicant_name : 'Anonimo',
                     'submitted_at' => $submittedAt?->format('d/m/Y H:i') ?? 'Sin fecha',
                     'status_label' => $status['label'],
                     'status_badge_class' => $status['badge_class'],

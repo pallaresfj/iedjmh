@@ -26,32 +26,32 @@ test('user with pqrs permissions can list create edit and delete pqrs requests',
     $existing = PqrsRequest::query()->create([
         'tracking_code' => 'PQRS-2026-MANAGE-001',
         'type' => 'peticion',
+        'is_anonymous' => false,
         'status' => 'received',
         'priority' => 'medium',
-        'subject' => 'Solicitud existente para listar',
         'message' => str_repeat('Contenido existente. ', 3),
         'applicant_name' => 'Solicitante inicial',
+        'applicant_email' => 'inicial@example.test',
         'submitted_at' => now()->subHours(2),
     ]);
 
     $this->actingAs($user)
         ->get(route('filament.admin.resources.pqrs-requests.index'))
         ->assertOk()
-        ->assertSee('Solicitud existente para listar');
+        ->assertSee('Contenido existente.');
 
     Livewire::test(CreatePqrsRequest::class)
         ->fillForm([
             'type' => 'queja',
+            'is_anonymous' => false,
             'status' => 'received',
             'priority' => 'high',
-            'subject' => 'Nueva PQRS creada desde panel',
             'message' => str_repeat('Mensaje detallado para la solicitud. ', 3),
             'applicant_name' => 'Mariana Torres',
             'applicant_email' => 'mariana@example.test',
             'applicant_phone' => '3000000000',
             'applicant_document' => '111222333',
             'applicant_address' => 'Calle 1 #2-3',
-            'municipality' => 'Pivijay',
             'consent_habeas_data' => true,
         ])
         ->call('create')
@@ -59,7 +59,7 @@ test('user with pqrs permissions can list create edit and delete pqrs requests',
         ->assertRedirect();
 
     $created = PqrsRequest::query()
-        ->where('subject', 'Nueva PQRS creada desde panel')
+        ->where('applicant_email', 'mariana@example.test')
         ->firstOrFail();
 
     expect($created->tracking_code)->toStartWith('PQRS-'.now()->format('Y').'-')
@@ -104,11 +104,12 @@ test('user without pqrs permissions cannot access pqrs resource', function () {
     $record = PqrsRequest::query()->create([
         'tracking_code' => 'PQRS-2026-BLOCK-001',
         'type' => 'peticion',
+        'is_anonymous' => false,
         'status' => 'received',
         'priority' => 'medium',
-        'subject' => 'Solicitud bloqueada',
         'message' => str_repeat('Contenido bloqueado. ', 3),
         'applicant_name' => 'Usuario bloqueado',
+        'applicant_email' => 'bloqueado@example.test',
         'submitted_at' => now()->subHour(),
     ]);
 

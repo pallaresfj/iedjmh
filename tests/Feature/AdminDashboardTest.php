@@ -69,11 +69,12 @@ test('admin dashboard shows expected kpi totals', function () {
         PqrsRequest::query()->create([
             'tracking_code' => "PQRS-2026-PEN-{$index}",
             'type' => 'peticion',
+            'is_anonymous' => false,
             'status' => 'received',
             'priority' => 'medium',
-            'subject' => "Solicitud pendiente {$index}",
             'message' => str_repeat('Mensaje de prueba pendiente. ', 2),
             'applicant_name' => "Usuario {$index}",
+            'applicant_email' => "usuario{$index}@example.test",
             'submitted_at' => $now->subHours($index),
         ]);
     }
@@ -82,11 +83,12 @@ test('admin dashboard shows expected kpi totals', function () {
         PqrsRequest::query()->create([
             'tracking_code' => "PQRS-2026-CER-{$index}",
             'type' => 'peticion',
+            'is_anonymous' => false,
             'status' => 'closed',
             'priority' => 'medium',
-            'subject' => "Solicitud cerrada {$index}",
             'message' => str_repeat('Mensaje de prueba cerrada. ', 2),
             'applicant_name' => "Cerrado {$index}",
+            'applicant_email' => "cerrado{$index}@example.test",
             'submitted_at' => $now->subDays($index),
             'resolved_at' => $now->subHours($index),
         ]);
@@ -160,11 +162,12 @@ test('admin dashboard lists recent news pqrs and upcoming events', function () {
     PqrsRequest::query()->create([
         'tracking_code' => 'PQRS-2026-LISTA-001',
         'type' => 'peticion',
+        'is_anonymous' => false,
         'status' => 'received',
         'priority' => 'medium',
-        'subject' => 'Solicitud de cupo media tecnica',
         'message' => str_repeat('Solicitud de prueba. ', 2),
         'applicant_name' => 'Maria Cardenas',
+        'applicant_email' => 'maria.cardenas@example.test',
         'submitted_at' => now()->subHours(2),
     ]);
 
@@ -181,7 +184,7 @@ test('admin dashboard lists recent news pqrs and upcoming events', function () {
     $this->get('/admin')
         ->assertOk()
         ->assertSee('Noticia Rectoral')
-        ->assertSee('Solicitud de cupo media tecnica')
+        ->assertSee('Solicitud de prueba.')
         ->assertSee('Feria de emprendimiento agropecuario');
 });
 
@@ -262,11 +265,12 @@ test('dashboard disables resource links when user lacks permissions', function (
     $pqrs = PqrsRequest::query()->create([
         'tracking_code' => 'PQRS-2026-DENY-001',
         'type' => 'peticion',
+        'is_anonymous' => false,
         'status' => 'received',
         'priority' => 'medium',
-        'subject' => 'PQRS sin permisos de acceso',
         'message' => str_repeat('Sin acceso. ', 4),
         'applicant_name' => 'Solicitante restringido',
+        'applicant_email' => 'restringido@example.test',
         'submitted_at' => now()->subHour(),
     ]);
 
@@ -312,11 +316,12 @@ test('dashboard exposes pqrs links when user has pqrs permissions', function () 
     $pqrs = PqrsRequest::query()->create([
         'tracking_code' => 'PQRS-2026-LINK-001',
         'type' => 'peticion',
+        'is_anonymous' => false,
         'status' => 'received',
         'priority' => 'medium',
-        'subject' => 'Solicitud con enlace en dashboard',
         'message' => str_repeat('Mensaje de prueba. ', 4),
         'applicant_name' => 'Persona con enlace',
+        'applicant_email' => 'enlace@example.test',
         'submitted_at' => now()->subMinutes(30),
     ]);
 

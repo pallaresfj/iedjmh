@@ -71,8 +71,8 @@ class FortifyServiceProvider extends ServiceProvider
 
         RateLimiter::for('pqrs', function (Request $request) {
             $email = Str::lower((string) $request->input('applicant_email'));
-            $subject = Str::lower((string) $request->input('subject'));
-            $identifier = $request->ip().'|'.$email.'|'.$subject;
+            $type = Str::lower((string) $request->input('type'));
+            $identifier = $request->ip().'|'.$email.'|'.$type;
 
             return [
                 Limit::perMinute(5)->by($request->ip()),

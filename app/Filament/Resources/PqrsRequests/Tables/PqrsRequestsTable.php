@@ -58,12 +58,16 @@ class PqrsRequestsTable
                         'urgent' => 'Urgente',
                         default => ucfirst($state),
                     }),
-                TextColumn::make('subject')
-                    ->label('Asunto')
-                    ->searchable()
+                TextColumn::make('is_anonymous')
+                    ->label('Modalidad')
+                    ->badge()
+                    ->formatStateUsing(fn (bool $state): string => $state ? 'Anonima' : 'Identificada'),
+                TextColumn::make('message')
+                    ->label('Resumen')
                     ->limit(60),
                 TextColumn::make('applicant_name')
                     ->label('Solicitante')
+                    ->formatStateUsing(fn (?string $state): string => filled($state) ? $state : 'Anonimo')
                     ->searchable(),
                 TextColumn::make('submitted_at')
                     ->label('Radicada')

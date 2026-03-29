@@ -8,7 +8,7 @@
             @forelse ($items as $item)
                 <article class="agro-pqrs-item {{ $item['stripe_class'] }}">
                     <div>
-                        <p class="agro-pqrs-item__subject">{{ $item['subject'] }}</p>
+                        <p class="agro-pqrs-item__subject">{{ $item['summary'] }}</p>
                         <p class="agro-pqrs-item__meta">
                             {{ $item['submitted_at'] }} • {{ $item['applicant'] }}
                         </p>

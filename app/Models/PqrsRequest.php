@@ -20,9 +20,9 @@ class PqrsRequest extends Model
     protected $fillable = [
         'tracking_code',
         'type',
+        'is_anonymous',
         'status',
         'priority',
-        'subject',
         'attachment_path',
         'message',
         'applicant_name',
@@ -30,7 +30,6 @@ class PqrsRequest extends Model
         'applicant_phone',
         'applicant_document',
         'applicant_address',
-        'municipality',
         'consent_habeas_data',
         'submitted_at',
         'resolved_at',
@@ -43,6 +42,7 @@ class PqrsRequest extends Model
     protected function casts(): array
     {
         return [
+            'is_anonymous' => 'boolean',
             'consent_habeas_data' => 'boolean',
             'submitted_at' => 'datetime',
             'resolved_at' => 'datetime',
