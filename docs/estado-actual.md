@@ -12,7 +12,7 @@ Fecha de corte: 2026-03-28
 - Transparencia (`/transparencia`): landing, listado filtrable de documentos, detalle de documento con relacionados. Incluye modulo de contratacion (`/transparencia/contratacion`) con listado y detalle de procesos.
 - Atencion al Ciudadano (`/atencion-ciudadano`): landing, contacto, PQRS (formulario, radicado y consulta de estado), tramites filtrables, FAQ filtrables, mapa del sitio y participacion.
 - Proyectos (`/proyectos`): listado paginado con filtros por busqueda, categoria y ordenamiento. Detalle por slug con proyectos relacionados. Soporte para proyecto destacado.
-- Noticias (`/noticias`): listado paginado con filtros por busqueda, categoria y ordenamiento. Hasta 4 noticias destacadas. Detalle por slug con noticias relacionadas.
+- Noticias (`/noticias`): listado paginado con filtros por busqueda, categoria y ordenamiento. Hasta 3 noticias destacadas. Detalle por slug con noticias relacionadas.
 - Eventos (`/eventos/{slug}`): detalle de evento individual.
 - Busqueda global (`/buscar`): busqueda unificada de contenido.
 - Sitemap XML (`/sitemap.xml`): generacion automatica.

@@ -52,6 +52,8 @@
         </x-slot:sidebar>
 
         <div class="space-y-6">
+            @php($featuredNewsLimited = $featuredNews->take(3))
+
             @if (filled($content))
                 <section class="text-sm leading-relaxed text-ied-gray-700 sm:text-base">
                     {!! nl2br(e($content)) !!}
@@ -59,15 +61,15 @@
             @endif
 
             <section id="news-results" class="space-y-4">
-                @if ($featuredNews->isNotEmpty())
+                @if ($featuredNewsLimited->isNotEmpty())
                     <section class="space-y-4 border-b border-ied-gray-200 pb-6">
                         <h2 class="public-heading text-xl font-semibold text-ied-gray-900">Noticias destacadas</h2>
                         <div @class([
                             'grid gap-6',
-                            'md:grid-cols-2' => $featuredNews->count() >= 2,
-                            'xl:grid-cols-3' => $featuredNews->count() >= 3,
+                            'md:grid-cols-2' => $featuredNewsLimited->count() >= 2,
+                            'xl:grid-cols-3' => $featuredNewsLimited->count() >= 3,
                         ])>
-                            @foreach ($featuredNews as $item)
+                            @foreach ($featuredNewsLimited as $item)
                                 <x-public.home.news-card
                                     :title="$item['title']"
                                     :excerpt="$item['excerpt']"
@@ -81,12 +83,12 @@
                     </section>
                 @endif
 
-                @if ($items->count() === 0 && $featuredNews->isEmpty())
+                @if ($items->count() === 0 && $featuredNewsLimited->isEmpty())
                     <div class="rounded-xl border border-dashed border-ied-gray-200 bg-ied-gray-100 p-4 text-sm text-ied-gray-700">
                         No se encontraron noticias con los filtros aplicados.
                     </div>
                 @elseif ($items->count() > 0)
-                    @if ($featuredNews->isNotEmpty())
+                    @if ($featuredNewsLimited->isNotEmpty())
                         <h2 class="public-heading text-xl font-semibold text-ied-gray-900">Todas las noticias</h2>
                     @endif
 

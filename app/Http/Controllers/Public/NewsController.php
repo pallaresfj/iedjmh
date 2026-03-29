@@ -48,7 +48,7 @@ class NewsController extends Controller
                     ->where('is_featured', true)
                     ->orderBy('sort_order')
                     ->orderByDesc('published_at')
-                    ->limit(4)
+                    ->limit(Post::MAX_PUBLISHED_FEATURED)
                     ->get()
                     ->map(fn (Post $post): array => $this->mapPost($post));
             }

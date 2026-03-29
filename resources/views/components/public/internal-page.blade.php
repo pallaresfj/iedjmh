@@ -5,6 +5,7 @@
     'sectionKey' => null,
     'replaceHeaderWithBanner' => false,
     'forceBannerTitleStyle' => false,
+    'sidebarWidth' => '17rem',
 ])
 
 @php($primaryNav = config('institution.navigation.primary', []))
@@ -110,7 +111,10 @@
 @endif
 
 <section class="public-container py-8 sm:py-10 lg:py-12">
-    <div class="grid gap-8 lg:grid-cols-[17rem_minmax(0,1fr)]">
+    <div
+        class="grid gap-8 lg:[grid-template-columns:var(--public-sidebar-width)_minmax(0,1fr)]"
+        style="--public-sidebar-width: {{ $sidebarWidth }};"
+    >
         <aside class="space-y-4">
             @isset($sidebar)
                 {{ $sidebar }}

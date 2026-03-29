@@ -121,6 +121,8 @@ test('public pqrs submission stores anonymous mode and clears identity fields', 
         'is_anonymous' => '1',
         'applicant_name' => 'Debe limpiarse',
         'applicant_document' => '99999999',
+        'applicant_phone' => '3001112233',
+        'applicant_address' => 'Direccion temporal',
         'applicant_email' => 'anonimo@example.test',
         'message' => 'Mensaje anonimo con contenido suficiente para registrar la solicitud correctamente.',
         'consent_habeas_data' => '1',
@@ -134,7 +136,9 @@ test('public pqrs submission stores anonymous mode and clears identity fields', 
 
     expect($pqrs->is_anonymous)->toBeTrue()
         ->and($pqrs->applicant_name)->toBeNull()
-        ->and($pqrs->applicant_document)->toBeNull();
+        ->and($pqrs->applicant_document)->toBeNull()
+        ->and($pqrs->applicant_phone)->toBeNull()
+        ->and($pqrs->applicant_address)->toBeNull();
 });
 
 test('public pqrs submission requires email', function () {
