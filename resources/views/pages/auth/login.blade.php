@@ -5,6 +5,12 @@
         <!-- Session Status -->
         <x-auth-session-status class="text-center" :status="session('status')" />
 
+        @if ($errors->has('google'))
+            <div class="rounded-lg border border-rose-300 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700">
+                {{ $errors->first('google') }}
+            </div>
+        @endif
+
         <form method="POST" action="{{ route('login.store') }}" class="flex flex-col gap-6">
             @csrf
 
@@ -48,6 +54,25 @@
                 </flux:button>
             </div>
         </form>
+
+        @if (filled(config('services.google.client_id')) && filled(config('services.google.client_secret')) && filled(config('services.google.redirect')))
+            <div class="relative">
+                <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                    <span class="w-full border-t border-zinc-200 dark:border-zinc-700"></span>
+                </div>
+                <div class="relative flex justify-center text-xs uppercase">
+                    <span class="bg-white px-2 text-zinc-500 dark:bg-zinc-900 dark:text-zinc-400">{{ __('Or continue with') }}</span>
+                </div>
+            </div>
+
+            <a
+                href="{{ route('auth.google.redirect') }}"
+                class="inline-flex w-full items-center justify-center gap-3 rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-700 transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
+            >
+                <span class="inline-flex h-6 w-6 items-center justify-center rounded-full border border-zinc-300 text-xs font-bold text-zinc-700 dark:border-zinc-500 dark:text-zinc-200">G</span>
+                {{ __('Continue with Google') }}
+            </a>
+        @endif
 
         @if (Route::has('register'))
             <div class="space-x-1 text-sm text-center rtl:space-x-reverse text-zinc-600 dark:text-zinc-400">

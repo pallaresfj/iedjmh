@@ -15,7 +15,7 @@ class RecentPqrsWidget extends Widget
 
     protected int|string|array $columnSpan = [
         'default' => 'full',
-        'xl' => 8,
+        'xl' => 6,
     ];
 
     /**

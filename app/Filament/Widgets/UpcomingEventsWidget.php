@@ -15,7 +15,7 @@ class UpcomingEventsWidget extends Widget
 
     protected int|string|array $columnSpan = [
         'default' => 'full',
-        'xl' => 4,
+        'xl' => 6,
     ];
 
     /**

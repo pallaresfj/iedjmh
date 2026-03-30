@@ -46,6 +46,9 @@ class AdminPanelProvider extends PanelProvider
             ->renderHook('panels::head.end', fn (): HtmlString => new HtmlString(
                 '<style>:root{'.collect(PublicSettings::themeColors())->map(fn ($v, $k) => "$k:$v")->implode(';').'}</style>'
             ))
+            ->renderHook('panels::auth.login.form.after', fn (): HtmlString => new HtmlString(
+                view('filament.auth.google-login')->render()
+            ))
             ->databaseNotifications()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')

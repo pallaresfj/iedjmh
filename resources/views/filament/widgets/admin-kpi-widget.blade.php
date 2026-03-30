@@ -1,7 +1,13 @@
 <x-filament-widgets::widget class="agro-widget">
-    <div class="agro-kpi-grid">
+    @php($isKpiMosaicLayout = count($kpis) === 5)
+
+    <div @class(['agro-kpi-grid', 'agro-kpi-grid--mosaic' => $isKpiMosaicLayout])>
         @foreach ($kpis as $kpi)
-            <article @class(['agro-kpi-card', 'agro-kpi-card--highlight' => $kpi['highlight'] ?? false])>
+            <article @class([
+                'agro-kpi-card',
+                'agro-kpi-card--highlight' => $kpi['highlight'] ?? false,
+                'agro-kpi-card--wide' => $isKpiMosaicLayout && $loop->index >= 3,
+            ])>
                 <div class="agro-kpi-card__top">
                     <span class="agro-kpi-card__icon">
                         <x-filament::icon :icon="$kpi['icon']" />
