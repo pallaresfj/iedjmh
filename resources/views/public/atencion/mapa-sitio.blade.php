@@ -17,12 +17,22 @@
 
             <section class="grid gap-4 md:grid-cols-2">
                 @foreach ($sitemap as $section)
-                    <article class="public-surface p-5">
-                        <h2 class="public-heading text-lg font-semibold text-ied-gray-900">{{ $section['title'] }}</h2>
-                        <ul class="mt-3 space-y-2 text-sm text-ied-gray-700">
+                    <article class="rounded-2xl border border-ied-gray-200 bg-white p-5 sm:p-6">
+                        <div class="flex items-start gap-4">
+                            <span class="inline-flex size-12 shrink-0 items-center justify-center rounded-xl bg-ied-primary-light/30">
+                                <span class="material-symbols-outlined text-2xl text-ied-primary" aria-hidden="true">{{ $section['icon'] ?? 'article' }}</span>
+                            </span>
+
+                            <div class="min-w-0">
+                                <h2 class="public-heading text-lg font-extrabold text-ied-gray-900">{{ $section['title'] }}</h2>
+                            </div>
+                        </div>
+
+                        <ul class="mt-4 space-y-2 text-sm">
                             @foreach ($section['items'] as $item)
-                                <li>
-                                    <a href="{{ route($item['route']) }}" class="text-ied-primary-dark hover:text-ied-primary">
+                                <li class="flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-base text-ied-gray-400" aria-hidden="true">chevron_right</span>
+                                    <a href="{{ route($item['route']) }}" class="text-ied-primary-dark transition hover:text-ied-primary">
                                         {{ $item['label'] }}
                                     </a>
                                 </li>

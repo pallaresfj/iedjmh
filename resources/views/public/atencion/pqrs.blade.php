@@ -22,45 +22,55 @@
                 </section>
             @endif
 
-            <section class="public-surface p-5 sm:p-6">
-                <div class="grid gap-4 md:grid-cols-2">
-                    <section class="public-surface public-pqrs-sidebar-process p-5 sm:p-6">
-                        <h3 class="public-pqrs-sidebar-process__title">
-                            <span class="material-symbols-outlined" aria-hidden="true">info</span>
-                            Proceso de Radicacion
-                        </h3>
-                        <ol class="public-pqrs-sidebar-process__steps" aria-label="Pasos para radicar una solicitud PQRS">
-                            <li class="public-pqrs-sidebar-process__step">
-                                <span class="public-pqrs-sidebar-process__badge">1</span>
-                                <p>Seleccione el tipo de solicitud (Peticion, Queja, Reclamo, Sugerencia o Felicitacion).</p>
-                            </li>
-                            <li class="public-pqrs-sidebar-process__step">
-                                <span class="public-pqrs-sidebar-process__badge">2</span>
-                                <p>Diligencie sus datos o elija la opcion de radicado anonimo.</p>
-                            </li>
-                            <li class="public-pqrs-sidebar-process__step">
-                                <span class="public-pqrs-sidebar-process__badge">3</span>
-                                <p>Describa los hechos de manera clara y adjunte evidencias si es necesario.</p>
-                            </li>
-                            <li class="public-pqrs-sidebar-process__step">
-                                <span class="public-pqrs-sidebar-process__badge">4</span>
-                                <p>Conserve su codigo de radicado para seguimiento futuro.</p>
-                            </li>
-                        </ol>
-                    </section>
+            <section class="grid gap-4 md:grid-cols-2">
+                <article class="rounded-2xl border border-ied-gray-200 bg-white p-5 sm:p-6">
+                    <div class="flex items-start gap-4">
+                        <span class="inline-flex size-12 shrink-0 items-center justify-center rounded-xl bg-ied-primary-light/30">
+                            <span class="material-symbols-outlined text-2xl text-ied-primary" aria-hidden="true">info</span>
+                        </span>
 
-                    <section class="public-surface public-pqrs-sidebar-track p-5 sm:p-6">
-                        <h3 class="public-pqrs-sidebar-track__title">
-                            <span class="material-symbols-outlined" aria-hidden="true">target</span>
-                            Consultar Estado
-                        </h3>
-                        <p class="public-pqrs-sidebar-track__lead">
-                            Ingrese el codigo asignado al momento de su radicacion para conocer el avance de su solicitud.
-                        </p>
+                        <div class="min-w-0 space-y-0.5">
+                            <h3 class="public-heading text-lg font-extrabold text-ied-gray-900">Proceso de Radicacion</h3>
+                            <p class="text-sm leading-relaxed text-ied-gray-600">Siga estos pasos para radicar su solicitud.</p>
+                        </div>
+                    </div>
 
-                        <form action="{{ route('atencion.pqrs.status') }}" method="POST" class="public-pqrs-sidebar-track__form">
-                            @csrf
-                            <label class="sr-only" for="inline-tracking-code">Codigo de radicado</label>
+                    <ol class="mt-4 space-y-3" aria-label="Pasos para radicar una solicitud PQRS">
+                        <li class="flex items-start gap-3 text-sm text-ied-gray-700">
+                            <span class="inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-ied-primary text-xs font-bold text-white">1</span>
+                            <p class="pt-0.5">Seleccione el tipo de solicitud (Peticion, Queja, Reclamo, Sugerencia o Felicitacion).</p>
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-ied-gray-700">
+                            <span class="inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-ied-primary text-xs font-bold text-white">2</span>
+                            <p class="pt-0.5">Diligencie sus datos o elija la opcion de radicado anonimo.</p>
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-ied-gray-700">
+                            <span class="inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-ied-primary text-xs font-bold text-white">3</span>
+                            <p class="pt-0.5">Describa los hechos de manera clara y adjunte evidencias si es necesario.</p>
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-ied-gray-700">
+                            <span class="inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-ied-primary text-xs font-bold text-white">4</span>
+                            <p class="pt-0.5">Conserve su codigo de radicado para seguimiento futuro.</p>
+                        </li>
+                    </ol>
+                </article>
+
+                <article class="rounded-2xl border border-ied-gray-200 bg-white p-5 sm:p-6">
+                    <div class="flex items-start gap-4">
+                        <span class="inline-flex size-12 shrink-0 items-center justify-center rounded-xl bg-ied-primary-light/30">
+                            <span class="material-symbols-outlined text-2xl text-ied-primary" aria-hidden="true">target</span>
+                        </span>
+
+                        <div class="min-w-0 space-y-0.5">
+                            <h3 class="public-heading text-lg font-extrabold text-ied-gray-900">Consultar Estado</h3>
+                            <p class="text-sm leading-relaxed text-ied-gray-600">Ingrese el codigo asignado al momento de su radicacion para conocer el avance de su solicitud.</p>
+                        </div>
+                    </div>
+
+                    <form action="{{ route('atencion.pqrs.status') }}" method="POST" class="mt-4 space-y-3">
+                        @csrf
+                        <label class="block">
+                            <span class="sr-only">Codigo de radicado</span>
                             <input
                                 id="inline-tracking-code"
                                 type="text"
@@ -69,10 +79,12 @@
                                 required
                                 maxlength="50"
                                 placeholder="Ej: PQRS-2026-0001"
-                                class="public-pqrs-sidebar-track__input"
+                                class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
                             >
+                        </label>
 
-                            <label class="sr-only" for="inline-applicant-email">Correo electronico</label>
+                        <label class="block">
+                            <span class="sr-only">Correo electronico</span>
                             <input
                                 id="inline-applicant-email"
                                 type="email"
@@ -81,23 +93,31 @@
                                 required
                                 maxlength="255"
                                 placeholder="Correo registrado en la solicitud"
-                                class="public-pqrs-sidebar-track__input"
+                                class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
                             >
+                        </label>
 
-                            <button type="submit" class="public-pqrs-sidebar-track__button">
-                                <span class="material-symbols-outlined" aria-hidden="true">search</span>
-                                Consultar Estado
-                            </button>
-                        </form>
-                    </section>
+                        <button type="submit" class="inline-flex items-center gap-2 rounded-full bg-ied-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-ied-primary-dark">
+                            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">search</span>
+                            Consultar Estado
+                        </button>
+                    </form>
+                </article>
+            </section>
+
+            <section class="rounded-2xl border border-ied-gray-200 bg-white p-5 sm:p-6">
+                <div class="flex items-start gap-4">
+                    <span class="inline-flex size-12 shrink-0 items-center justify-center rounded-xl bg-ied-primary-light/30">
+                        <span class="material-symbols-outlined text-2xl text-ied-primary" aria-hidden="true">edit_note</span>
+                    </span>
+
+                    <div class="min-w-0 space-y-0.5">
+                        <h2 class="public-heading text-lg font-extrabold text-ied-gray-900">Radicacion PQRS</h2>
+                        <p class="text-sm leading-relaxed text-ied-gray-600">Completa este formulario para registrar tu solicitud. Recibiras un codigo de seguimiento.</p>
+                    </div>
                 </div>
 
-                <h2 class="public-heading mt-6 text-lg font-semibold text-ied-gray-900">Radicacion PQRS</h2>
-                <p class="mt-2 text-sm text-ied-gray-700">
-                    Completa este formulario para registrar tu solicitud. Recibiras un codigo de seguimiento.
-                </p>
-
-                <form action="{{ route('atencion.pqrs.store') }}" method="POST" enctype="multipart/form-data" class="mt-5 grid gap-4 md:grid-cols-12" data-pqrs-form>
+                <form action="{{ route('atencion.pqrs.store') }}" method="POST" enctype="multipart/form-data" class="mt-5 space-y-4" data-pqrs-form>
                     @csrf
 
                     <div class="hidden" aria-hidden="true">
@@ -108,54 +128,56 @@
                     <input type="hidden" name="is_anonymous" value="0">
 
                     {{-- Fila 1: Tipo, Correo, Modalidad --}}
-                    <label class="md:col-span-4">
-                        <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Tipo de solicitud</span>
-                        <select
-                            name="type"
-                            required
-                            class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
-                        >
-                            @foreach ($typeOptions as $value => $label)
-                                <option value="{{ $value }}" @selected(old('type') === $value)>{{ $label }}</option>
-                            @endforeach
-                        </select>
-                        @error('type')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
-                    </label>
+                    <div class="grid gap-4 md:grid-cols-[1fr_1fr_auto]">
+                        <label class="block">
+                            <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Tipo de solicitud</span>
+                            <select
+                                name="type"
+                                required
+                                class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
+                            >
+                                @foreach ($typeOptions as $value => $label)
+                                    <option value="{{ $value }}" @selected(old('type') === $value)>{{ $label }}</option>
+                                @endforeach
+                            </select>
+                            @error('type')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
+                        </label>
 
-                    <label class="md:col-span-6">
-                        <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Correo electronico</span>
-                        <input
-                            type="email"
-                            name="applicant_email"
-                            value="{{ old('applicant_email') }}"
-                            required
-                            class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
-                        >
-                        @error('applicant_email')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
-                    </label>
+                        <label class="block">
+                            <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Correo electronico</span>
+                            <input
+                                type="email"
+                                name="applicant_email"
+                                value="{{ old('applicant_email') }}"
+                                required
+                                class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
+                            >
+                            @error('applicant_email')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
+                        </label>
 
-                    <label class="md:col-span-2">
-                        <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Modalidad</span>
-                        <span class="mt-2 inline-flex items-center gap-3">
-                            <span class="public-ios-switch">
-                                <input
-                                    type="checkbox"
-                                    name="is_anonymous"
-                                    value="1"
-                                    role="switch"
-                                    @checked(old('is_anonymous'))
-                                    class="public-ios-switch__input"
-                                    data-anonymous-toggle
-                                >
-                                <span class="public-ios-switch__track" aria-hidden="true"></span>
+                        <label class="block">
+                            <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Modalidad</span>
+                            <span class="mt-2 inline-flex items-center gap-3">
+                                <span class="public-ios-switch">
+                                    <input
+                                        type="checkbox"
+                                        name="is_anonymous"
+                                        value="1"
+                                        role="switch"
+                                        @checked(old('is_anonymous'))
+                                        class="public-ios-switch__input"
+                                        data-anonymous-toggle
+                                    >
+                                    <span class="public-ios-switch__track" aria-hidden="true"></span>
+                                </span>
+                                <span class="text-sm text-ied-gray-800">Anonimo</span>
                             </span>
-                            <span class="text-sm text-ied-gray-800">Anonimo</span>
-                        </span>
-                        @error('is_anonymous')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
-                    </label>
+                            @error('is_anonymous')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
+                        </label>
+                    </div>
 
                     {{-- Fila 2: Nombre y documento --}}
-                    <div class="md:col-span-12 grid gap-4 md:grid-cols-2" data-anonymous-identity>
+                    <div class="grid gap-4 md:grid-cols-2" data-anonymous-identity>
                         <label class="block">
                             <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Nombre completo</span>
                             <input
@@ -185,8 +207,8 @@
                     </div>
 
                     {{-- Fila 3: Direccion y telefono --}}
-                    <div class="md:col-span-12 grid gap-4 md:grid-cols-2" data-anonymous-contact>
-                        <label>
+                    <div class="grid gap-4 md:grid-cols-2" data-anonymous-contact>
+                        <label class="block">
                             <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Direccion</span>
                             <input
                                 type="text"
@@ -199,7 +221,7 @@
                             @error('applicant_address')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
                         </label>
 
-                        <label>
+                        <label class="block">
                             <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Telefono</span>
                             <input
                                 type="text"
@@ -214,11 +236,11 @@
                     </div>
 
                     {{-- Fila 4: Mensaje --}}
-                    <label class="md:col-span-12">
+                    <label class="block">
                         <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Mensaje</span>
                         <textarea
                             name="message"
-                            rows="6"
+                            rows="5"
                             required
                             maxlength="5000"
                             class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
@@ -227,7 +249,7 @@
                     </label>
 
                     {{-- Fila 5: Adjunto --}}
-                    <label class="md:col-span-12">
+                    <label class="block">
                         <span class="public-pqrs-upload__title">Carga de archivos / Evidencias</span>
 
                         <div
@@ -258,7 +280,7 @@
                     </label>
 
                     {{-- Fila 6: Tratamiento de datos --}}
-                    <label class="md:col-span-12 inline-flex items-start gap-2 text-sm text-ied-gray-700">
+                    <label class="inline-flex items-start gap-2 text-sm text-ied-gray-700">
                         <input type="checkbox" name="consent_habeas_data" value="1" @checked(old('consent_habeas_data')) class="mt-1 rounded border-ied-gray-300 text-ied-primary focus:ring-ied-primary/30">
                         <span>
                             Autorizo el tratamiento de datos personales conforme a la normativa vigente.
@@ -266,9 +288,10 @@
                         </span>
                     </label>
 
-                    <div class="md:col-span-12">
-                        <button type="submit" class="inline-flex items-center rounded-full bg-ied-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-ied-primary-dark">
+                    <div>
+                        <button type="submit" class="inline-flex items-center gap-2 rounded-full bg-ied-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-ied-primary-dark">
                             Enviar solicitud
+                            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">send</span>
                         </button>
                     </div>
                 </form>

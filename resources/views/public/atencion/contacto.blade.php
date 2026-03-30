@@ -28,106 +28,99 @@
             @endif
 
             <section class="grid gap-6 xl:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
-                <div class="space-y-6">
-                    <article class="public-surface p-5 sm:p-6">
-                        <h2 class="public-heading text-2xl font-bold tracking-[-0.01em] text-ied-gray-900">Informacion institucional</h2>
+                <div class="space-y-4">
+                    <article class="rounded-2xl border border-ied-gray-200 bg-white p-5 sm:p-6">
+                        <div class="flex items-start gap-4">
+                            <span class="inline-flex size-12 shrink-0 items-center justify-center rounded-xl bg-ied-primary-light/30">
+                                <span class="material-symbols-outlined text-2xl text-ied-primary" aria-hidden="true">apartment</span>
+                            </span>
 
-                        <ul class="mt-5 space-y-5">
-                            <li class="flex items-start gap-3">
-                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800" aria-hidden="true">
-                                    <span class="material-symbols-outlined text-[20px]">location_on</span>
-                                </span>
-                                <div>
-                                    <p class="text-xs font-bold uppercase tracking-[0.12em] text-ied-gray-600">Direccion fisica</p>
-                                    <p class="mt-1 text-lg font-semibold leading-tight text-ied-gray-900">{{ $contact['address'] ?: 'No disponible' }}</p>
-                                    <p class="mt-1 text-sm text-ied-gray-700">{{ $contact['location'] ?: 'No disponible' }}</p>
-                                </div>
-                            </li>
-
-                            <li class="flex items-start gap-3">
-                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-800" aria-hidden="true">
-                                    <span class="material-symbols-outlined text-[20px]">call</span>
-                                </span>
-                                <div>
-                                    <p class="text-xs font-bold uppercase tracking-[0.12em] text-ied-gray-600">Linea telefonica</p>
-                                    <p class="mt-1 text-lg font-semibold leading-tight text-ied-gray-900">{{ $contact['phone'] ?: 'No disponible' }}</p>
-                                </div>
-                            </li>
-
-                            <li class="flex items-start gap-3">
-                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800" aria-hidden="true">
-                                    <span class="material-symbols-outlined text-[20px]">mail</span>
-                                </span>
-                                <div>
-                                    <p class="text-xs font-bold uppercase tracking-[0.12em] text-ied-gray-600">Correo electronico</p>
-                                    @if ($contact['email'])
-                                        <a href="mailto:{{ $contact['email'] }}" class="mt-1 inline-block text-lg font-semibold leading-tight text-ied-gray-900 underline-offset-2 hover:text-ied-primary-dark hover:underline">
-                                            {{ $contact['email'] }}
-                                        </a>
-                                    @else
-                                        <p class="mt-1 text-lg font-semibold leading-tight text-ied-gray-900">No disponible</p>
-                                    @endif
-                                </div>
-                            </li>
-
-                            <li class="flex items-start gap-3">
-                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-ied-primary-dark text-white" aria-hidden="true">
-                                    <svg
-                                        data-contact-clock-icon
-                                        class="h-5 w-5 text-white"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        aria-hidden="true"
-                                        focusable="false"
-                                    >
-                                        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8" />
-                                        <path d="M12 7.5V12L15 13.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                </span>
-                                <div>
-                                    <p class="text-xs font-bold uppercase tracking-[0.12em] text-ied-gray-600">Horario de atencion</p>
-                                    <p class="mt-1 text-lg font-semibold leading-tight text-ied-gray-900">{{ $contact['hours'] ?: 'No disponible' }}</p>
-                                </div>
-                            </li>
-                        </ul>
-                    </article>
-
-                    <article class="public-surface p-5 sm:p-6">
-                        <div class="rounded-xl border border-ied-gray-200 bg-white p-4 shadow-sm">
-                            <p class="text-xs font-bold uppercase tracking-[0.12em] text-ied-gray-600">Ubicanos en el mapa</p>
-                            <div class="mt-2 flex flex-wrap items-center gap-2">
-                                @if ($hasLocationCoordinates)
-                                    <button
-                                        type="button"
-                                        class="public-icon-button public-icon-button--surface"
-                                        data-location-map-open
-                                        data-location-latitude="{{ $locationLatitude }}"
-                                        data-location-longitude="{{ $locationLongitude }}"
-                                        aria-label="Ver ubicacion en el mapa"
-                                        title="Ver mapa"
-                                    >
-                                        <span class="material-symbols-outlined" aria-hidden="true">map</span>
-                                        <span class="sr-only">Ver mapa institucional</span>
-                                    </button>
-                                    <p class="text-sm text-ied-gray-700">Abrir mapa institucional</p>
-                                @elseif($googleMapsUrl)
-                                    <p class="text-sm text-ied-gray-700">La ubicacion solo esta disponible en Google Maps desde el popup del mapa.</p>
-                                @else
-                                    <p class="text-sm text-ied-gray-600">Ubicacion no disponible.</p>
-                                @endif
+                            <div class="min-w-0 space-y-0.5">
+                                <h2 class="public-heading text-lg font-extrabold text-ied-gray-900">Informacion institucional</h2>
+                                <p class="text-sm leading-relaxed text-ied-gray-600">Canales de atencion y horarios de servicio.</p>
                             </div>
                         </div>
+
+                        <dl class="mt-4 space-y-2 text-sm">
+                            <div class="flex items-start gap-2">
+                                <span class="material-symbols-outlined mt-0.5 text-base text-ied-gray-400" aria-hidden="true">location_on</span>
+                                <div>
+                                    <dt class="sr-only">Direccion</dt>
+                                    <dd class="text-ied-gray-700">{{ $contact['address'] ?: 'No disponible' }}</dd>
+                                    @if (! empty($contact['location']))
+                                        <dd class="text-xs text-ied-gray-600">{{ $contact['location'] }}</dd>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-base text-ied-gray-400" aria-hidden="true">call</span>
+                                <div>
+                                    <dt class="sr-only">Telefono</dt>
+                                    <dd class="text-ied-gray-700">{{ $contact['phone'] ?: 'No disponible' }}</dd>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-base text-ied-gray-400" aria-hidden="true">mail</span>
+                                <div>
+                                    <dt class="sr-only">Correo</dt>
+                                    <dd>
+                                        @if ($contact['email'])
+                                            <a href="mailto:{{ $contact['email'] }}" class="text-ied-primary-dark transition hover:text-ied-primary">{{ $contact['email'] }}</a>
+                                        @else
+                                            <span class="text-ied-gray-700">No disponible</span>
+                                        @endif
+                                    </dd>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-base text-ied-gray-400" aria-hidden="true">schedule</span>
+                                <div>
+                                    <dt class="sr-only">Horario</dt>
+                                    <dd class="text-ied-gray-700">{{ $contact['hours'] ?: 'No disponible' }}</dd>
+                                </div>
+                            </div>
+                        </dl>
+
+                        @if ($hasLocationCoordinates)
+                            <button
+                                type="button"
+                                class="mt-5 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-ied-primary-dark transition hover:text-ied-primary"
+                                data-location-map-open
+                                data-location-latitude="{{ $locationLatitude }}"
+                                data-location-longitude="{{ $locationLongitude }}"
+                            >
+                                Ver ubicacion
+                                <svg class="size-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.19L10.22 5.53a.75.75 0 011.06-1.06l5 5a.75.75 0 010 1.06l-5 5a.75.75 0 11-1.06-1.06l3.72-3.72H3.75A.75.75 0 013 10z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        @elseif ($googleMapsUrl)
+                            <a href="{{ $googleMapsUrl }}" target="_blank" rel="noopener noreferrer" class="mt-5 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-ied-primary-dark transition hover:text-ied-primary">
+                                Ver ubicacion
+                                <svg class="size-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.19L10.22 5.53a.75.75 0 011.06-1.06l5 5a.75.75 0 010 1.06l-5 5a.75.75 0 11-1.06-1.06l3.72-3.72H3.75A.75.75 0 013 10z" clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                        @endif
                     </article>
                 </div>
 
-                <article class="public-surface p-5 sm:p-6 lg:p-7">
-                    <h2 class="public-heading text-3xl font-bold tracking-[-0.02em] text-ied-gray-900">Envianos un mensaje</h2>
-                    <p class="mt-2 text-sm text-ied-gray-700 sm:text-base">
-                        Completa el formulario y radicaremos tu solicitud para darle respuesta institucional.
-                    </p>
+                <article class="rounded-2xl border border-ied-gray-200 bg-white p-5 sm:p-6">
+                    <div class="flex items-start gap-4">
+                        <span class="inline-flex size-12 shrink-0 items-center justify-center rounded-xl bg-ied-primary-light/30">
+                            <span class="material-symbols-outlined text-2xl text-ied-primary" aria-hidden="true">mail</span>
+                        </span>
 
-                    <form action="{{ route('atencion.pqrs.store') }}" method="POST" class="mt-6 space-y-5">
+                        <div class="min-w-0 space-y-0.5">
+                            <h2 class="public-heading text-lg font-extrabold text-ied-gray-900">Envianos un mensaje</h2>
+                            <p class="text-sm leading-relaxed text-ied-gray-600">Completa el formulario y radicaremos tu solicitud para darle respuesta institucional.</p>
+                        </div>
+                    </div>
+
+                    <form action="{{ route('atencion.pqrs.store') }}" method="POST" class="mt-5 space-y-4">
                         @csrf
 
                         <div class="hidden" aria-hidden="true">
@@ -139,7 +132,7 @@
                         <input type="hidden" name="origin" value="contact" />
                         <input type="hidden" name="is_anonymous" value="0" />
 
-                        <label>
+                        <label class="block">
                             <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Nombre completo</span>
                             <input
                                 type="text"
@@ -149,13 +142,13 @@
                                 maxlength="255"
                                 autocomplete="name"
                                 placeholder="Ej. Juan Perez"
-                                class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2.5 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
+                                class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
                             />
                             @error('applicant_name')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
                         </label>
 
                         <div class="grid gap-4 md:grid-cols-2">
-                            <label>
+                            <label class="block">
                                 <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Correo electronico</span>
                                 <input
                                     type="email"
@@ -165,12 +158,12 @@
                                     maxlength="255"
                                     autocomplete="email"
                                     placeholder="nombre@ejemplo.com"
-                                    class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2.5 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
+                                    class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
                                 />
                                 @error('applicant_email')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
                             </label>
 
-                            <label>
+                            <label class="block">
                                 <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Telefono</span>
                                 <input
                                     type="text"
@@ -179,22 +172,22 @@
                                     maxlength="80"
                                     autocomplete="tel"
                                     placeholder="3001234567"
-                                    class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2.5 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
+                                    class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
                                 />
                                 @error('applicant_phone')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
                             </label>
                         </div>
 
-                        <label>
+                        <label class="block">
                             <span class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ied-gray-700">Tu mensaje</span>
                             <textarea
                                 name="message"
-                                rows="7"
+                                rows="5"
                                 required
                                 minlength="20"
                                 maxlength="5000"
                                 placeholder="Escribe aqui tu consulta detalladamente..."
-                                class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2.5 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
+                                class="w-full rounded-lg border border-ied-gray-200 bg-white px-3 py-2 text-sm text-ied-gray-900 outline-none transition focus:border-ied-primary focus:ring-2 focus:ring-ied-primary/20"
                             >{{ old('message') }}</textarea>
                             @error('message')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
                         </label>
@@ -206,7 +199,7 @@
                                 value="1"
                                 required
                                 @checked(old('consent_habeas_data'))
-                                class="mt-0.5 rounded border-ied-gray-300 text-ied-primary focus:ring-ied-primary/30"
+                                class="mt-1 rounded border-ied-gray-300 text-ied-primary focus:ring-ied-primary/30"
                             />
                             <span>
                                 Acepto el tratamiento de mis datos personales segun la politica de privacidad institucional.
@@ -214,11 +207,11 @@
                             </span>
                         </label>
 
-                        <div class="pt-2">
+                        <div>
                             <button
                                 type="submit"
                                 data-contact-submit
-                                class="flex w-full min-h-12 items-center justify-center gap-2 rounded-xl bg-ied-primary-dark px-5 py-3.5 text-sm font-bold uppercase tracking-[0.08em] text-white shadow-sm transition hover:bg-ied-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ied-primary-dark"
+                                class="inline-flex items-center gap-2 rounded-full bg-ied-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-ied-primary-dark"
                             >
                                 Enviar mensaje
                                 <span class="material-symbols-outlined text-[18px]" aria-hidden="true">send</span>

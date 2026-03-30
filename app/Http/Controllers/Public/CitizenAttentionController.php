@@ -29,12 +29,22 @@ class CitizenAttentionController extends Controller
         $page = $this->publishedPageBySlug('atencion-ciudadano');
         $categories = $this->procedureCategories();
 
+        $cards = [
+            ['title' => 'Contáctenos', 'summary' => 'Canales de contacto institucional y horarios de atencion.', 'route' => 'atencion.contactenos', 'icon' => 'contact_phone'],
+            ['title' => 'PQRS', 'summary' => 'Formulario para peticiones, quejas, reclamos y sugerencias con radicado.', 'route' => 'atencion.pqrs', 'icon' => 'inbox'],
+            ['title' => 'Tramites y servicios', 'summary' => 'Consulta requisitos, canales y tiempos de respuesta.', 'route' => 'atencion.tramites', 'icon' => 'assignment'],
+            ['title' => 'Preguntas frecuentes', 'summary' => 'Respuestas rapidas para orientacion ciudadana.', 'route' => 'atencion.faq', 'icon' => 'quiz'],
+            ['title' => 'Mapa del sitio', 'summary' => 'Estructura completa de navegacion del portal.', 'route' => 'atencion.mapa-sitio', 'icon' => 'account_tree'],
+            ['title' => 'Participacion', 'summary' => 'Mecanismos para la participacion ciudadana.', 'route' => 'atencion.participacion', 'icon' => 'groups'],
+        ];
+
         return view('public.atencion.index', [
             'title' => $page?->title ?: 'Atención al Ciudadano',
             'lead' => $page?->summary ?: 'Canales institucionales de contacto, PQRS, trámites, participación y orientación ciudadana.',
             'banner' => $this->resolvePageBanner($page),
             'content' => $page?->content,
             'attentionPages' => $this->attentionPages(),
+            'cards' => $cards,
             'procedureCategories' => $categories,
             'featuredFaqs' => $this->featuredFaqs(),
         ]);
@@ -474,12 +484,14 @@ class CitizenAttentionController extends Controller
         return collect([
             [
                 'title' => 'Inicio',
+                'icon' => 'home',
                 'items' => [
                     ['label' => 'Inicio', 'route' => 'home'],
                 ],
             ],
             [
                 'title' => 'Institucion',
+                'icon' => 'apartment',
                 'items' => [
                     ['label' => 'Institucion', 'route' => 'institucion.index'],
                     ['label' => 'Historia', 'route' => 'institucion.historia'],
@@ -494,6 +506,7 @@ class CitizenAttentionController extends Controller
             ],
             [
                 'title' => 'Academico',
+                'icon' => 'school',
                 'items' => [
                     ['label' => 'Academico', 'route' => 'academico.index'],
                     ['label' => 'Niveles Educativos', 'route' => 'academico.niveles-educativos'],
@@ -506,6 +519,7 @@ class CitizenAttentionController extends Controller
             ],
             [
                 'title' => 'Noticias y Transparencia',
+                'icon' => 'newspaper',
                 'items' => [
                     ['label' => 'Noticias', 'route' => 'noticias.index'],
                     ['label' => 'Transparencia', 'route' => 'transparencia.index'],
@@ -514,6 +528,7 @@ class CitizenAttentionController extends Controller
             ],
             [
                 'title' => 'Atención al Ciudadano',
+                'icon' => 'support_agent',
                 'items' => $this->attentionPages()->map(fn (array $item): array => [
                     'label' => $item['title'],
                     'route' => $item['route'],

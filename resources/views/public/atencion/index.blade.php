@@ -28,30 +28,14 @@
             @endif
 
             <section class="grid gap-4 md:grid-cols-2">
-                <a href="{{ route('atencion.contactenos') }}" class="public-surface block p-5 transition hover:-translate-y-0.5 hover:shadow-md">
-                    <h2 class="public-heading text-lg font-semibold text-ied-gray-900">Contáctenos</h2>
-                    <p class="mt-2 text-sm text-ied-gray-700">Canales de contacto institucional y horarios de atencion.</p>
-                </a>
-                <a href="{{ route('atencion.pqrs') }}" class="public-surface block p-5 transition hover:-translate-y-0.5 hover:shadow-md">
-                    <h2 class="public-heading text-lg font-semibold text-ied-gray-900">PQRS</h2>
-                    <p class="mt-2 text-sm text-ied-gray-700">Formulario para peticiones, quejas, reclamos y sugerencias con radicado.</p>
-                </a>
-                <a href="{{ route('atencion.tramites') }}" class="public-surface block p-5 transition hover:-translate-y-0.5 hover:shadow-md">
-                    <h2 class="public-heading text-lg font-semibold text-ied-gray-900">Tramites y servicios</h2>
-                    <p class="mt-2 text-sm text-ied-gray-700">Consulta requisitos, canales y tiempos de respuesta.</p>
-                </a>
-                <a href="{{ route('atencion.faq') }}" class="public-surface block p-5 transition hover:-translate-y-0.5 hover:shadow-md">
-                    <h2 class="public-heading text-lg font-semibold text-ied-gray-900">Preguntas frecuentes</h2>
-                    <p class="mt-2 text-sm text-ied-gray-700">Respuestas rapidas para orientacion ciudadana.</p>
-                </a>
-                <a href="{{ route('atencion.mapa-sitio') }}" class="public-surface block p-5 transition hover:-translate-y-0.5 hover:shadow-md">
-                    <h2 class="public-heading text-lg font-semibold text-ied-gray-900">Mapa del sitio</h2>
-                    <p class="mt-2 text-sm text-ied-gray-700">Estructura completa de navegacion del portal.</p>
-                </a>
-                <a href="{{ route('atencion.participacion') }}" class="public-surface block p-5 transition hover:-translate-y-0.5 hover:shadow-md">
-                    <h2 class="public-heading text-lg font-semibold text-ied-gray-900">Participacion</h2>
-                    <p class="mt-2 text-sm text-ied-gray-700">Mecanismos para la participacion ciudadana.</p>
-                </a>
+                @foreach ($cards as $card)
+                    <x-public.atencion.page-card
+                        :title="$card['title']"
+                        :summary="$card['summary']"
+                        :route="$card['route']"
+                        :icon="$card['icon']"
+                    />
+                @endforeach
             </section>
 
             @if ($procedureCategories->isNotEmpty())
