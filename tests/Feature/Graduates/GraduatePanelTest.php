@@ -20,7 +20,7 @@ test('authenticated graduate can access all panel sections', function () {
     $this->actingAs($graduate, 'graduate');
 
     $this->get(route('egresados.panel.resumen'))->assertOk();
-    $this->get(route('egresados.panel.certificados'))->assertOk();
+    $this->get(route('egresados.panel.documentos'))->assertOk();
     $this->get(route('egresados.panel.registro-academico'))->assertOk();
     $this->get(route('egresados.panel.configuracion'))->assertOk();
 });
@@ -49,7 +49,7 @@ test('graduate only sees own visible documents on certificates page', function (
 
     $this->actingAs($graduate, 'graduate');
 
-    $response = $this->get(route('egresados.panel.certificados'));
+    $response = $this->get(route('egresados.panel.documentos'));
 
     $response->assertOk();
     $response->assertSee('Acta propia visible');
@@ -57,3 +57,11 @@ test('graduate only sees own visible documents on certificates page', function (
     $response->assertDontSee('Acta ajena visible');
 });
 
+test('legacy certificates route redirects to documents route', function () {
+    $graduate = Graduate::factory()->create(['status' => 'active']);
+
+    $this->actingAs($graduate, 'graduate');
+
+    $this->get(route('egresados.panel.certificados'))
+        ->assertRedirect(route('egresados.panel.documentos'));
+});

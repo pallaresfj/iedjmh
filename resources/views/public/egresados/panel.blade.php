@@ -11,8 +11,7 @@
                         <span class="material-symbols-outlined">school</span>
                     </span>
                     <div>
-                        <p class="text-xs font-semibold uppercase tracking-[0.14em] text-ied-gray-600">Portal institucional</p>
-                        <p class="text-sm font-bold text-ied-gray-900">Egresados IEDJMH</p>
+                        <p class="text-base font-black tracking-normal normal-case leading-tight text-ied-gray-900">Portal de Egresados</p>
                     </div>
                 </div>
 
@@ -21,9 +20,9 @@
                         <span class="material-symbols-outlined !text-[19px]">dashboard</span>
                         Resumen
                     </a>
-                    <a href="{{ route('egresados.panel.certificados') }}" @class(['flex items-center gap-3 rounded-xl px-3 py-2 font-semibold transition', 'bg-emerald-100 text-emerald-900' => $section === 'mis-certificados', 'text-ied-gray-700 hover:bg-ied-gray-100' => $section !== 'mis-certificados'])>
+                    <a href="{{ route('egresados.panel.documentos') }}" @class(['flex items-center gap-3 rounded-xl px-3 py-2 font-semibold transition', 'bg-emerald-100 text-emerald-900' => $section === 'mis-documentos', 'text-ied-gray-700 hover:bg-ied-gray-100' => $section !== 'mis-documentos'])>
                         <span class="material-symbols-outlined !text-[19px]">description</span>
-                        Mis Certificados
+                        Mis Documentos
                     </a>
                     <a href="{{ route('egresados.panel.registro-academico') }}" @class(['flex items-center gap-3 rounded-xl px-3 py-2 font-semibold transition', 'bg-emerald-100 text-emerald-900' => $section === 'registro-academico', 'text-ied-gray-700 hover:bg-ied-gray-100' => $section !== 'registro-academico'])>
                         <span class="material-symbols-outlined !text-[19px]">fact_check</span>
@@ -55,7 +54,7 @@
                 @if ($section === 'resumen')
                     <article class="rounded-2xl border border-emerald-200 bg-emerald-100/70 p-6 shadow-sm lg:p-8">
                         <p class="text-xs font-bold uppercase tracking-[0.16em] text-emerald-800">Portal institucional</p>
-                        <h1 class="mt-2 text-4xl font-black tracking-[-0.02em] text-emerald-950">Bienvenido de nuevo, {{ $graduate->full_name }}.</h1>
+                        <h1 class="mt-2 text-4xl font-black tracking-[-0.02em] text-emerald-950">Bienvenido(a), {{ $graduate->full_name }}.</h1>
                         <p class="mt-4 max-w-3xl text-lg leading-relaxed text-emerald-900">Accede a tus documentos oficiales y mantente conectado con la red de egresados.</p>
                     </article>
 
@@ -71,9 +70,15 @@
                                     <article class="rounded-2xl border border-ied-gray-200 bg-ied-gray-100 p-4">
                                         <h3 class="text-xl font-black tracking-[-0.01em] text-ied-gray-900">{{ $document->title }}</h3>
                                         <p class="mt-1 text-sm text-ied-gray-700">{{ $document->description ?: 'Documento institucional disponible en Google Drive.' }}</p>
-                                        <a href="{{ $document->drive_url }}" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex w-full items-center justify-center rounded-xl border border-emerald-300 bg-white px-4 py-2 text-sm font-bold text-emerald-800 transition hover:bg-emerald-50">
-                                            Abrir documento
-                                        </a>
+                                        @if ($document->access_url)
+                                            <a href="{{ $document->access_url }}" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex w-full items-center justify-center rounded-xl border border-emerald-300 bg-white px-4 py-2 text-sm font-bold text-emerald-800 transition hover:bg-emerald-50">
+                                                Abrir documento
+                                            </a>
+                                        @else
+                                            <span class="mt-4 inline-flex w-full items-center justify-center rounded-xl border border-ied-gray-300 bg-white px-4 py-2 text-sm font-semibold text-ied-gray-600">
+                                                Documento no disponible
+                                            </span>
+                                        @endif
                                     </article>
                                 @empty
                                     <p class="text-sm text-ied-gray-700">No hay documentos visibles en este momento.</p>
@@ -102,21 +107,27 @@
                     </div>
                 @endif
 
-                @if ($section === 'mis-certificados')
+                @if ($section === 'mis-documentos')
                     <article class="rounded-2xl border border-ied-gray-200 bg-white p-6 shadow-sm">
-                        <h1 class="text-3xl font-black tracking-[-0.02em] text-ied-gray-900">Mis Certificados</h1>
+                        <h1 class="text-3xl font-black tracking-[-0.02em] text-ied-gray-900">Mis Documentos</h1>
                         <p class="mt-2 text-sm text-ied-gray-700">Documentos oficiales publicados para tu perfil.</p>
                         <div class="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                             @forelse ($documents as $document)
                                 <article class="rounded-2xl border border-ied-gray-200 bg-ied-gray-100 p-4">
                                     <p class="text-xs font-bold uppercase tracking-[0.12em] text-emerald-700">{{ $document->type_label ?: 'General' }}</p>
                                     <h2 class="mt-2 text-xl font-black tracking-[-0.01em] text-ied-gray-900">{{ $document->title }}</h2>
-                                    <a href="{{ $document->drive_url }}" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex w-full items-center justify-center rounded-xl bg-ied-primary px-4 py-2 text-sm font-bold text-white transition hover:bg-ied-primary-dark">
-                                        Descargar / Abrir
-                                    </a>
+                                    @if ($document->access_url)
+                                        <a href="{{ $document->access_url }}" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex w-full items-center justify-center rounded-xl bg-ied-primary px-4 py-2 text-sm font-bold text-white transition hover:bg-ied-primary-dark">
+                                            Descargar / Abrir
+                                        </a>
+                                    @else
+                                        <span class="mt-4 inline-flex w-full items-center justify-center rounded-xl border border-ied-gray-300 bg-white px-4 py-2 text-sm font-semibold text-ied-gray-600">
+                                            Documento no disponible
+                                        </span>
+                                    @endif
                                 </article>
                             @empty
-                                <p class="text-sm text-ied-gray-700">Todavia no tienes certificados visibles.</p>
+                                <p class="text-sm text-ied-gray-700">Todavia no tienes documentos visibles.</p>
                             @endforelse
                         </div>
                     </article>

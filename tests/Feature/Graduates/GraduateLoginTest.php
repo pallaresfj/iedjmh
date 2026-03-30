@@ -6,6 +6,11 @@ use Illuminate\Support\Facades\Hash;
 
 uses(RefreshDatabase::class);
 
+test('get login path redirects to graduates entry page', function () {
+    $this->get('/egresados/login')
+        ->assertRedirect(route('egresados.index'));
+});
+
 test('graduate can login with national id and password', function () {
     $graduate = Graduate::factory()->create([
         'national_id' => '1234567890',
@@ -47,3 +52,19 @@ test('graduate login fails with invalid credentials', function () {
     $this->assertGuest('graduate');
 });
 
+test('graduate login fails with invalid credentials and redirects to entry page without referrer', function () {
+    Graduate::factory()->create([
+        'national_id' => '1234567890',
+        'status' => 'active',
+        'password' => Hash::make('secret12345'),
+    ]);
+
+    $response = $this->post(route('egresados.login'), [
+        'national_id' => '1234567890',
+        'password' => 'invalid-password',
+    ]);
+
+    $response->assertRedirect(route('egresados.index'));
+    $response->assertSessionHasErrors('login');
+    $this->assertGuest('graduate');
+});

@@ -21,13 +21,15 @@ class GraduateDocumentFactory extends Factory
         return [
             'graduate_id' => Graduate::factory(),
             'title' => $this->faker->randomElement([
-                'Diploma Profesional',
+                'Diploma',
                 'Acta de Grado',
-                'Resultados Saber 11',
+                'Resultado Prueba Saber',
             ]),
-            'type_label' => $this->faker->randomElement(['diploma', 'acta', 'resultado']),
+            'type_label' => $this->faker->randomElement(array_keys(\App\Models\GraduateDocument::TYPE_OPTIONS)),
             'description' => $this->faker->sentence(),
             'drive_url' => 'https://drive.google.com/file/d/'.$this->faker->regexify('[a-zA-Z0-9_-]{24}').'/view',
+            'file_path' => null,
+            'file_disk' => 'local',
             'is_official' => $this->faker->boolean(70),
             'is_visible' => true,
             'sort_order' => $this->faker->numberBetween(0, 10),

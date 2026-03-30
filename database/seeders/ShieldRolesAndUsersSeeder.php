@@ -32,6 +32,7 @@ class ShieldRolesAndUsersSeeder extends Seeder
         'Document',
         'Event',
         'Faq',
+        'Graduate',
         'Page',
         'PqrsRequest',
         'Post',

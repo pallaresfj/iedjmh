@@ -85,7 +85,7 @@
 
                 <p class="mb-5 text-sm leading-relaxed text-ied-gray-700">Verificaremos tus datos con los registros institucionales cargados por la institucion.</p>
 
-                <form method="POST" action="{{ route('egresados.preregister') }}" class="space-y-4">
+                <form method="POST" action="{{ route('egresados.preregister') }}" enctype="multipart/form-data" class="space-y-4">
                     @csrf
                     <div class="grid gap-4 sm:grid-cols-2">
                         <div class="sm:col-span-2">
@@ -141,6 +141,12 @@
                         <div>
                             <label for="password_confirmation" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Confirmar contrasena</label>
                             <input id="password_confirmation" type="password" name="password_confirmation" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-emerald-200" />
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label for="identity-document" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Documento de identidad (PDF o imagen)</label>
+                            <input id="identity-document" type="file" name="identity_document" accept=".pdf,image/jpeg,image/png,image/webp" required class="w-full rounded-xl border border-ied-gray-200 bg-white px-4 py-3 text-sm text-ied-gray-900 file:mr-4 file:rounded-lg file:border-0 file:bg-emerald-100 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-emerald-800 hover:file:bg-emerald-200 focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-emerald-200" />
+                            <p class="mt-1 text-xs text-ied-gray-600">Tamano maximo: 1 MB.</p>
+                            @error('identity_document') <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p> @enderror
                         </div>
                     </div>
 

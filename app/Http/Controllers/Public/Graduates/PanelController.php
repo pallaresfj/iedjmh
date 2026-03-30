@@ -30,7 +30,7 @@ class PanelController extends Controller
         /** @var Graduate $graduate */
         $graduate = $request->user('graduate');
 
-        return $this->panelView($graduate, 'mis-certificados', [
+        return $this->panelView($graduate, 'mis-documentos', [
             'documents' => $this->visibleDocuments($graduate),
         ]);
     }

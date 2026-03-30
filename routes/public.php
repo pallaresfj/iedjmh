@@ -27,6 +27,7 @@ Route::post('/matricula', [MatriculaController::class, 'store'])
 
 Route::prefix('egresados')->name('egresados.')->group(function () {
     Route::get('/', [GraduateAuthController::class, 'index'])->name('index');
+    Route::get('/login', fn () => redirect()->route('egresados.index'))->name('login.view');
     Route::post('/login', [GraduateAuthController::class, 'login'])
         ->middleware('throttle:20,1')
         ->name('login');
@@ -47,7 +48,8 @@ Route::prefix('egresados')->name('egresados.')->group(function () {
         Route::prefix('panel')->name('panel.')->group(function (): void {
             Route::get('/', fn () => redirect()->route('egresados.panel.resumen'))->name('index');
             Route::get('/resumen', [GraduatePanelController::class, 'summary'])->name('resumen');
-            Route::get('/mis-certificados', [GraduatePanelController::class, 'certificates'])->name('certificados');
+            Route::get('/mis-documentos', [GraduatePanelController::class, 'certificates'])->name('documentos');
+            Route::get('/mis-certificados', fn () => redirect()->route('egresados.panel.documentos'))->name('certificados');
             Route::get('/registro-academico', [GraduatePanelController::class, 'academicRecord'])->name('registro-academico');
             Route::get('/configuracion', [GraduatePanelController::class, 'settings'])->name('configuracion');
             Route::patch('/configuracion', [GraduatePanelController::class, 'updateSettings'])->name('configuracion.update');

@@ -5,11 +5,15 @@ namespace App\Http\Controllers\Public\Graduates;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Public\Concerns\ResolvesPublicContent;
 use App\Models\Graduate;
+use App\Models\GraduateDocument;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Throwable;
 
 class AuthController extends Controller
 {
@@ -47,7 +51,8 @@ class AuthController extends Controller
         $graduate = Graduate::query()->where('national_id', $nationalId)->first();
 
         if ($graduate === null) {
-            return back()
+            return redirect()
+                ->route('egresados.index')
                 ->withInput($request->only('national_id'))
                 ->withErrors([
                     'login' => 'No encontramos un egresado con ese numero de identificacion.',
@@ -55,7 +60,8 @@ class AuthController extends Controller
         }
 
         if ($graduate->status === 'blocked') {
-            return back()
+            return redirect()
+                ->route('egresados.index')
                 ->withInput($request->only('national_id'))
                 ->withErrors([
                     'login' => 'Tu cuenta se encuentra bloqueada. Contacta a la institucion para soporte.',
@@ -63,7 +69,8 @@ class AuthController extends Controller
         }
 
         if (! $graduate->isActive()) {
-            return back()
+            return redirect()
+                ->route('egresados.index')
                 ->withInput($request->only('national_id'))
                 ->withErrors([
                     'login' => 'Debes completar primero tu preregistro para activar el acceso.',
@@ -78,7 +85,8 @@ class AuthController extends Controller
         ], $remember);
 
         if (! $attempted) {
-            return back()
+            return redirect()
+                ->route('egresados.index')
                 ->withInput($request->only('national_id'))
                 ->withErrors([
                     'login' => 'Credenciales invalidas. Verifica tu documento y contraseña.',
@@ -110,6 +118,7 @@ class AuthController extends Controller
             'city' => ['required', 'string', 'max:255'],
             'country' => ['required', 'string', 'max:255'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'identity_document' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png,webp', 'max:1024'],
             'data_processing_consent' => ['accepted'],
         ], [
             'data_processing_consent.accepted' => 'Debes aceptar el consentimiento de tratamiento de datos.',
@@ -120,7 +129,8 @@ class AuthController extends Controller
             ->first();
 
         if ($graduate === null) {
-            return back()
+            return redirect()
+                ->route('egresados.index')
                 ->withInput($request->except('password', 'password_confirmation'))
                 ->withErrors([
                     'preregistro' => 'No existe un registro institucional para ese numero de identificacion.',
@@ -128,7 +138,8 @@ class AuthController extends Controller
         }
 
         if ($graduate->status === 'blocked') {
-            return back()
+            return redirect()
+                ->route('egresados.index')
                 ->withInput($request->except('password', 'password_confirmation'))
                 ->withErrors([
                     'preregistro' => 'Este registro se encuentra bloqueado. Comunicate con la institucion.',
@@ -141,27 +152,74 @@ class AuthController extends Controller
             ->exists();
 
         if ($emailConflict) {
-            return back()
+            return redirect()
+                ->route('egresados.index')
                 ->withInput($request->except('password', 'password_confirmation'))
                 ->withErrors([
                     'email' => 'Ese correo ya esta asociado a otro egresado.',
                 ]);
         }
 
-        $graduate->fill([
-            'full_name' => trim((string) $validated['full_name']),
-            'email' => trim((string) $validated['email']),
-            'phone' => trim((string) $validated['phone']),
-            'graduation_year' => (int) $validated['graduation_year'],
-            'current_occupation' => trim((string) $validated['current_occupation']),
-            'city' => trim((string) $validated['city']),
-            'country' => trim((string) $validated['country']),
-            'password' => Hash::make($validated['password']),
-            'data_processing_consent_at' => now(),
-            'status' => 'active',
-            'activated_at' => $graduate->activated_at ?: now(),
-        ]);
-        $graduate->save();
+        $identityDocumentPath = $request->file('identity_document')->store(
+            'graduates/'.$graduate->id.'/identity-documents',
+            'local'
+        );
+
+        $previousIdentityPath = null;
+
+        try {
+            DB::transaction(function () use ($graduate, $validated, $identityDocumentPath, &$previousIdentityPath): void {
+                $graduate->fill([
+                    'full_name' => trim((string) $validated['full_name']),
+                    'email' => trim((string) $validated['email']),
+                    'phone' => trim((string) $validated['phone']),
+                    'graduation_year' => (int) $validated['graduation_year'],
+                    'current_occupation' => trim((string) $validated['current_occupation']),
+                    'city' => trim((string) $validated['city']),
+                    'country' => trim((string) $validated['country']),
+                    'password' => Hash::make($validated['password']),
+                    'data_processing_consent_at' => now(),
+                    'status' => 'active',
+                    'activated_at' => $graduate->activated_at ?: now(),
+                ]);
+                $graduate->save();
+
+                $identityRecord = $graduate->documents()
+                    ->where('title', 'Identificación')
+                    ->where('type_label', 'Personal')
+                    ->first();
+
+                if ($identityRecord !== null && $identityRecord->file_disk === 'local' && filled($identityRecord->file_path)) {
+                    $previousIdentityPath = $identityRecord->file_path;
+                }
+
+                if ($identityRecord === null) {
+                    $identityRecord = new GraduateDocument;
+                    $identityRecord->graduate_id = $graduate->id;
+                    $identityRecord->sort_order = 0;
+                }
+
+                $identityRecord->fill([
+                    'title' => 'Identificación',
+                    'type_label' => 'Personal',
+                    'description' => 'Documento de identidad del egresado',
+                    'drive_url' => null,
+                    'file_path' => $identityDocumentPath,
+                    'file_disk' => 'local',
+                    'is_official' => true,
+                    'is_visible' => true,
+                ]);
+                $identityRecord->save();
+            });
+        } catch (Throwable $exception) {
+            Storage::disk('local')->delete($identityDocumentPath);
+
+            throw $exception;
+        }
+
+        if (filled($previousIdentityPath) && $previousIdentityPath !== $identityDocumentPath) {
+            Storage::disk('local')->delete($previousIdentityPath);
+        }
 
         Auth::guard('graduate')->login($graduate, true);
         $request->session()->regenerate();
