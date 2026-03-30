@@ -7,7 +7,7 @@ use Filament\Widgets\Widget;
 
 class UpcomingEventsWidget extends Widget
 {
-    protected static ?int $sort = 6;
+    protected static ?int $sort = 7;
 
     protected static bool $isLazy = false;
 

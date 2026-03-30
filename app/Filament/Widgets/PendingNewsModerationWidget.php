@@ -13,7 +13,10 @@ class PendingNewsModerationWidget extends Widget
 
     protected string $view = 'filament.widgets.pending-news-moderation-widget';
 
-    protected int|string|array $columnSpan = 'full';
+    protected int|string|array $columnSpan = [
+        'default' => 'full',
+        'xl' => 8,
+    ];
 
     public static function canView(): bool
     {

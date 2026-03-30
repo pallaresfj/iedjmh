@@ -4,11 +4,13 @@ namespace App\Support\Dashboard;
 
 use App\Filament\Resources\Contracts\ContractResource;
 use App\Filament\Resources\Events\EventResource;
+use App\Filament\Resources\Graduates\GraduateResource;
 use App\Filament\Resources\MatriculaRequests\MatriculaRequestResource;
 use App\Filament\Resources\Posts\PostResource;
 use App\Filament\Resources\PqrsRequests\PqrsRequestResource;
 use App\Models\Contract;
 use App\Models\Event;
+use App\Models\Graduate;
 use App\Models\MatriculaRequest;
 use App\Models\Post;
 use App\Models\PqrsRequest;
@@ -260,6 +262,30 @@ class AdminDashboardData
             'finalized' => (int) $finalized,
             'index_url' => $this->resourceIndexUrl(ContractResource::class, 'filament.admin.resources.contracts.index'),
             'create_url' => $this->resourceCreateUrl(ContractResource::class, 'filament.admin.resources.contracts.create'),
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function graduateStatus(): array
+    {
+        $total = Graduate::count();
+        $active = Graduate::where('status', 'active')->count();
+        $preloaded = Graduate::where('status', 'preloaded')->count();
+        $blocked = Graduate::where('status', 'blocked')->count();
+        $pendingVerification = Graduate::where('record_verification_status', 'pending')->count();
+        $verified = $total - $pendingVerification;
+        $verificationProgress = $total > 0 ? (int) round(($verified / $total) * 100) : 0;
+
+        return [
+            'total' => (int) $total,
+            'active' => (int) $active,
+            'preloaded' => (int) $preloaded,
+            'blocked' => (int) $blocked,
+            'pending_verification' => (int) $pendingVerification,
+            'verification_progress' => max(0, min(100, $verificationProgress)),
+            'index_url' => $this->resourceIndexUrl(GraduateResource::class, 'filament.admin.resources.graduates.index'),
         ];
     }
 

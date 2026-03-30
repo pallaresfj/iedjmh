@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Filament\Widgets\AdminKpiWidget;
 use App\Filament\Widgets\ContractingStatusWidget;
+use App\Filament\Widgets\GraduateStatusWidget;
 use App\Filament\Widgets\PendingNewsModerationWidget;
 use App\Filament\Widgets\RecentMatriculaWidget;
 use App\Filament\Widgets\RecentNewsWidget;
@@ -47,6 +48,7 @@ class Dashboard extends BaseDashboard
         return [
             AdminKpiWidget::class,
             PendingNewsModerationWidget::class,
+            GraduateStatusWidget::class,
             RecentNewsWidget::class,
             ContractingStatusWidget::class,
             RecentPqrsWidget::class,

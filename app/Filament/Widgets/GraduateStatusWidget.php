@@ -5,17 +5,17 @@ namespace App\Filament\Widgets;
 use App\Support\Dashboard\AdminDashboardData;
 use Filament\Widgets\Widget;
 
-class RecentPqrsWidget extends Widget
+class GraduateStatusWidget extends Widget
 {
-    protected static ?int $sort = 6;
+    protected static ?int $sort = 3;
 
     protected static bool $isLazy = false;
 
-    protected string $view = 'filament.widgets.recent-pqrs-widget';
+    protected string $view = 'filament.widgets.graduate-status-widget';
 
     protected int|string|array $columnSpan = [
         'default' => 'full',
-        'xl' => 8,
+        'xl' => 4,
     ];
 
     /**
@@ -24,7 +24,7 @@ class RecentPqrsWidget extends Widget
     protected function getViewData(): array
     {
         return [
-            'items' => app(AdminDashboardData::class)->recentPqrs(),
+            'status' => app(AdminDashboardData::class)->graduateStatus(),
         ];
     }
 }

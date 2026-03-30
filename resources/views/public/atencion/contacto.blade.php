@@ -222,4 +222,24 @@
             </section>
         </div>
     </x-public.internal-page>
+
+    <section class="bg-ied-primary-dark py-16 sm:py-20">
+        <div class="public-container">
+            <div class="public-content-shell">
+                <div class="flex flex-col items-start gap-8 sm:flex-row sm:items-center sm:justify-between">
+                    <div class="max-w-2xl space-y-3">
+                        <h2 class="public-heading text-3xl font-black text-white sm:text-4xl">¿Eres egresado de nuestra institución?</h2>
+                        <p class="text-base leading-relaxed text-white/80 sm:text-lg">Queremos mantener el contacto contigo. Actualiza tus datos para recibir invitaciones a eventos y noticias institucionales.</p>
+                    </div>
+
+                    <a
+                        href="{{ route('egresados.index') }}"
+                        class="inline-flex shrink-0 items-center rounded-full bg-ied-primary-light px-8 py-4 text-sm font-bold uppercase tracking-widest text-ied-primary-dark transition hover:brightness-110"
+                    >
+                        Actualizar datos
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
 @endsection

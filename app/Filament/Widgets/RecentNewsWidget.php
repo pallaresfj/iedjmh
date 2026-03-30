@@ -7,7 +7,7 @@ use Filament\Widgets\Widget;
 
 class RecentNewsWidget extends Widget
 {
-    protected static ?int $sort = 3;
+    protected static ?int $sort = 4;
 
     protected static bool $isLazy = false;
 

@@ -7,7 +7,7 @@ use Filament\Widgets\Widget;
 
 class ContractingStatusWidget extends Widget
 {
-    protected static ?int $sort = 4;
+    protected static ?int $sort = 5;
 
     protected static bool $isLazy = false;
 
