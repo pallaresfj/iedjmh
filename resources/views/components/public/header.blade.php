@@ -73,7 +73,7 @@
                         Aula Virtual
                     </a>
                 @endif
-                <a href="{{ route('atencion.index') }}" class="public-header__action public-header__action--primary rounded-full bg-ied-primary px-5 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-ied-primary-dark">
+                <a href="{{ route('matricula.index') }}" class="public-header__action public-header__action--primary rounded-full bg-ied-primary px-5 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-ied-primary-dark">
                     Matriculas
                 </a>
                 <a href="{{ route('buscar') }}" class="public-header__action grid size-9 place-items-center rounded-full border-2 border-ied-primary/20 text-ied-primary transition hover:bg-ied-primary/10" aria-label="Buscar en el sitio">
@@ -102,7 +102,7 @@
                     <div class="public-header__mobile-panel mt-3 space-y-3 rounded-xl p-3 shadow-lg">
                         <x-public.nav :items="$menuItems" mobile />
                         <div class="public-header__mobile-actions grid gap-2 border-t border-ied-gray-200 pt-3">
-                            <a href="{{ route('atencion.index') }}" class="public-header__mobile-action public-header__mobile-action--primary rounded-lg border border-ied-gray-200 px-3 py-2 text-center text-sm font-semibold text-ied-gray-700">
+                            <a href="{{ route('matricula.index') }}" class="public-header__mobile-action public-header__mobile-action--primary rounded-lg border border-ied-gray-200 px-3 py-2 text-center text-sm font-semibold text-ied-gray-700">
                                 Matriculas
                             </a>
                             @if (filled($sieeUrl))

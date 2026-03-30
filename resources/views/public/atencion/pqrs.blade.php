@@ -329,6 +329,7 @@
                 const maxSizeBytes = 2 * 1024 * 1024;
                 const allowedExtensions = new Set(['pdf', 'docx']);
                 let dragDepth = 0;
+                let isPickerOpening = false;
 
                 const bytesToMb = (bytes) => (bytes / (1024 * 1024)).toFixed(2);
 
@@ -396,6 +397,26 @@
                     syncSelectedFile(file);
                 };
 
+                const openPicker = (event = null) => {
+                    if (fileInput.disabled || isPickerOpening) {
+                        return;
+                    }
+
+                    if (event?.target === fileInput) {
+                        return;
+                    }
+
+                    if (event?.target instanceof Element && event.target.closest('input[type="file"]')) {
+                        return;
+                    }
+
+                    isPickerOpening = true;
+                    fileInput.click();
+                    window.setTimeout(() => {
+                        isPickerOpening = false;
+                    }, 0);
+                };
+
                 const preventDefaults = (event) => {
                     event.preventDefault();
                     event.stopPropagation();
@@ -437,14 +458,15 @@
                     processFile(droppedFiles[0]);
                 });
 
-                dropzone.addEventListener('click', () => {
-                    fileInput.click();
+                dropzone.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    openPicker(event);
                 });
 
                 dropzone.addEventListener('keydown', (event) => {
                     if (event.key === 'Enter' || event.key === ' ') {
                         event.preventDefault();
-                        fileInput.click();
+                        openPicker();
                     }
                 });
 
@@ -456,7 +478,12 @@
                     dropzone.classList.remove('is-focused');
                 });
 
-                fileInput.addEventListener('change', () => {
+                fileInput.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                });
+
+                fileInput.addEventListener('change', (event) => {
+                    event.stopPropagation();
                     clearFileError();
                     const selectedFile = fileInput.files?.[0];
 

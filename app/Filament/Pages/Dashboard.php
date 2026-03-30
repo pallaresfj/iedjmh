@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Filament\Widgets\AdminKpiWidget;
 use App\Filament\Widgets\ContractingStatusWidget;
 use App\Filament\Widgets\PendingNewsModerationWidget;
+use App\Filament\Widgets\RecentMatriculaWidget;
 use App\Filament\Widgets\RecentNewsWidget;
 use App\Filament\Widgets\RecentPqrsWidget;
 use App\Filament\Widgets\UpcomingEventsWidget;
@@ -50,6 +51,7 @@ class Dashboard extends BaseDashboard
             ContractingStatusWidget::class,
             RecentPqrsWidget::class,
             UpcomingEventsWidget::class,
+            RecentMatriculaWidget::class,
         ];
     }
 }

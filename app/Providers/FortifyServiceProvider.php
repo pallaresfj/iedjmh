@@ -79,5 +79,16 @@ class FortifyServiceProvider extends ServiceProvider
                 Limit::perHour(20)->by(Str::transliterate($identifier)),
             ];
         });
+
+        RateLimiter::for('matricula', function (Request $request) {
+            $document = Str::lower((string) $request->input('document_number'));
+            $grade = Str::lower((string) $request->input('grade'));
+            $identifier = $request->ip().'|'.$document.'|'.$grade;
+
+            return [
+                Limit::perMinute(4)->by($request->ip()),
+                Limit::perHour(12)->by(Str::transliterate($identifier)),
+            ];
+        });
     }
 }

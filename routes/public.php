@@ -6,6 +6,7 @@ use App\Http\Controllers\Public\ContractingController;
 use App\Http\Controllers\Public\EventController;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\InstitutionController;
+use App\Http\Controllers\Public\MatriculaController;
 use App\Http\Controllers\Public\NewsController;
 use App\Http\Controllers\Public\ProjectController;
 use App\Http\Controllers\Public\SearchController;
@@ -16,6 +17,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', HomeController::class)->name('home');
 Route::get('/buscar', SearchController::class)->name('buscar');
 Route::get('/sitemap.xml', SitemapXmlController::class)->name('sitemap.xml');
+Route::get('/matricula', [MatriculaController::class, 'index'])->name('matricula.index');
+Route::post('/matricula', [MatriculaController::class, 'store'])
+    ->middleware('throttle:matricula')
+    ->name('matricula.store');
 
 Route::prefix('institucion')->group(function () {
     Route::get('/', [InstitutionController::class, 'index'])->name('institucion.index');

@@ -4,12 +4,15 @@ namespace App\Support\Dashboard;
 
 use App\Filament\Resources\Contracts\ContractResource;
 use App\Filament\Resources\Events\EventResource;
+use App\Filament\Resources\MatriculaRequests\MatriculaRequestResource;
 use App\Filament\Resources\Posts\PostResource;
 use App\Filament\Resources\PqrsRequests\PqrsRequestResource;
 use App\Models\Contract;
 use App\Models\Event;
+use App\Models\MatriculaRequest;
 use App\Models\Post;
 use App\Models\PqrsRequest;
+use App\Support\Matricula\MatriculaOptions;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -29,6 +32,13 @@ class AdminDashboardData
         'resuelto',
         'cerrado',
         'finalizado',
+    ];
+
+    /**
+     * @var array<int, string>
+     */
+    private const MATRICULA_PENDING_STATUSES = [
+        'pending',
     ];
 
     private CarbonImmutable $now;
@@ -56,6 +66,10 @@ class AdminDashboardData
             })
             ->count();
 
+        $pendingMatriculas = MatriculaRequest::query()
+            ->whereIn('status', self::MATRICULA_PENDING_STATUSES)
+            ->count();
+
         $eventsThisWeek = Event::query()
             ->where('status', 'published')
             ->whereNotNull('starts_at')
@@ -76,6 +90,14 @@ class AdminDashboardData
             ->count();
 
         return [
+            [
+                'label' => 'Matriculas',
+                'value' => (int) $pendingMatriculas,
+                'description' => 'Solicitudes pendientes',
+                'icon' => 'heroicon-o-academic-cap',
+                'badge_class' => 'agro-badge agro-badge--blue',
+                'url' => $this->resourceIndexUrl(MatriculaRequestResource::class, 'filament.admin.resources.matricula-requests.index'),
+            ],
             [
                 'label' => 'Pendientes',
                 'value' => (int) $pendingPqrs,
@@ -167,6 +189,35 @@ class AdminDashboardData
                     'status_badge_class' => $status['badge_class'],
                     'stripe_class' => $status['stripe_class'],
                     'record_url' => $this->pqrsRecordUrl($request),
+                ];
+            });
+    }
+
+    /**
+     * @return Collection<int, array<string, mixed>>
+     */
+    public function recentMatriculas(int $limit = 4): Collection
+    {
+        return MatriculaRequest::query()
+            ->with('campus')
+            ->orderByDesc('submitted_at')
+            ->orderByDesc('id')
+            ->limit($limit)
+            ->get()
+            ->map(function (MatriculaRequest $request): array {
+                $submittedAt = $request->submitted_at?->timezone('America/Bogota');
+                $status = $this->matriculaStatusData((string) $request->status);
+
+                return [
+                    'student' => $request->student_name,
+                    'grade' => MatriculaOptions::gradeOptions()[$request->grade] ?? $request->grade,
+                    'document' => $request->document_number,
+                    'campus' => $request->campus?->name ?? 'Sin sede',
+                    'submitted_at' => $submittedAt?->format('d/m/Y H:i') ?? 'Sin fecha',
+                    'status_label' => $status['label'],
+                    'status_badge_class' => $status['badge_class'],
+                    'stripe_class' => $status['stripe_class'],
+                    'record_url' => $this->matriculaRecordUrl($request),
                 ];
             });
     }
@@ -366,6 +417,56 @@ class AdminDashboardData
             ],
             'closed', 'cerrado', 'finalizado' => [
                 'label' => 'Cerrado',
+                'badge_class' => 'agro-badge agro-badge--slate',
+                'stripe_class' => 'agro-pqrs-item--slate',
+            ],
+            default => [
+                'label' => 'Pendiente',
+                'badge_class' => 'agro-badge agro-badge--amber',
+                'stripe_class' => 'agro-pqrs-item--amber',
+            ],
+        };
+    }
+
+    private function matriculaRecordUrl(MatriculaRequest $request): ?string
+    {
+        $editUrl = $this->resourceEditUrl(
+            MatriculaRequestResource::class,
+            $request,
+            'filament.admin.resources.matricula-requests.edit',
+            ['record' => $request],
+        );
+
+        if (filled($editUrl)) {
+            return $editUrl;
+        }
+
+        return $this->resourceViewUrl(
+            MatriculaRequestResource::class,
+            $request,
+            'filament.admin.resources.matricula-requests.view',
+            ['record' => $request],
+        );
+    }
+
+    /**
+     * @return array{label: string, badge_class: string, stripe_class: string}
+     */
+    private function matriculaStatusData(string $status): array
+    {
+        return match ($status) {
+            'in_review' => [
+                'label' => 'En revision',
+                'badge_class' => 'agro-badge agro-badge--blue',
+                'stripe_class' => 'agro-pqrs-item--blue',
+            ],
+            'approved' => [
+                'label' => 'Aprobada',
+                'badge_class' => 'agro-badge agro-badge--emerald',
+                'stripe_class' => 'agro-pqrs-item--emerald',
+            ],
+            'rejected' => [
+                'label' => 'Rechazada',
                 'badge_class' => 'agro-badge agro-badge--slate',
                 'stripe_class' => 'agro-pqrs-item--slate',
             ],
