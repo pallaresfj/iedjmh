@@ -63,6 +63,7 @@ return [
                     ['label' => 'PQRS', 'route' => 'atencion.pqrs', 'icon' => 'forum'],
                     ['label' => 'Trámites y servicios', 'route' => 'atencion.tramites', 'icon' => 'assignment'],
                     ['label' => 'Preguntas frecuentes', 'route' => 'atencion.faq', 'icon' => 'help'],
+                    ['label' => 'Portal de egresados', 'route' => 'egresados.index', 'icon' => 'school'],
                 ],
             ],
             [

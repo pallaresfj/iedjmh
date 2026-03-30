@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Models\Graduate;
 
 return [
 
@@ -42,6 +43,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'graduate' => [
+            'driver' => 'session',
+            'provider' => 'graduates',
+        ],
     ],
 
     /*
@@ -65,6 +70,10 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', User::class),
+        ],
+        'graduates' => [
+            'driver' => 'eloquent',
+            'model' => Graduate::class,
         ],
 
         // 'users' => [
@@ -96,6 +105,12 @@ return [
         'users' => [
             'provider' => 'users',
             'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'graduates' => [
+            'provider' => 'graduates',
+            'table' => 'graduate_password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
         ],

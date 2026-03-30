@@ -11,7 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias([
+            'graduate.auth' => \App\Http\Middleware\AuthenticateGraduate::class,
+            'graduate.active' => \App\Http\Middleware\EnsureActiveGraduate::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

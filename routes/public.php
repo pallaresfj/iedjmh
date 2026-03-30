@@ -4,6 +4,9 @@ use App\Http\Controllers\Public\AcademicController;
 use App\Http\Controllers\Public\CitizenAttentionController;
 use App\Http\Controllers\Public\ContractingController;
 use App\Http\Controllers\Public\EventController;
+use App\Http\Controllers\Public\Graduates\AuthController as GraduateAuthController;
+use App\Http\Controllers\Public\Graduates\PanelController as GraduatePanelController;
+use App\Http\Controllers\Public\Graduates\PasswordController as GraduatePasswordController;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\InstitutionController;
 use App\Http\Controllers\Public\MatriculaController;
@@ -21,6 +24,36 @@ Route::get('/matricula', [MatriculaController::class, 'index'])->name('matricula
 Route::post('/matricula', [MatriculaController::class, 'store'])
     ->middleware('throttle:matricula')
     ->name('matricula.store');
+
+Route::prefix('egresados')->name('egresados.')->group(function () {
+    Route::get('/', [GraduateAuthController::class, 'index'])->name('index');
+    Route::post('/login', [GraduateAuthController::class, 'login'])
+        ->middleware('throttle:20,1')
+        ->name('login');
+    Route::post('/preregistro', [GraduateAuthController::class, 'preregister'])
+        ->middleware('throttle:20,1')
+        ->name('preregister');
+
+    Route::get('/olvido-clave', [GraduatePasswordController::class, 'create'])->name('password.request');
+    Route::post('/olvido-clave', [GraduatePasswordController::class, 'store'])
+        ->middleware('throttle:10,1')
+        ->name('password.email');
+    Route::get('/restablecer-clave/{token}', [GraduatePasswordController::class, 'edit'])->name('password.reset.form');
+    Route::post('/restablecer-clave', [GraduatePasswordController::class, 'update'])->name('password.reset.update');
+
+    Route::middleware(['graduate.auth', 'graduate.active'])->group(function (): void {
+        Route::post('/logout', [GraduateAuthController::class, 'logout'])->name('logout');
+
+        Route::prefix('panel')->name('panel.')->group(function (): void {
+            Route::get('/', fn () => redirect()->route('egresados.panel.resumen'))->name('index');
+            Route::get('/resumen', [GraduatePanelController::class, 'summary'])->name('resumen');
+            Route::get('/mis-certificados', [GraduatePanelController::class, 'certificates'])->name('certificados');
+            Route::get('/registro-academico', [GraduatePanelController::class, 'academicRecord'])->name('registro-academico');
+            Route::get('/configuracion', [GraduatePanelController::class, 'settings'])->name('configuracion');
+            Route::patch('/configuracion', [GraduatePanelController::class, 'updateSettings'])->name('configuracion.update');
+        });
+    });
+});
 
 Route::prefix('institucion')->group(function () {
     Route::get('/', [InstitutionController::class, 'index'])->name('institucion.index');

@@ -6,11 +6,13 @@
     'replaceHeaderWithBanner' => false,
     'forceBannerTitleStyle' => false,
     'sidebarWidth' => '17rem',
+    'withoutSidebar' => false,
 ])
 
 @php($primaryNav = config('institution.navigation.primary', []))
 @php($hasBanner = is_array($banner))
 @php($forceBannerTitleStyle = (bool) $forceBannerTitleStyle)
+@php($withoutSidebar = (bool) $withoutSidebar)
 @php($effectiveBanner = $banner)
 
 @if ($forceBannerTitleStyle && ! $hasBanner)
@@ -111,56 +113,62 @@
 @endif
 
 <section class="public-container py-8 sm:py-10 lg:py-12">
-    <div
-        class="grid gap-8 lg:[grid-template-columns:var(--public-sidebar-width)_minmax(0,1fr)]"
-        style="--public-sidebar-width: {{ $sidebarWidth }};"
-    >
-        <aside class="space-y-4">
-            @isset($sidebar)
-                {{ $sidebar }}
-            @else
-                <div class="public-surface p-4 sm:p-5">
-                    <p class="public-heading text-sm font-semibold uppercase tracking-wide text-ied-gray-900">Navegación</p>
-                    <ul class="mt-3 space-y-1 text-sm">
-                        @foreach ($primaryNav as $item)
-                            @php($isActive = request()->routeIs($item['route']))
-                            <li>
-                                <a
-                                    href="{{ route($item['route']) }}"
-                                    @if ($isActive) aria-current="page" @endif
-                                    @class([
-                                        'block rounded-md px-3 py-2 transition',
-                                        'bg-ied-primary text-white' => $isActive,
-                                        'text-ied-gray-700 hover:bg-ied-gray-100 hover:text-ied-primary-dark' => ! $isActive,
-                                    ])
-                                >
-                                    {{ $item['label'] }}
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-
-                <div class="public-surface p-4 sm:p-5">
-                    <p class="public-heading text-sm font-semibold uppercase tracking-wide text-ied-gray-900">Accesos rápidos</p>
-                    <ul class="mt-3 space-y-2 text-sm text-ied-gray-700">
-                        <li>
-                            <a href="{{ route('academico.index') }}" class="text-ied-primary-dark hover:text-ied-primary">
-                                Académico
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('atencion.index') }}" class="text-ied-primary-dark hover:text-ied-primary">
-                                Atención al Ciudadano
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            @endisset
-        </aside>
-
+    @if ($withoutSidebar)
         <article class="public-surface p-5 sm:p-7 lg:p-8">
             {{ $slot }}
         </article>
-    </div>
+    @else
+        <div
+            class="grid gap-8 lg:[grid-template-columns:var(--public-sidebar-width)_minmax(0,1fr)]"
+            style="--public-sidebar-width: {{ $sidebarWidth }};"
+        >
+            <aside class="space-y-4">
+                @isset($sidebar)
+                    {{ $sidebar }}
+                @else
+                    <div class="public-surface p-4 sm:p-5">
+                        <p class="public-heading text-sm font-semibold uppercase tracking-wide text-ied-gray-900">Navegación</p>
+                        <ul class="mt-3 space-y-1 text-sm">
+                            @foreach ($primaryNav as $item)
+                                @php($isActive = request()->routeIs($item['route']))
+                                <li>
+                                    <a
+                                        href="{{ route($item['route']) }}"
+                                        @if ($isActive) aria-current="page" @endif
+                                        @class([
+                                            'block rounded-md px-3 py-2 transition',
+                                            'bg-ied-primary text-white' => $isActive,
+                                            'text-ied-gray-700 hover:bg-ied-gray-100 hover:text-ied-primary-dark' => ! $isActive,
+                                        ])
+                                    >
+                                        {{ $item['label'] }}
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+
+                    <div class="public-surface p-4 sm:p-5">
+                        <p class="public-heading text-sm font-semibold uppercase tracking-wide text-ied-gray-900">Accesos rápidos</p>
+                        <ul class="mt-3 space-y-2 text-sm text-ied-gray-700">
+                            <li>
+                                <a href="{{ route('academico.index') }}" class="text-ied-primary-dark hover:text-ied-primary">
+                                    Académico
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('atencion.index') }}" class="text-ied-primary-dark hover:text-ied-primary">
+                                    Atención al Ciudadano
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                @endisset
+            </aside>
+
+            <article class="public-surface p-5 sm:p-7 lg:p-8">
+                {{ $slot }}
+            </article>
+        </div>
+    @endif
 </section>

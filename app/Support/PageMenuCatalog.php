@@ -64,6 +64,13 @@ class PageMenuCatalog
             'slug' => 'academico-sistema-evaluacion',
             'section' => 'academico',
         ],
+        'egresados.index' => [
+            'label' => 'Portal de Egresados',
+            'route' => 'egresados.index',
+            'path' => '/egresados',
+            'slug' => 'egresados',
+            'section' => 'atencion',
+        ],
     ];
 
     /**
