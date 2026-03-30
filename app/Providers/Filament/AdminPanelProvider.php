@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Auth\Login;
 use App\Filament\Pages\Dashboard;
 use App\Support\PublicSettings;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
@@ -31,7 +32,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->viteTheme('resources/css/filament/admin/theme.css')
-            ->login()
+            ->login(Login::class)
             ->userMenu(position: UserMenuPosition::Sidebar)
             ->sidebarCollapsibleOnDesktop()
             ->colors([

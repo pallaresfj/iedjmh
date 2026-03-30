@@ -42,7 +42,7 @@ class HomeController extends Controller
             'cta_label' => 'Conoce nuestra matricula 2026',
             'cta_url' => route('matricula.index'),
             'cta_target' => '_self',
-            'image_url' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuDMUNlu1vZSYgs1mJ8XI2JBGdEGv7h77-FKsinYr5EjYaApSudFf0jhOBzLc6yoEXKGCF-tewz8MJIFovX4aKHbA0O3FnBStuhctqyV0oVkBdASloF8K2rO8VVM18nBjgTP2zwD60uTY7U6Vw-bB3w4vymqId0y98mtqnopTqtBAvch6WRWhfF7lV9eqtrHoQxcCTLHXNxBGP1xnxW6D-Hw4cLmuICL4qmBewmK1UqmRBf9D7Wau-xa_o7aSt4rGKkayqhXd0Sj8bxl',
+            'image_url' => PublicSettings::homeHeroFallbackImageUrl(),
         ];
 
         $settingsImagePath = PublicSettings::get('home_hero_image_path');

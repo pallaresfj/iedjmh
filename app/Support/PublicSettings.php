@@ -13,6 +13,8 @@ class PublicSettings
 {
     private const REQUEST_CACHE_KEY = '_public_settings_singleton';
 
+    private const HOME_HERO_IMAGE_FALLBACK_URL = 'https://lh3.googleusercontent.com/aida-public/AB6AXuDMUNlu1vZSYgs1mJ8XI2JBGdEGv7h77-FKsinYr5EjYaApSudFf0jhOBzLc6yoEXKGCF-tewz8MJIFovX4aKHbA0O3FnBStuhctqyV0oVkBdASloF8K2rO8VVM18nBjgTP2zwD60uTY7U6Vw-bB3w4vymqId0y98mtqnopTqtBAvch6WRWhfF7lV9eqtrHoQxcCTLHXNxBGP1xnxW6D-Hw4cLmuICL4qmBewmK1UqmRBf9D7Wau-xa_o7aSt4rGKkayqhXd0Sj8bxl';
+
     /**
      * @var array<string, string>
      */
@@ -76,6 +78,11 @@ class PublicSettings
         }
 
         return '/storage/'.$normalizedPath;
+    }
+
+    public static function homeHeroFallbackImageUrl(): string
+    {
+        return static::HOME_HERO_IMAGE_FALLBACK_URL;
     }
 
     private static function normalizePublicDiskUrl(string $url, string $normalizedPath): string

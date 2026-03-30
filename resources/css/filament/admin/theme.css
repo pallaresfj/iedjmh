@@ -461,4 +461,170 @@
     .agro-moderation-alert__footer a {
         @apply underline decoration-transparent transition hover:decoration-amber-900 dark:hover:decoration-amber-200;
     }
+
+    .agro-admin-login-screen .fi-simple-layout {
+        @apply min-h-dvh;
+    }
+
+    .agro-admin-login-screen .fi-simple-main-ctn {
+        @apply items-stretch;
+    }
+
+    .agro-admin-login-screen .fi-simple-main {
+        @apply my-0 max-w-full bg-transparent px-0 py-0 shadow-none ring-0;
+    }
+
+    .agro-admin-login-page .fi-simple-page-content {
+        @apply gap-y-0;
+    }
+
+    .agro-admin-login {
+        position: relative;
+        isolation: isolate;
+        display: flex;
+        min-height: 100dvh;
+        flex-direction: column;
+        overflow: hidden;
+        background-color: #0f3c45;
+        background-image: var(--agro-login-bg-image);
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        color: #ffffff;
+    }
+
+    .agro-admin-login__overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background:
+            linear-gradient(180deg, rgba(8, 25, 30, 0.34) 0%, rgba(8, 25, 30, 0.56) 100%),
+            radial-gradient(circle at center, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.26));
+        backdrop-filter: blur(2.5px);
+    }
+
+    .agro-admin-login__header,
+    .agro-admin-login__content,
+    .agro-admin-login__footer {
+        position: relative;
+        z-index: 1;
+    }
+
+    .agro-admin-login__header {
+        @apply px-6 pt-5 sm:px-8 sm:pt-6;
+    }
+
+    .agro-admin-login__brand {
+        @apply text-sm font-extrabold tracking-tight text-white/90 sm:text-base;
+    }
+
+    .agro-admin-login__content {
+        @apply flex flex-1 items-center justify-center px-4 py-8 sm:px-6 sm:py-10;
+    }
+
+    .agro-admin-login__card {
+        width: min(100%, 24.5rem);
+        @apply rounded-[1.6rem] border border-white/50 bg-white/95 px-5 py-6 text-slate-900 shadow-[0_30px_90px_rgba(10,20,30,0.34)] backdrop-blur-sm sm:px-6 sm:py-6;
+    }
+
+    .agro-admin-login__logo-wrap {
+        @apply mx-auto mb-4 grid size-15 place-items-center overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm;
+    }
+
+    .agro-admin-login__logo {
+        @apply size-full object-contain p-1.5;
+    }
+
+    .agro-admin-login__logo-fallback {
+        @apply h-8 w-8 text-slate-700;
+    }
+
+    .agro-admin-login__title {
+        @apply text-center text-[1.95rem] leading-none font-black tracking-tight text-[color:var(--color-ied-primary)];
+    }
+
+    .agro-admin-login__subtitle {
+        @apply mt-1.5 text-center text-[13px] font-semibold text-slate-600;
+    }
+
+    .agro-admin-login__form {
+        @apply mt-5;
+    }
+
+    .agro-admin-login__form .fi-fo-field-wrp-label {
+        @apply text-[0.68rem] font-bold uppercase tracking-[0.12em] text-slate-500;
+    }
+
+    .agro-admin-login__form .fi-input-wrp {
+        @apply rounded-xl border-slate-300 bg-white;
+    }
+
+    .agro-admin-login__form .fi-btn.fi-color-primary {
+        @apply rounded-xl border-0 text-white shadow-sm;
+        background-color: var(--color-ied-primary);
+    }
+
+    .agro-admin-login__form .fi-btn.fi-color-primary:hover {
+        background-color: var(--color-ied-primary-dark);
+    }
+
+    .agro-admin-login__form .fi-btn.fi-color-gray {
+        @apply rounded-xl border-slate-300 bg-white text-slate-700;
+    }
+
+    .agro-admin-login__google-section {
+        @apply mt-5;
+    }
+
+    .agro-admin-login__form .agro-login-separator {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        column-gap: 0.5rem;
+        @apply my-4 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400;
+    }
+
+    .agro-admin-login__form .agro-login-separator span {
+        @apply text-center;
+    }
+
+    .agro-admin-login__form .agro-login-separator::before,
+    .agro-admin-login__form .agro-login-separator::after {
+        content: '';
+        @apply h-px w-full bg-slate-200;
+    }
+
+    .agro-admin-login__form .agro-google-btn {
+        @apply rounded-xl border border-slate-300 bg-white text-slate-700 hover:bg-slate-50;
+        font-weight: 400 !important;
+    }
+
+    .agro-admin-login__form .agro-google-btn__label {
+        font-family: 'Google Sans', 'Roboto', Arial, sans-serif;
+        @apply text-sm tracking-[0.01em];
+        font-weight: 400 !important;
+    }
+
+    .agro-admin-login__form .agro-google-logo {
+        @apply shrink-0;
+    }
+
+    .agro-admin-login__footer {
+        @apply px-6 pb-5 text-[11px] text-white/70 sm:px-8 sm:pb-6;
+    }
+
+    .agro-admin-login__footer a {
+        @apply font-semibold text-white/85 transition hover:text-white;
+    }
+
+    @media (max-width: 640px) {
+        .agro-admin-login__title {
+            @apply text-[1.7rem];
+        }
+
+        .agro-admin-login__card {
+            width: min(100%, 22.75rem);
+            @apply rounded-3xl px-4 py-5;
+        }
+    }
 }
