@@ -19,11 +19,17 @@ return new class extends Migration
             $table->string('applicant_name')->nullable();
             $table->string('applicant_email')->nullable();
             $table->string('applicant_phone')->nullable();
-            $table->string('applicant_document_number')->nullable();
+            $table->string('applicant_document')->nullable();
             $table->string('applicant_address')->nullable();
+            $table->boolean('consent_habeas_data')->default(false);
             $table->string('status')->default('open')->index();
             $table->foreignId('assigned_to')->nullable()->constrained('users')->nullOnDelete();
+            $table->longText('internal_notes')->nullable();
+            $table->timestamp('submitted_at')->nullable()->index();
+            $table->timestamp('resolved_at')->nullable()->index();
             $table->timestamp('closed_at')->nullable();
+            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });
