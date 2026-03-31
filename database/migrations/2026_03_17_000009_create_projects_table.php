@@ -18,6 +18,9 @@ return new class extends Migration
             $table->string('external_url')->nullable();
             $table->json('gallery_image_paths')->nullable();
             $table->string('status')->default('draft')->index();
+            $table->boolean('is_featured')->default(false)->index();
+            $table->unsignedInteger('sort_order')->default(0);
+            $table->timestamp('published_at')->nullable();
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
             $table->softDeletes();
