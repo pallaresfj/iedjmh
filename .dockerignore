@@ -1,0 +1,49 @@
+# Dependencies (installed during build)
+node_modules/
+vendor/
+
+# Git
+.git/
+.gitattributes
+
+# IDE / Editor
+.idea/
+.vscode/
+.zed/
+.fleet/
+.nova/
+.DS_Store
+
+# Environment (configured via Dokploy panel)
+.env
+.env.backup
+.env.production
+
+# Dev tools / CI
+.claude/
+.codex/
+.github/
+tests/
+docs/
+phpunit.xml
+phpstan.neon
+pint.json
+AGENTS.md
+
+# Compiled assets (rebuilt during Docker build)
+public/build/
+public/hot
+public/css/filament
+public/js/filament
+public/fonts/filament
+
+# Storage artifacts (mounted as volumes)
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/app/public/*
+storage/app/private/*
+
+# Dev databases
+database/database.sqlite
