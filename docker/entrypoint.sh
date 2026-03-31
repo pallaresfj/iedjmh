@@ -6,6 +6,31 @@ echo "==> [entrypoint] Starting IEDJMH application..."
 cd /var/www/html
 
 # -------------------------------------------------------
+#  0. Validate required environment variables
+# -------------------------------------------------------
+echo "==> Validating required environment variables..."
+
+MISSING_ENV_VARS=""
+for REQUIRED_VAR in APP_KEY APP_URL DB_CONNECTION DB_HOST DB_PORT DB_DATABASE DB_USERNAME; do
+    eval "REQUIRED_VALUE=\${$REQUIRED_VAR:-}"
+
+    if [ -z "$REQUIRED_VALUE" ]; then
+        MISSING_ENV_VARS="$MISSING_ENV_VARS $REQUIRED_VAR"
+    fi
+done
+
+if [ -n "$MISSING_ENV_VARS" ]; then
+    echo "    ERROR: Missing required env vars:$MISSING_ENV_VARS"
+    echo "    Configure them in Dokploy and redeploy."
+    exit 1
+fi
+
+if [ "$APP_KEY" = "base64:" ] || [ "$APP_KEY" = "null" ]; then
+    echo "    ERROR: APP_KEY is invalid. Define a real app key in Dokploy."
+    exit 1
+fi
+
+# -------------------------------------------------------
 #  1. Prepare storage directories & permissions
 # -------------------------------------------------------
 echo "==> Preparing storage directories..."
@@ -39,24 +64,26 @@ until php artisan db:monitor --databases=mysql 2>/dev/null | grep -q "OK" || [ $
 done
 
 if [ $RETRY_COUNT -ge $MAX_RETRIES ]; then
-    echo "    WARNING: Database may not be ready, continuing anyway..."
+    echo "    ERROR: Database is not reachable after $MAX_RETRIES retries."
+    exit 1
 fi
 
 # -------------------------------------------------------
 #  4. Run database migrations
 # -------------------------------------------------------
 echo "==> Running migrations..."
-php artisan migrate --force --no-interaction 2>&1 || echo "    WARNING: Migrations had issues (may already be up to date)"
+php artisan migrate --force --no-interaction
 
 # -------------------------------------------------------
 #  5. Cache configuration for performance
 # -------------------------------------------------------
 echo "==> Caching configuration..."
-php artisan config:cache 2>&1 || echo "    WARNING: config:cache failed"
-php artisan route:cache 2>&1 || echo "    WARNING: route:cache failed"
-php artisan view:cache 2>&1 || echo "    WARNING: view:cache failed"
-php artisan event:cache 2>&1 || echo "    WARNING: event:cache failed"
-php artisan filament:cache-components 2>&1 || echo "    WARNING: filament:cache-components failed"
+php artisan optimize:clear
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+php artisan event:cache
+php artisan filament:cache-components
 
 # -------------------------------------------------------
 #  6. Ensure PHP-FPM socket directory exists
