@@ -10,15 +10,17 @@ return new class extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->string('site_name');
-            $table->string('dane_code', 50)->nullable();
-            $table->string('nit', 50)->nullable();
+            $table->unsignedTinyInteger('singleton')->default(1)->index();
+            $table->string('institution_name');
+            $table->string('dane', 100)->nullable();
+            $table->string('nit', 100)->nullable();
             $table->string('location')->nullable();
             $table->string('academic_modality_label', 120)->nullable();
             $table->string('academic_modality_icon', 60)->nullable();
             $table->string('rector_name')->nullable();
             $table->string('email')->nullable();
-            $table->string('phone', 50)->nullable();
+            $table->string('phone', 80)->nullable();
+            $table->string('address')->nullable();
             $table->string('siee')->nullable();
             $table->string('siee_name', 120)->nullable();
             $table->foreignId('siee_document_id')->nullable()->constrained('documents')->nullOnDelete();
@@ -46,16 +48,19 @@ return new class extends Migration
             // Allies
             $table->json('allies')->nullable();
             // Contact
-            $table->string('contact_email')->nullable();
-            $table->string('contact_phone', 80)->nullable();
-            $table->string('contact_address')->nullable();
             $table->text('contact_hours')->nullable();
             // Location coordinates
-            $table->decimal('location_lat', 10, 7)->nullable();
-            $table->decimal('location_lng', 10, 7)->nullable();
+            $table->decimal('location_latitude', 10, 7)->nullable();
+            $table->decimal('location_longitude', 10, 7)->nullable();
             // Symbols
-            $table->longText('symbols_content')->nullable();
+            $table->text('symbols_flag_intro')->nullable();
+            $table->json('symbols_flag_stripes')->nullable();
+            $table->text('symbols_shield_intro')->nullable();
             $table->string('symbols_shield_image_path')->nullable();
+            $table->json('symbols_shield_items')->nullable();
+            $table->string('symbols_hymn_title', 160)->nullable();
+            $table->string('symbols_hymn_audio_path')->nullable();
+            $table->longText('symbols_hymn_lyrics')->nullable();
             // Contracting manual
             $table->foreignId('contracting_manual_document_id')->nullable()->constrained('documents')->nullOnDelete();
             $table->timestamps();

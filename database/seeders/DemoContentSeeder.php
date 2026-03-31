@@ -58,8 +58,8 @@ class DemoContentSeeder extends Seeder
         Setting::query()->create([
             'singleton' => 1,
             'institution_name' => 'IED Agropecuaria Jose Maria Herrera',
-            'institution_nit' => '819001234-5',
-            'institution_dane_code' => '147551000123',
+            'nit' => '819001234-5',
+            'dane' => '147551000123',
             'rector_name' => 'Francisco Pallares',
         ]);
     }
