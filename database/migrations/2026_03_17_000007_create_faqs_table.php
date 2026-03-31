@@ -11,10 +11,16 @@ return new class extends Migration
         Schema::create('faqs', function (Blueprint $table) {
             $table->id();
             $table->string('question');
+            $table->string('slug')->unique();
+            $table->foreignId('category_id')->nullable()->constrained('categories')->nullOnDelete();
             $table->text('answer');
             $table->unsignedInteger('sort_order')->default(0)->index();
-            $table->boolean('is_active')->default(true)->index();
+            $table->string('status', 20)->default('draft')->index();
+            $table->timestamp('published_at')->nullable()->index();
+            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

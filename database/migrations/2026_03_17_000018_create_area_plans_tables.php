@@ -11,13 +11,18 @@ return new class extends Migration
         Schema::create('area_plans', function (Blueprint $table) {
             $table->id();
             $table->string('area_name');
+            $table->string('icon', 80);
+            $table->string('plan_url', 2048);
             $table->foreignId('page_id')->nullable()->constrained('pages')->nullOnDelete();
             $table->string('intensity', 50)->nullable();
             $table->longText('general_objective')->nullable();
             $table->json('specific_objectives')->nullable();
             $table->json('grade_topics')->nullable();
-            $table->string('status')->default('draft')->index();
+            $table->string('status', 20)->default('draft')->index();
+            $table->timestamp('published_at')->nullable()->index();
+            $table->unsignedInteger('sort_order')->default(0)->index();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('area_plan_staff_member', function (Blueprint $table) {

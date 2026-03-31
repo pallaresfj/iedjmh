@@ -15,9 +15,12 @@ return new class extends Migration
             $table->text('excerpt')->nullable();
             $table->longText('content')->nullable();
             $table->string('cover_image_path')->nullable();
-            $table->string('status')->default('draft')->index();
+            $table->string('status', 20)->default('draft')->index();
             $table->timestamp('published_at')->nullable()->index();
+            $table->unsignedInteger('sort_order')->default(0)->index();
+            $table->boolean('is_featured')->default(false)->index();
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });

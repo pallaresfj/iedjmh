@@ -12,8 +12,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('pqrs_request_id')->constrained('pqrs_requests')->cascadeOnDelete();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
-            $table->text('body');
+            $table->string('author_name')->nullable();
+            $table->string('author_email')->nullable();
+            $table->longText('message');
             $table->boolean('is_internal')->default(false);
+            $table->json('attachments')->nullable();
             $table->timestamps();
         });
     }

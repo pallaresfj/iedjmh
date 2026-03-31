@@ -20,11 +20,22 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Throwable;
 
 class AdminDashboardData
 {
+    /**
+     * @var array<string, bool>
+     */
+    private array $knownTablePresence = [];
+
+    /**
+     * @var array<string, bool>
+     */
+    private array $knownColumnPresence = [];
+
     /**
      * @var array<int, string>
      */
@@ -55,10 +66,7 @@ class AdminDashboardData
      */
     public function kpis(): array
     {
-        $publishedContractsQuery = Contract::query()
-            ->where('status', 'published')
-            ->whereNotNull('published_at')
-            ->where('published_at', '<=', $this->now);
+        $publishedContractsQuery = $this->publishedContractsQuery();
 
         $pendingPqrs = PqrsRequest::query()
             ->where(function (Builder $query): void {
@@ -87,9 +95,17 @@ class AdminDashboardData
             ->where('published_at', '<=', $this->now)
             ->count();
 
-        $activeContracts = (clone $publishedContractsQuery)
-            ->whereIn('process_status', ['en_curso', 'adjudicado'])
-            ->count();
+        $activeContracts = 0;
+
+        if ($publishedContractsQuery !== null) {
+            $activeContractsQuery = clone $publishedContractsQuery;
+
+            if ($this->canQueryColumn('contracts', 'process_status')) {
+                $activeContractsQuery->whereIn('process_status', ['en_curso', 'adjudicado']);
+            }
+
+            $activeContracts = $activeContractsQuery->count();
+        }
 
         return [
             [
@@ -230,24 +246,47 @@ class AdminDashboardData
     public function contractingStatus(): array
     {
         $year = (int) $this->now->year;
+        $indexUrl = $this->resourceIndexUrl(ContractResource::class, 'filament.admin.resources.contracts.index');
+        $createUrl = $this->resourceCreateUrl(ContractResource::class, 'filament.admin.resources.contracts.create');
 
-        $baseQuery = Contract::query()
-            ->where('status', 'published')
-            ->whereNotNull('published_at')
-            ->where('published_at', '<=', $this->now)
-            ->where('fiscal_year', $year);
+        $baseQuery = $this->publishedContractsQuery();
 
-        $inProgress = (clone $baseQuery)
-            ->where('process_status', 'en_curso')
-            ->count();
+        if ($baseQuery === null) {
+            return [
+                'year' => $year,
+                'total' => 0,
+                'progress' => 0,
+                'in_progress' => 0,
+                'awarded' => 0,
+                'finalized' => 0,
+                'index_url' => $indexUrl,
+                'create_url' => $createUrl,
+            ];
+        }
 
-        $awarded = (clone $baseQuery)
-            ->where('process_status', 'adjudicado')
-            ->count();
+        if ($this->canQueryColumn('contracts', 'fiscal_year')) {
+            $baseQuery->where('fiscal_year', $year);
+        } elseif ($this->canQueryColumn('contracts', 'year')) {
+            $baseQuery->where('year', $year);
+        }
 
-        $finalized = (clone $baseQuery)
-            ->where('process_status', 'finalizado')
-            ->count();
+        $inProgress = 0;
+        $awarded = 0;
+        $finalized = 0;
+
+        if ($this->canQueryColumn('contracts', 'process_status')) {
+            $inProgress = (clone $baseQuery)
+                ->where('process_status', 'en_curso')
+                ->count();
+
+            $awarded = (clone $baseQuery)
+                ->where('process_status', 'adjudicado')
+                ->count();
+
+            $finalized = (clone $baseQuery)
+                ->where('process_status', 'finalizado')
+                ->count();
+        }
 
         $total = (clone $baseQuery)->count();
         $completed = $awarded + $finalized;
@@ -260,9 +299,72 @@ class AdminDashboardData
             'in_progress' => (int) $inProgress,
             'awarded' => (int) $awarded,
             'finalized' => (int) $finalized,
-            'index_url' => $this->resourceIndexUrl(ContractResource::class, 'filament.admin.resources.contracts.index'),
-            'create_url' => $this->resourceCreateUrl(ContractResource::class, 'filament.admin.resources.contracts.create'),
+            'index_url' => $indexUrl,
+            'create_url' => $createUrl,
         ];
+    }
+
+    private function publishedContractsQuery(): ?Builder
+    {
+        if (! $this->canQueryTable('contracts')) {
+            return null;
+        }
+
+        $query = Contract::query();
+
+        if ($this->canQueryColumn('contracts', 'status')) {
+            $query->where('status', 'published');
+        }
+
+        if ($this->canQueryColumn('contracts', 'published_at')) {
+            $query
+                ->whereNotNull('published_at')
+                ->where('published_at', '<=', $this->now);
+        } elseif ($this->canQueryColumn('contracts', 'publication_date')) {
+            $query
+                ->whereNotNull('publication_date')
+                ->whereDate('publication_date', '<=', $this->now->toDateString());
+        }
+
+        return $query;
+    }
+
+    private function canQueryTable(string $table): bool
+    {
+        if (array_key_exists($table, $this->knownTablePresence)) {
+            return $this->knownTablePresence[$table];
+        }
+
+        try {
+            $this->knownTablePresence[$table] = Schema::hasTable($table);
+        } catch (Throwable) {
+            $this->knownTablePresence[$table] = false;
+        }
+
+        return $this->knownTablePresence[$table];
+    }
+
+    private function canQueryColumn(string $table, string $column): bool
+    {
+        $cacheKey = "{$table}.{$column}";
+
+        if (array_key_exists($cacheKey, $this->knownColumnPresence)) {
+            return $this->knownColumnPresence[$cacheKey];
+        }
+
+        if (! $this->canQueryTable($table)) {
+            $this->knownColumnPresence[$cacheKey] = false;
+
+            return false;
+        }
+
+        try {
+            $this->knownColumnPresence[$cacheKey] = Schema::hasColumn($table, $column);
+        } catch (Throwable) {
+            $this->knownColumnPresence[$cacheKey] = false;
+        }
+
+        return $this->knownColumnPresence[$cacheKey];
     }
 
     /**

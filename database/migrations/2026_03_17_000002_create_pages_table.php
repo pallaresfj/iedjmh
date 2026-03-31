@@ -13,8 +13,11 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug')->unique();
             $table->string('menu_binding')->nullable()->unique();
+            $table->text('summary')->nullable();
             $table->longText('content')->nullable();
-            $table->string('status')->default('published')->index();
+            $table->string('status', 20)->default('draft')->index();
+            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });

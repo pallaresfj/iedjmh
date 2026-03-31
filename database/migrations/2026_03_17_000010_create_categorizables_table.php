@@ -12,7 +12,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
             $table->morphs('categorizable');
+            $table->unsignedInteger('sort_order')->default(0)->index();
             $table->timestamps();
+
+            $table->unique(['category_id', 'categorizable_type', 'categorizable_id'], 'categorizables_unique');
         });
     }
 

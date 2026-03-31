@@ -12,19 +12,35 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
+            $table->text('description')->nullable();
+            $table->string('status', 20)->default('published')->index();
+            $table->unsignedInteger('sort_order')->default(0)->index();
+            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('contracts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('contract_type_id')->constrained('contract_types')->restrictOnDelete();
-            $table->string('contract_number')->index();
-            $table->unsignedSmallInteger('year')->index();
-            $table->string('object');
-            $table->decimal('amount', 15, 2)->nullable();
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
-            $table->string('status')->default('draft')->index();
+            $table->string('process_code')->unique();
+            $table->unsignedSmallInteger('fiscal_year')->index();
+            $table->text('object');
+            $table->decimal('official_budget', 15, 2)->nullable();
+            $table->string('process_status', 40)->default('en_curso')->index();
+            $table->date('publication_date')->nullable()->index();
+            $table->date('offers_deadline_date')->nullable();
+            $table->date('evaluation_date')->nullable();
+            $table->date('award_date')->nullable();
+            $table->string('contractor_name')->nullable();
+            $table->string('contractor_nit', 100)->nullable()->index();
+            $table->text('contractor_social_object')->nullable();
+            $table->string('secop_ii_url', 2048)->nullable();
+            $table->string('status', 20)->default('draft')->index();
+            $table->timestamp('published_at')->nullable()->index();
+            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -32,9 +48,10 @@ return new class extends Migration
         Schema::create('contract_documents', function (Blueprint $table) {
             $table->id();
             $table->foreignId('contract_id')->constrained('contracts')->cascadeOnDelete();
-            $table->string('title');
+            $table->string('stage', 40)->default('soporte')->index();
             $table->string('document_type')->index();
-            $table->string('drive_url', 2048)->nullable();
+            $table->string('title');
+            $table->string('external_url', 2048)->nullable();
             $table->unsignedInteger('sort_order')->default(0);
             $table->timestamps();
         });
