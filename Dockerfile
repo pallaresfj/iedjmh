@@ -1,7 +1,7 @@
 # ==============================================================================
 #  STAGE 1 — Install Composer dependencies
 # ==============================================================================
-FROM php:8.3-cli-alpine AS composer-deps
+FROM php:8.4-cli-alpine AS composer-deps
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -9,12 +9,15 @@ WORKDIR /build
 
 COPY composer.json composer.lock ./
 
+# Use --ignore-platform-reqs because extensions (gd, intl, zip, bcmath)
+# are only needed at runtime (Stage 3), not for downloading source files.
 RUN composer install \
     --no-dev \
     --no-interaction \
     --no-scripts \
     --no-autoloader \
     --prefer-dist \
+    --ignore-platform-reqs \
     && rm -rf /root/.composer/cache
 
 
@@ -41,7 +44,7 @@ RUN npm run build
 # ==============================================================================
 #  STAGE 3 — Production PHP application
 # ==============================================================================
-FROM php:8.3-fpm AS production
+FROM php:8.4-fpm AS production
 
 ARG APP_VERSION=latest
 
