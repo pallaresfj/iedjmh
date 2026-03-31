@@ -1,5 +1,5 @@
 @if (filled(config('services.google.client_id')) && filled(config('services.google.client_secret')) && filled(config('services.google.redirect')))
-    <div class="agro-admin-login__google-section mt-5">
+    <div class="agro-admin-login__google-section">
         <div class="agro-login-separator" aria-hidden="true">
             <span>O CONTINUAR CON</span>
         </div>

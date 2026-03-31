@@ -62,6 +62,7 @@ test('admin login renders google separator and branded google button when oauth 
     $this->get('/admin/login')
         ->assertOk()
         ->assertDontSee('fi-simple-header', false)
+        ->assertSee('agro-login-separator', false)
         ->assertSee('O CONTINUAR CON')
         ->assertSee('agro-google-btn', false)
         ->assertSee('agro-google-logo', false)

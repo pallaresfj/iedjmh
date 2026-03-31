@@ -573,7 +573,7 @@
     }
 
     .agro-admin-login__google-section {
-        @apply mt-5;
+        @apply mt-3 grid gap-3;
     }
 
     .agro-admin-login__form .agro-login-separator {
@@ -581,7 +581,7 @@
         grid-template-columns: 1fr auto 1fr;
         align-items: center;
         column-gap: 0.5rem;
-        @apply my-4 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400;
+        @apply my-0 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400;
     }
 
     .agro-admin-login__form .agro-login-separator span {
@@ -599,9 +599,15 @@
         font-weight: 400 !important;
     }
 
+    .agro-admin-login__form .agro-google-btn .fi-btn-label,
     .agro-admin-login__form .agro-google-btn__label {
         font-family: 'Google Sans', 'Roboto', Arial, sans-serif;
         @apply text-sm tracking-[0.01em];
+        font-weight: 400 !important;
+    }
+
+    .agro-admin-login__form .agro-google-btn span,
+    .agro-admin-login__form .agro-google-btn .fi-btn-label {
         font-weight: 400 !important;
     }
 
