@@ -13,7 +13,12 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             ShieldRolesAndUsersSeeder::class,
-            DemoContentSeeder::class,
         ]);
+
+        if (! app()->isProduction() || (bool) env('SEED_DEMO_CONTENT', false)) {
+            $this->call([
+                DemoContentSeeder::class,
+            ]);
+        }
     }
 }
