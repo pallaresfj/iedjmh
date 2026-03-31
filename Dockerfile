@@ -131,9 +131,9 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # -----------------------------------------------------------
 #  Nginx & Supervisor configuration
 # -----------------------------------------------------------
-RUN rm -f /etc/nginx/sites-enabled/default /etc/nginx/sites-available/default
-COPY docker/nginx.conf /etc/nginx/sites-available/iedjmh.conf
-RUN ln -s /etc/nginx/sites-available/iedjmh.conf /etc/nginx/sites-enabled/iedjmh.conf
+RUN rm -f /etc/nginx/sites-enabled/default /etc/nginx/sites-available/default \
+         /etc/nginx/conf.d/default.conf
+COPY docker/nginx.conf /etc/nginx/conf.d/iedjmh.conf
 
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
@@ -150,8 +150,8 @@ COPY . .
 
 # Generate optimized autoloader + run post-install scripts
 RUN composer dump-autoload --optimize --no-dev \
-    && php artisan package:discover --ansi || true \
-    && php artisan filament:upgrade || true
+    && (php artisan package:discover --ansi || true) \
+    && (php artisan filament:upgrade || true)
 
 # Copy compiled assets from Stage 2
 COPY --from=assets /build/public/build/ ./public/build/
