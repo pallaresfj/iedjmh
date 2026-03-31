@@ -116,12 +116,8 @@ RUN { \
     echo "opcache.jit_buffer_size=128M"; \
     } > "$PHP_INI_DIR/conf.d/opcache.ini"
 
-# PHP-FPM: unix socket
-RUN sed -i 's|listen = 127.0.0.1:9000|listen = /run/php/php-fpm.sock|' /usr/local/etc/php-fpm.d/www.conf \
-    && sed -i 's|;listen.owner = www-data|listen.owner = www-data|' /usr/local/etc/php-fpm.d/www.conf \
-    && sed -i 's|;listen.group = www-data|listen.group = www-data|' /usr/local/etc/php-fpm.d/www.conf \
-    && sed -i 's|;listen.mode = 0660|listen.mode = 0660|' /usr/local/etc/php-fpm.d/www.conf \
-    && mkdir -p /run/php
+# PHP-FPM: keep default TCP listener on port 9000
+RUN mkdir -p /run/php
 
 # -----------------------------------------------------------
 #  Composer binary
