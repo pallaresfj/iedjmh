@@ -11,6 +11,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->trustProxies(at: '*');
+
         $middleware->alias([
             'graduate.auth' => \App\Http\Middleware\AuthenticateGraduate::class,
             'graduate.active' => \App\Http\Middleware\EnsureActiveGraduate::class,

@@ -4,6 +4,7 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\User as SocialiteUser;
+use Spatie\Permission\Models\Role;
 
 beforeEach(function (): void {
     config()->set('services.google.client_id', 'google-client-id');
@@ -48,11 +49,14 @@ test('google callback rejects accounts that are not registered locally', functio
     $this->assertGuest();
 });
 
-test('google callback authenticates existing admin users', function (): void {
+test('google callback authenticates existing users with an allowed panel role', function (): void {
+    $role = Role::findOrCreate('administrador', 'web');
+
     $user = User::factory()->create([
         'email' => 'admin@iedjmh.test',
-        'is_admin' => true,
+        'is_admin' => false,
     ]);
+    $user->assignRole($role);
 
     fakeGoogleCallback(makeGoogleUser('admin@iedjmh.test'));
 
@@ -65,7 +69,7 @@ test('google callback authenticates existing admin users', function (): void {
 test('google callback rejects users without admin panel access', function (): void {
     User::factory()->create([
         'email' => 'user@iedjmh.test',
-        'is_admin' => false,
+        'is_admin' => true,
     ]);
 
     fakeGoogleCallback(makeGoogleUser('user@iedjmh.test'));
@@ -78,10 +82,13 @@ test('google callback rejects users without admin panel access', function (): vo
 });
 
 test('google callback routes admin users with 2fa enabled through the challenge', function (): void {
+    $role = Role::findOrCreate('super_admin', 'web');
+
     $user = User::factory()->withTwoFactor()->create([
         'email' => 'admin2fa@iedjmh.test',
-        'is_admin' => true,
+        'is_admin' => false,
     ]);
+    $user->assignRole($role);
 
     fakeGoogleCallback(makeGoogleUser('admin2fa@iedjmh.test'));
 

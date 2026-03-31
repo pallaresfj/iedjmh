@@ -32,7 +32,8 @@ test('admin login renders institutional branding from settings', function () {
         ->assertSee('href="https://asyservicios.com"', false);
 
     expect($response->getContent())
-        ->toMatch('/&copy;\s*'.now()->year.'\s+IED Branding Admin\s*-\s*Desarrollado por/s');
+        ->toMatch('/&copy;\s*'.now()->year.'\s+IED Branding Admin\s*-\s*Desarrollado por/s')
+        ->toMatch('/id="form\.password"[^>]*type="password"/');
 });
 
 test('admin login uses shared home hero fallback when hero image setting is empty', function () {

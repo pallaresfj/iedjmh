@@ -13,6 +13,8 @@ use Spatie\Permission\PermissionRegistrar;
 
 class ShieldRolesAndUsersSeeder extends Seeder
 {
+    private const DEFAULT_SEEDED_PASSWORD = 'pass1234';
+
     /**
      * @var array<int, string>
      */
@@ -134,14 +136,14 @@ class ShieldRolesAndUsersSeeder extends Seeder
             $user = User::query()->create([
                 'name' => $name,
                 'email' => $email,
-                // Password placeholder: el acceso esperado es via SSO.
-                'password' => Hash::make(Str::random(48)),
+                'password' => Hash::make(self::DEFAULT_SEEDED_PASSWORD),
                 'email_verified_at' => now(),
                 'is_admin' => in_array($role, ['super_admin', 'soporte'], true),
             ]);
         } else {
             $user->forceFill([
                 'name' => $name,
+                'password' => Hash::make(self::DEFAULT_SEEDED_PASSWORD),
                 'is_admin' => in_array($role, ['super_admin', 'soporte'], true),
             ])->save();
         }
