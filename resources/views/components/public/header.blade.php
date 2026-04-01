@@ -31,6 +31,7 @@
 )
 @php($institutionName = \App\Support\PublicSettings::get('institution_name', config('institution.display_name', config('institution.name', 'IED JOSÉ MARÍA HERRERA'))))
 @php($logoUrl = \App\Support\PublicSettings::mediaUrl(\App\Support\PublicSettings::get('logo_path')))
+@php($logoFallbackIcon = \App\Support\PublicSettings::logoFallbackIcon())
 @php($institutionDane = \App\Support\PublicSettings::get('dane', ''))
 @php($institutionNit = \App\Support\PublicSettings::get('nit', ''))
 @php($sieeUrl = \App\Support\PublicSettings::get('siee'))
@@ -49,7 +50,7 @@
                     </span>
                 @else
                     <span class="grid size-12 shrink-0 place-items-center rounded-xl bg-ied-primary text-white">
-                        <span class="material-symbols-outlined !text-[30px]" aria-hidden="true">agriculture</span>
+                        <span class="public-header__icon-fallback material-symbols-outlined !text-[30px]" aria-hidden="true">{{ $logoFallbackIcon }}</span>
                     </span>
                 @endif
                 <span class="min-w-0">

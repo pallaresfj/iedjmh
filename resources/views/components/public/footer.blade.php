@@ -7,6 +7,7 @@
 @php($allies = \App\Support\PublicSettings::allies())
 @php($institutionName = \App\Support\PublicSettings::get('institution_name', config('institution.name')))
 @php($logoUrl = \App\Support\PublicSettings::mediaUrl(\App\Support\PublicSettings::get('logo_path')))
+@php($logoFallbackIcon = \App\Support\PublicSettings::logoFallbackIcon())
 
 <footer @class([
     'public-footer mt-14 border-t border-white/10 text-white/90',
@@ -21,7 +22,7 @@
                             <img src="{{ $logoUrl }}" alt="Logo institucional footer" class="public-footer__logo size-full object-contain p-1.5" />
                         </span>
                     @else
-                        <span class="public-footer__icon-fallback material-symbols-outlined text-ied-primary-light !text-[28px]" aria-hidden="true">agriculture</span>
+                        <span class="public-footer__icon-fallback material-symbols-outlined text-ied-primary-light !text-[28px]" aria-hidden="true">{{ $logoFallbackIcon }}</span>
                     @endif
                     <p class="public-heading text-lg font-bold text-white">{{ $institutionName }}</p>
                 </div>

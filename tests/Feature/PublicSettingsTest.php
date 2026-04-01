@@ -70,6 +70,51 @@ test('home header uses configurable academic modality submenu label and icon', f
         ->assertSee('>eco<', false);
 });
 
+test('logo fallback icon uses academic modality icon from settings when logo is missing', function () {
+    Setting::query()->create([
+        'singleton' => 1,
+        'institution_name' => 'IED Icono Fallback',
+        'academic_modality_icon' => 'eco',
+        'logo_path' => null,
+    ]);
+
+    $response = $this->get(route('home'))->assertOk();
+
+    expect($response->getContent())
+        ->toMatch('/public-header__icon-fallback[^>]*>eco<\/span>/')
+        ->toMatch('/public-footer__icon-fallback[^>]*>eco<\/span>/');
+});
+
+test('logo fallback icon uses safe default when academic modality icon is invalid', function () {
+    Setting::query()->create([
+        'singleton' => 1,
+        'institution_name' => 'IED Icono Fallback Invalido',
+        'academic_modality_icon' => 'eco-alert!',
+        'logo_path' => null,
+    ]);
+
+    $response = $this->get(route('home'))->assertOk();
+
+    expect($response->getContent())
+        ->toMatch('/public-header__icon-fallback[^>]*>agriculture<\/span>/')
+        ->toMatch('/public-footer__icon-fallback[^>]*>agriculture<\/span>/');
+});
+
+test('logo fallback icon is not rendered when logo image is configured', function () {
+    Setting::query()->create([
+        'singleton' => 1,
+        'institution_name' => 'IED Con Logo',
+        'academic_modality_icon' => 'eco',
+        'logo_path' => 'settings/logo-con-fallback-test.svg',
+    ]);
+
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertSee('src="/storage/settings/logo-con-fallback-test.svg"', false)
+        ->assertDontSee('public-header__icon-fallback', false)
+        ->assertDontSee('public-footer__icon-fallback', false);
+});
+
 test('contact page uses contact data from settings', function () {
     config()->set('institution.address', 'Direccion desde config');
     config()->set('institution.phone', '3000000000');

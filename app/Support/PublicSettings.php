@@ -244,6 +244,11 @@ class PublicSettings
         ];
     }
 
+    public static function logoFallbackIcon(): string
+    {
+        return static::academicModality()['icon'];
+    }
+
     /**
      * @return array{
      *     flag_intro: string,
