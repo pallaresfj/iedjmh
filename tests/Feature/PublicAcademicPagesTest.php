@@ -10,14 +10,14 @@ uses(RefreshDatabase::class);
 test('academic landing page loads and shows navigation cards', function () {
     $this->get(route('academico.index'))
         ->assertOk()
-        ->assertSee('Academico')
+        ->assertSee('Académico')
         ->assertSee('Niveles Educativos')
         ->assertSee('Modalidad')
-        ->assertSee('Planes de Area')
-        ->assertSee('Sistema de Evaluacion')
-        ->assertSee('Proyectos Pedagogicos')
-        ->assertSee('Calendario Academico')
-        ->assertSee('Zona Academica');
+        ->assertSee('Planes de Área')
+        ->assertSee('Sistema de Evaluación')
+        ->assertSee('Proyectos Pedagógicos')
+        ->assertSee('Calendario Académico')
+        ->assertSee('Zona Académica');
 });
 
 test('academic niveles educativos page loads', function () {
@@ -40,6 +40,7 @@ test('academic modalidad legacy route returns 404', function () {
 test('academic module uses modality label and icon from settings', function () {
     Setting::query()->create([
         'singleton' => 1,
+        'institution_name' => 'IED Modalidad',
         'academic_modality_label' => 'Modalidad Tecnica',
         'academic_modality_icon' => 'eco',
     ]);
@@ -57,19 +58,19 @@ test('academic module uses modality label and icon from settings', function () {
 test('academic planes de area page loads', function () {
     $this->get(route('academico.planes-area'))
         ->assertOk()
-        ->assertSee('Planes de Area');
+        ->assertSee('Planes de Área');
 });
 
 test('academic sistema evaluacion page loads', function () {
     $this->get(route('academico.sistema-evaluacion'))
         ->assertOk()
-        ->assertSee('Sistema de Evaluacion');
+        ->assertSee('Sistema de Evaluación');
 });
 
 test('academic proyectos pedagogicos page loads', function () {
     $this->get(route('academico.proyectos-pedagogicos'))
         ->assertOk()
-        ->assertSee('Proyectos Pedagogicos');
+        ->assertSee('Proyectos Pedagógicos');
 });
 
 test('academic proyectos pedagogicos shows published projects', function () {
@@ -89,7 +90,7 @@ test('academic proyectos pedagogicos shows published projects', function () {
 test('academic calendario academico page loads', function () {
     $this->get(route('academico.calendario-academico'))
         ->assertOk()
-        ->assertSee('Calendario Academico');
+        ->assertSee('Calendario Académico');
 });
 
 test('academic page uses cms content when available', function () {

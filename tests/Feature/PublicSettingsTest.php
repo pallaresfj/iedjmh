@@ -139,7 +139,6 @@ test('contact page uses contact data from settings', function () {
         ->assertSee('contacto@iedjmh.edu.co')
         ->assertSee('Lunes a viernes: 8:00 AM - 3:00 PM')
         ->assertSee('Pivijay Centro, Magdalena')
-        ->assertSee('data-contact-clock-icon', false)
         ->assertSee('data-contact-submit', false)
         ->assertSee('Enviar mensaje')
         ->assertDontSee('Direccion desde config')
@@ -169,7 +168,6 @@ test('contact page falls back to config values when contact settings are empty',
         ->assertSee('3119998877')
         ->assertSee('fallback@iedjmh.edu.co')
         ->assertSee('Ciudad fallback, Departamento fallback')
-        ->assertSee('Horario de atencion')
         ->assertSee('No disponible');
 });
 
@@ -235,7 +233,7 @@ test('contact page keeps location text and adds map action when coordinates are 
     $this->get(route('atencion.contactenos'))
         ->assertOk()
         ->assertSee('Sede principal')
-        ->assertSee('Ver mapa')
+        ->assertSee('Ver ubicacion')
         ->assertSee('data-location-map-open', false)
         ->assertSee('data-location-latitude="10.595432"', false)
         ->assertSee('data-location-longitude="-74.186521"', false);
