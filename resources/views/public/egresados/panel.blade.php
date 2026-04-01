@@ -3,11 +3,11 @@
 @section('title', 'Panel de Egresados')
 
 @section('content')
-    <div class="min-h-screen bg-[#edf1ef]">
+    <div class="min-h-screen bg-ied-gray-100">
         <div class="mx-auto grid w-full max-w-[1400px] gap-6 px-4 py-6 lg:grid-cols-[260px_minmax(0,1fr)] lg:px-6">
             <aside class="rounded-2xl border border-ied-gray-200 bg-white p-4 shadow-sm lg:sticky lg:top-6 lg:h-[calc(100vh-3rem)]">
                 <div class="mb-5 flex items-center gap-3">
-                    <span class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-full bg-ied-primary/15 text-ied-primary-dark">
                         <span class="material-symbols-outlined">school</span>
                     </span>
                     <div>
@@ -16,19 +16,19 @@
                 </div>
 
                 <nav class="space-y-2 text-sm">
-                    <a href="{{ route('egresados.panel.resumen') }}" @class(['flex items-center gap-3 rounded-xl px-3 py-2 font-semibold transition', 'bg-emerald-100 text-emerald-900' => $section === 'resumen', 'text-ied-gray-700 hover:bg-ied-gray-100' => $section !== 'resumen'])>
+                    <a href="{{ route('egresados.panel.resumen') }}" @class(['flex items-center gap-3 rounded-xl px-3 py-2 font-semibold transition', 'bg-ied-primary/15 text-ied-primary-dark' => $section === 'resumen', 'text-ied-gray-700 hover:bg-ied-gray-100' => $section !== 'resumen'])>
                         <span class="material-symbols-outlined !text-[19px]">dashboard</span>
                         Resumen
                     </a>
-                    <a href="{{ route('egresados.panel.documentos') }}" @class(['flex items-center gap-3 rounded-xl px-3 py-2 font-semibold transition', 'bg-emerald-100 text-emerald-900' => $section === 'mis-documentos', 'text-ied-gray-700 hover:bg-ied-gray-100' => $section !== 'mis-documentos'])>
+                    <a href="{{ route('egresados.panel.documentos') }}" @class(['flex items-center gap-3 rounded-xl px-3 py-2 font-semibold transition', 'bg-ied-primary/15 text-ied-primary-dark' => $section === 'mis-documentos', 'text-ied-gray-700 hover:bg-ied-gray-100' => $section !== 'mis-documentos'])>
                         <span class="material-symbols-outlined !text-[19px]">description</span>
                         Mis Documentos
                     </a>
-                    <a href="{{ route('egresados.panel.registro-academico') }}" @class(['flex items-center gap-3 rounded-xl px-3 py-2 font-semibold transition', 'bg-emerald-100 text-emerald-900' => $section === 'registro-academico', 'text-ied-gray-700 hover:bg-ied-gray-100' => $section !== 'registro-academico'])>
+                    <a href="{{ route('egresados.panel.registro-academico') }}" @class(['flex items-center gap-3 rounded-xl px-3 py-2 font-semibold transition', 'bg-ied-primary/15 text-ied-primary-dark' => $section === 'registro-academico', 'text-ied-gray-700 hover:bg-ied-gray-100' => $section !== 'registro-academico'])>
                         <span class="material-symbols-outlined !text-[19px]">fact_check</span>
                         Registro Academico
                     </a>
-                    <a href="{{ route('egresados.panel.configuracion') }}" @class(['flex items-center gap-3 rounded-xl px-3 py-2 font-semibold transition', 'bg-emerald-100 text-emerald-900' => $section === 'configuracion', 'text-ied-gray-700 hover:bg-ied-gray-100' => $section !== 'configuracion'])>
+                    <a href="{{ route('egresados.panel.configuracion') }}" @class(['flex items-center gap-3 rounded-xl px-3 py-2 font-semibold transition', 'bg-ied-primary/15 text-ied-primary-dark' => $section === 'configuracion', 'text-ied-gray-700 hover:bg-ied-gray-100' => $section !== 'configuracion'])>
                         <span class="material-symbols-outlined !text-[19px]">settings</span>
                         Configuracion
                     </a>
@@ -46,23 +46,23 @@
 
             <section class="space-y-6">
                 @if (session('egresados_status'))
-                    <div class="rounded-xl border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
+                    <div class="rounded-xl border border-ied-primary/30 bg-ied-primary/10 px-4 py-3 text-sm font-medium text-ied-primary-dark">
                         {{ session('egresados_status') }}
                     </div>
                 @endif
 
                 @if ($section === 'resumen')
-                    <article class="rounded-2xl border border-emerald-200 bg-emerald-100/70 p-6 shadow-sm lg:p-8">
-                        <p class="text-xs font-bold uppercase tracking-[0.16em] text-emerald-800">Portal institucional</p>
-                        <h1 class="mt-2 text-4xl font-black tracking-[-0.02em] text-emerald-950">Bienvenido(a), {{ $graduate->full_name }}.</h1>
-                        <p class="mt-4 max-w-3xl text-lg leading-relaxed text-emerald-900">Accede a tus documentos oficiales y mantente conectado con la red de egresados.</p>
+                    <article class="rounded-2xl border border-ied-primary/20 bg-ied-primary/10 p-6 shadow-sm lg:p-8">
+                        <p class="text-xs font-bold uppercase tracking-[0.16em] text-ied-primary-dark">Portal institucional</p>
+                        <h1 class="mt-2 text-4xl font-black tracking-[-0.02em] text-ied-primary-dark">Bienvenido(a), {{ $graduate->full_name }}.</h1>
+                        <p class="mt-4 max-w-3xl text-lg leading-relaxed text-ied-primary-dark">Accede a tus documentos oficiales y mantente conectado con la red de egresados.</p>
                     </article>
 
                     <div class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
                         <div class="rounded-2xl border border-ied-gray-200 bg-white p-6 shadow-sm">
                             <div class="mb-4 flex items-center justify-between">
                                 <h2 class="text-3xl font-black tracking-[-0.02em] text-ied-gray-900">Documentos Digitales</h2>
-                                <span class="text-xs font-bold uppercase tracking-[0.14em] text-emerald-700">Registros verificados</span>
+                                <span class="text-xs font-bold uppercase tracking-[0.14em] text-ied-primary-dark">Registros verificados</span>
                             </div>
 
                             <div class="grid gap-4 md:grid-cols-2">
@@ -71,7 +71,7 @@
                                         <h3 class="text-xl font-black tracking-[-0.01em] text-ied-gray-900">{{ $document->title }}</h3>
                                         <p class="mt-1 text-sm text-ied-gray-700">{{ $document->description ?: 'Documento institucional disponible en Google Drive.' }}</p>
                                         @if ($document->access_url)
-                                            <a href="{{ $document->access_url }}" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex w-full items-center justify-center rounded-xl border border-emerald-300 bg-white px-4 py-2 text-sm font-bold text-emerald-800 transition hover:bg-emerald-50">
+                                            <a href="{{ $document->access_url }}" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex w-full items-center justify-center rounded-xl border border-ied-primary/30 bg-white px-4 py-2 text-sm font-bold text-ied-primary-dark transition hover:bg-ied-primary/10">
                                                 Abrir documento
                                             </a>
                                         @else
@@ -114,7 +114,7 @@
                         <div class="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                             @forelse ($documents as $document)
                                 <article class="rounded-2xl border border-ied-gray-200 bg-ied-gray-100 p-4">
-                                    <p class="text-xs font-bold uppercase tracking-[0.12em] text-emerald-700">{{ $document->type_label ?: 'General' }}</p>
+                                    <p class="text-xs font-bold uppercase tracking-[0.12em] text-ied-primary-dark">{{ $document->type_label ?: 'General' }}</p>
                                     <h2 class="mt-2 text-xl font-black tracking-[-0.01em] text-ied-gray-900">{{ $document->title }}</h2>
                                     @if ($document->access_url)
                                         <a href="{{ $document->access_url }}" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex w-full items-center justify-center rounded-xl bg-ied-primary px-4 py-2 text-sm font-bold text-white transition hover:bg-ied-primary-dark">
@@ -157,12 +157,12 @@
                             @csrf
                             @method('PATCH')
                             <div class="grid gap-4 sm:grid-cols-2">
-                                <div class="sm:col-span-2"><label for="settings-full-name" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Nombre completo</label><input id="settings-full-name" type="text" name="full_name" value="{{ old('full_name', $graduate->full_name) }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-emerald-200" />@error('full_name') <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p> @enderror</div>
-                                <div><label for="settings-email" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Correo electronico</label><input id="settings-email" type="email" name="email" value="{{ old('email', $graduate->email) }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-emerald-200" />@error('email') <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p> @enderror</div>
-                                <div><label for="settings-phone" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Telefono</label><input id="settings-phone" type="text" name="phone" value="{{ old('phone', $graduate->phone) }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-emerald-200" />@error('phone') <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p> @enderror</div>
-                                <div><label for="settings-occupation" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Ocupacion actual</label><input id="settings-occupation" type="text" name="current_occupation" value="{{ old('current_occupation', $graduate->current_occupation) }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-emerald-200" />@error('current_occupation') <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p> @enderror</div>
-                                <div><label for="settings-city" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Ciudad</label><input id="settings-city" type="text" name="city" value="{{ old('city', $graduate->city) }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-emerald-200" />@error('city') <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p> @enderror</div>
-                                <div><label for="settings-country" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Pais</label><input id="settings-country" type="text" name="country" value="{{ old('country', $graduate->country) }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-emerald-200" />@error('country') <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p> @enderror</div>
+                                <div class="sm:col-span-2"><label for="settings-full-name" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Nombre completo</label><input id="settings-full-name" type="text" name="full_name" value="{{ old('full_name', $graduate->full_name) }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-ied-primary/20" />@error('full_name') <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p> @enderror</div>
+                                <div><label for="settings-email" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Correo electronico</label><input id="settings-email" type="email" name="email" value="{{ old('email', $graduate->email) }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-ied-primary/20" />@error('email') <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p> @enderror</div>
+                                <div><label for="settings-phone" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Telefono</label><input id="settings-phone" type="text" name="phone" value="{{ old('phone', $graduate->phone) }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-ied-primary/20" />@error('phone') <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p> @enderror</div>
+                                <div><label for="settings-occupation" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Ocupacion actual</label><input id="settings-occupation" type="text" name="current_occupation" value="{{ old('current_occupation', $graduate->current_occupation) }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-ied-primary/20" />@error('current_occupation') <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p> @enderror</div>
+                                <div><label for="settings-city" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Ciudad</label><input id="settings-city" type="text" name="city" value="{{ old('city', $graduate->city) }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-ied-primary/20" />@error('city') <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p> @enderror</div>
+                                <div><label for="settings-country" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Pais</label><input id="settings-country" type="text" name="country" value="{{ old('country', $graduate->country) }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-ied-primary/20" />@error('country') <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p> @enderror</div>
                             </div>
 
                             <label class="flex items-start gap-3 rounded-xl border border-ied-gray-200 bg-ied-gray-100 px-4 py-3 text-sm text-ied-gray-700">

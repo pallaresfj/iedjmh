@@ -10,7 +10,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
         @vite(['resources/css/public.css', 'resources/js/app.js'])
     </head>
-    <body class="public-site min-h-screen bg-[#eef1ef] text-ied-gray-900 antialiased">
+    <body class="public-site min-h-screen bg-ied-gray-100 text-ied-gray-900 antialiased">
         @yield('content')
     </body>
 </html>

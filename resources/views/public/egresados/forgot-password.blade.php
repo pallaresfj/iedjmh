@@ -9,7 +9,7 @@
             <p class="mt-2 text-sm text-ied-gray-700">Ingresa tu correo para recibir el enlace de restablecimiento.</p>
 
             @if (session('status'))
-                <div class="mt-4 rounded-xl border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
+                <div class="mt-4 rounded-xl border border-ied-primary/30 bg-ied-primary/10 px-4 py-3 text-sm font-medium text-ied-primary-dark">
                     {{ session('status') }}
                 </div>
             @endif
@@ -18,7 +18,7 @@
                 @csrf
                 <div>
                     <label for="email" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Correo electronico</label>
-                    <input id="email" type="email" name="email" value="{{ old('email') }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-emerald-200" />
+                    <input id="email" type="email" name="email" value="{{ old('email') }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-ied-primary/20" />
                     @error('email')
                         <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p>
                     @enderror

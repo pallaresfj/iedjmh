@@ -13,7 +13,7 @@
         :without-sidebar="true"
     >
         @if (session('egresados_status'))
-            <div class="mb-4 rounded-xl border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
+            <div class="mb-4 rounded-xl border border-ied-primary/30 bg-ied-primary/10 px-4 py-3 text-sm font-medium text-ied-primary-dark">
                 {{ session('egresados_status') }}
             </div>
         @endif
@@ -33,7 +33,7 @@
         <div class="grid gap-6 xl:grid-cols-2">
             <section class="rounded-2xl border border-ied-gray-200 bg-white p-6 shadow-sm lg:p-8">
                 <div class="mb-6 flex items-center gap-3">
-                    <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-ied-primary/15 text-ied-primary-dark">
                         <span class="material-symbols-outlined">login</span>
                     </span>
                     <div>
@@ -46,7 +46,7 @@
                     @csrf
                     <div>
                         <label for="login-national-id" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Identificacion nacional</label>
-                        <input id="login-national-id" type="text" name="national_id" value="{{ old('national_id') }}" required class="w-full rounded-xl border border-ied-gray-200 bg-white px-4 py-3 text-sm text-ied-gray-900 focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-emerald-200" placeholder="CC o TI" />
+                        <input id="login-national-id" type="text" name="national_id" value="{{ old('national_id') }}" required class="w-full rounded-xl border border-ied-gray-200 bg-white px-4 py-3 text-sm text-ied-gray-900 focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-ied-primary/20" placeholder="CC o TI" />
                         @error('national_id')
                             <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p>
                         @enderror
@@ -57,7 +57,7 @@
                             <label for="login-password" class="block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Contrasena</label>
                             <a href="{{ route('egresados.password.request') }}" class="text-xs font-semibold text-ied-primary-dark hover:underline">Olvidaste tu clave?</a>
                         </div>
-                        <input id="login-password" type="password" name="password" required class="w-full rounded-xl border border-ied-gray-200 bg-white px-4 py-3 text-sm text-ied-gray-900 focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-emerald-200" />
+                        <input id="login-password" type="password" name="password" required class="w-full rounded-xl border border-ied-gray-200 bg-white px-4 py-3 text-sm text-ied-gray-900 focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-ied-primary/20" />
                     </div>
 
                     <label class="inline-flex items-center gap-2 text-sm text-ied-gray-600">
@@ -74,7 +74,7 @@
 
             <section class="rounded-2xl border border-ied-gray-200 bg-white p-6 shadow-sm lg:p-8">
                 <div class="mb-6 flex items-center gap-3">
-                    <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-ied-primary/15 text-ied-primary-dark">
                         <span class="material-symbols-outlined">person_add</span>
                     </span>
                     <div>
@@ -90,22 +90,22 @@
                     <div class="grid gap-4 sm:grid-cols-2">
                         <div class="sm:col-span-2">
                             <label for="full-name" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Nombre completo</label>
-                            <input id="full-name" type="text" name="full_name" value="{{ old('full_name') }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-emerald-200" placeholder="Ej. Mateo Rivera" />
+                            <input id="full-name" type="text" name="full_name" value="{{ old('full_name') }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-ied-primary/20" placeholder="Ej. Mateo Rivera" />
                             @error('full_name') <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label for="graduate-email" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Correo electronico</label>
-                            <input id="graduate-email" type="email" name="email" value="{{ old('email') }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-emerald-200" />
+                            <input id="graduate-email" type="email" name="email" value="{{ old('email') }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-ied-primary/20" />
                             @error('email') <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label for="graduate-phone" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Telefono</label>
-                            <input id="graduate-phone" type="text" name="phone" value="{{ old('phone') }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-emerald-200" />
+                            <input id="graduate-phone" type="text" name="phone" value="{{ old('phone') }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-ied-primary/20" />
                             @error('phone') <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label for="graduation-year" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Ano de graduacion</label>
-                            <select id="graduation-year" name="graduation_year" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-emerald-200">
+                            <select id="graduation-year" name="graduation_year" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-ied-primary/20">
                                 <option value="">Seleccionar Ano</option>
                                 @foreach ($graduationYears as $year)
                                     <option value="{{ $year }}" @selected((string) old('graduation_year') === (string) $year)>{{ $year }}</option>
@@ -115,36 +115,36 @@
                         </div>
                         <div>
                             <label for="national-id" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Identificacion nacional</label>
-                            <input id="national-id" type="text" name="national_id" value="{{ old('national_id') }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-emerald-200" />
+                            <input id="national-id" type="text" name="national_id" value="{{ old('national_id') }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-ied-primary/20" />
                             @error('national_id') <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label for="occupation" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Ocupacion actual</label>
-                            <input id="occupation" type="text" name="current_occupation" value="{{ old('current_occupation') }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-emerald-200" />
+                            <input id="occupation" type="text" name="current_occupation" value="{{ old('current_occupation') }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-ied-primary/20" />
                             @error('current_occupation') <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label for="city" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Ciudad</label>
-                            <input id="city" type="text" name="city" value="{{ old('city') }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-emerald-200" />
+                            <input id="city" type="text" name="city" value="{{ old('city') }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-ied-primary/20" />
                             @error('city') <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label for="country" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Pais</label>
-                            <input id="country" type="text" name="country" value="{{ old('country', 'Colombia') }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-emerald-200" />
+                            <input id="country" type="text" name="country" value="{{ old('country', 'Colombia') }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-ied-primary/20" />
                             @error('country') <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label for="password" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Contrasena</label>
-                            <input id="password" type="password" name="password" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-emerald-200" />
+                            <input id="password" type="password" name="password" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-ied-primary/20" />
                             @error('password') <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label for="password_confirmation" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Confirmar contrasena</label>
-                            <input id="password_confirmation" type="password" name="password_confirmation" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-emerald-200" />
+                            <input id="password_confirmation" type="password" name="password_confirmation" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-ied-primary/20" />
                         </div>
                         <div class="sm:col-span-2">
                             <label for="identity-document" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Documento de identidad (PDF o imagen)</label>
-                            <input id="identity-document" type="file" name="identity_document" accept=".pdf,image/jpeg,image/png,image/webp" required class="w-full rounded-xl border border-ied-gray-200 bg-white px-4 py-3 text-sm text-ied-gray-900 file:mr-4 file:rounded-lg file:border-0 file:bg-emerald-100 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-emerald-800 hover:file:bg-emerald-200 focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-emerald-200" />
+                            <input id="identity-document" type="file" name="identity_document" accept=".pdf,image/jpeg,image/png,image/webp" required class="w-full rounded-xl border border-ied-gray-200 bg-white px-4 py-3 text-sm text-ied-gray-900 file:mr-4 file:rounded-lg file:border-0 file:bg-ied-primary/15 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-ied-primary-dark hover:file:bg-ied-primary/25 focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-ied-primary/20" />
                             <p class="mt-1 text-xs text-ied-gray-600">Tamano maximo: 1 MB.</p>
                             @error('identity_document') <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p> @enderror
                         </div>
@@ -156,7 +156,7 @@
                     </label>
                     @error('data_processing_consent') <p class="text-xs font-medium text-rose-600">{{ $message }}</p> @enderror
 
-                    <button type="submit" class="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-ied-primary bg-white px-5 py-3 text-sm font-bold text-ied-primary-dark transition hover:bg-emerald-50">
+                    <button type="submit" class="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-ied-primary bg-white px-5 py-3 text-sm font-bold text-ied-primary-dark transition hover:bg-ied-primary/10">
                         Iniciar Verificacion de Datos
                     </button>
                 </form>

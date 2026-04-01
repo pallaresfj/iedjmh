@@ -14,7 +14,7 @@
 
                 <div>
                     <label for="email" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Correo electronico</label>
-                    <input id="email" type="email" name="email" value="{{ old('email', $email) }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-emerald-200" />
+                    <input id="email" type="email" name="email" value="{{ old('email', $email) }}" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-ied-primary/20" />
                     @error('email')
                         <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p>
                     @enderror
@@ -22,7 +22,7 @@
 
                 <div>
                     <label for="password" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Nueva contrasena</label>
-                    <input id="password" type="password" name="password" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-emerald-200" />
+                    <input id="password" type="password" name="password" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-ied-primary/20" />
                     @error('password')
                         <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p>
                     @enderror
@@ -30,7 +30,7 @@
 
                 <div>
                     <label for="password_confirmation" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Confirmar contrasena</label>
-                    <input id="password_confirmation" type="password" name="password_confirmation" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-emerald-200" />
+                    <input id="password_confirmation" type="password" name="password_confirmation" required class="w-full rounded-xl border border-ied-gray-200 px-4 py-3 text-sm focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-ied-primary/20" />
                 </div>
 
                 <button type="submit" class="inline-flex w-full items-center justify-center rounded-xl bg-ied-primary px-5 py-3 text-sm font-bold text-white transition hover:bg-ied-primary-dark">
