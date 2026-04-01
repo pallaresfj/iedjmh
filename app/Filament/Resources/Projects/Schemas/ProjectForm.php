@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Projects\Schemas;
 
 use App\Models\Project;
+use App\Support\Categories\CategoryScope;
 use Closure;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
@@ -17,6 +18,7 @@ use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class ProjectForm
@@ -44,7 +46,15 @@ class ProjectForm
                                     ->maxLength(255),
                                 Select::make('categories')
                                     ->label('Categorias')
-                                    ->relationship('categories', 'name')
+                                    ->relationship(
+                                        'categories',
+                                        'name',
+                                        function (Builder $query): void {
+                                            CategoryScope::applySubcategoryScope($query, CategoryScope::PROJECTS);
+                                        },
+                                    )
+                                    ->helperText(fn (): string => CategoryScope::helperText(CategoryScope::PROJECTS, 'Proyectos'))
+                                    ->disabled(fn (): bool => ! CategoryScope::hasParentCategory(CategoryScope::PROJECTS))
                                     ->multiple()
                                     ->preload()
                                     ->searchable()

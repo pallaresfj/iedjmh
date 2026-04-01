@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\Posts\Schemas;
 
-use App\Models\Category;
 use App\Models\Post;
+use App\Support\Categories\CategoryScope;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
@@ -50,27 +50,14 @@ class PostForm
                                 Select::make('categories')
                                     ->label('Categorias')
                                     ->relationship(
-                                        name: 'categories',
-                                        titleAttribute: 'name',
-                                        modifyQueryUsing: function (Builder $query): void {
-                                            $newsParentCategoryId = static::resolveNewsParentCategoryId();
-
-                                            if ($newsParentCategoryId === null) {
-                                                $query->whereRaw('1 = 0');
-
-                                                return;
-                                            }
-
-                                            $query
-                                                ->where('parent_id', $newsParentCategoryId)
-                                                ->orderBy('sort_order')
-                                                ->orderBy('name');
+                                        'categories',
+                                        'name',
+                                        function (Builder $query): void {
+                                            CategoryScope::applySubcategoryScope($query, CategoryScope::POSTS);
                                         },
                                     )
-                                    ->helperText(fn (): string => static::resolveNewsParentCategoryId() === null
-                                        ? 'Crea primero la categoria padre "Noticia" (o "Noticias") y sus categorias hijas.'
-                                        : 'Solo se muestran categorias hijas de la categoria padre "Noticia".')
-                                    ->disabled(fn (): bool => static::resolveNewsParentCategoryId() === null)
+                                    ->helperText(fn (): string => CategoryScope::helperText(CategoryScope::POSTS, 'Noticias'))
+                                    ->disabled(fn (): bool => ! CategoryScope::hasParentCategory(CategoryScope::POSTS))
                                     ->multiple()
                                     ->preload()
                                     ->searchable()
@@ -145,33 +132,5 @@ class PostForm
         }
 
         $set('slug', Str::slug((string) $state));
-    }
-
-    private static function resolveNewsParentCategoryId(): ?int
-    {
-        static $resolved = false;
-        static $categoryId = null;
-
-        if ($resolved) {
-            return $categoryId;
-        }
-
-        $resolved = true;
-
-        $categoryId = Category::query()
-            ->whereNull('parent_id')
-            ->whereIn('slug', ['noticia', 'noticias'])
-            ->value('id');
-
-        if ($categoryId !== null) {
-            return $categoryId;
-        }
-
-        $categoryId = Category::query()
-            ->whereNull('parent_id')
-            ->whereIn('name', ['Noticia', 'Noticias'])
-            ->value('id');
-
-        return $categoryId;
     }
 }

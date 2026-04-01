@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Faqs\Schemas;
 
 use App\Models\Faq;
+use App\Support\Categories\CategoryScope;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -10,6 +11,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class FaqForm
@@ -32,7 +34,15 @@ class FaqForm
                     ->maxLength(255),
                 Select::make('category_id')
                     ->label('Categoria')
-                    ->relationship('category', 'name')
+                    ->relationship(
+                        'category',
+                        'name',
+                        function (Builder $query): void {
+                            CategoryScope::applySubcategoryScope($query, CategoryScope::FAQS);
+                        },
+                    )
+                    ->helperText(fn (): string => CategoryScope::helperText(CategoryScope::FAQS, 'Preguntas frecuentes'))
+                    ->disabled(fn (): bool => ! CategoryScope::hasParentCategory(CategoryScope::FAQS))
                     ->searchable()
                     ->preload(),
                 Textarea::make('answer')

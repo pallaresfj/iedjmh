@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Posts\Tables;
 
+use App\Support\Categories\CategoryScope;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -57,7 +58,13 @@ class PostsTable
                     ]),
                 SelectFilter::make('categories')
                     ->label('Categoria')
-                    ->relationship('categories', 'name'),
+                    ->relationship(
+                        'categories',
+                        'name',
+                        function (Builder $query): void {
+                            CategoryScope::applySubcategoryScope($query, CategoryScope::POSTS);
+                        },
+                    ),
                 Filter::make('pending_moderation')
                     ->label('Pendientes de moderacion')
                     ->query(function (Builder $query): Builder {

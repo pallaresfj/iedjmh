@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Events\Tables;
 
 use App\Models\Event;
+use App\Support\Categories\CategoryScope;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -15,6 +16,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class EventsTable
@@ -57,7 +59,13 @@ class EventsTable
                     ]),
                 SelectFilter::make('categories')
                     ->label('Categoria')
-                    ->relationship('categories', 'name'),
+                    ->relationship(
+                        'categories',
+                        'name',
+                        function (Builder $query): void {
+                            CategoryScope::applySubcategoryScope($query, CategoryScope::EVENTS);
+                        },
+                    ),
                 TrashedFilter::make(),
             ])
             ->recordActions([

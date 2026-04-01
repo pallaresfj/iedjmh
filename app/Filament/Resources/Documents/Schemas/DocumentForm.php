@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Documents\Schemas;
 
 use App\Models\Document;
+use App\Support\Categories\CategoryScope;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
@@ -14,6 +15,7 @@ use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class DocumentForm
@@ -41,7 +43,15 @@ class DocumentForm
                                     ->maxLength(255),
                                 Select::make('categories')
                                     ->label('Categorias')
-                                    ->relationship('categories', 'name')
+                                    ->relationship(
+                                        'categories',
+                                        'name',
+                                        function (Builder $query): void {
+                                            CategoryScope::applySubcategoryScope($query, CategoryScope::DOCUMENTS);
+                                        },
+                                    )
+                                    ->helperText(fn (): string => CategoryScope::helperText(CategoryScope::DOCUMENTS, 'Documentos'))
+                                    ->disabled(fn (): bool => ! CategoryScope::hasParentCategory(CategoryScope::DOCUMENTS))
                                     ->multiple()
                                     ->preload()
                                     ->searchable()

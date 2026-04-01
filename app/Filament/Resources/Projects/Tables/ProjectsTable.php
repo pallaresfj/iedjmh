@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Projects\Tables;
 
+use App\Support\Categories\CategoryScope;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -15,6 +16,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class ProjectsTable
 {
@@ -56,7 +58,13 @@ class ProjectsTable
                     ]),
                 SelectFilter::make('categories')
                     ->label('Categoria')
-                    ->relationship('categories', 'name'),
+                    ->relationship(
+                        'categories',
+                        'name',
+                        function (Builder $query): void {
+                            CategoryScope::applySubcategoryScope($query, CategoryScope::PROJECTS);
+                        },
+                    ),
                 TernaryFilter::make('is_featured')
                     ->label('Destacado'),
                 TrashedFilter::make(),

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Events\Schemas;
 
 use App\Models\Event;
+use App\Support\Categories\CategoryScope;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -13,6 +14,7 @@ use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class EventForm
@@ -42,7 +44,15 @@ class EventForm
                                     ->maxLength(255),
                                 Select::make('categories')
                                     ->label('Categorias')
-                                    ->relationship('categories', 'name')
+                                    ->relationship(
+                                        'categories',
+                                        'name',
+                                        function (Builder $query): void {
+                                            CategoryScope::applySubcategoryScope($query, CategoryScope::EVENTS);
+                                        },
+                                    )
+                                    ->helperText(fn (): string => CategoryScope::helperText(CategoryScope::EVENTS, 'Eventos'))
+                                    ->disabled(fn (): bool => ! CategoryScope::hasParentCategory(CategoryScope::EVENTS))
                                     ->multiple()
                                     ->preload()
                                     ->searchable()

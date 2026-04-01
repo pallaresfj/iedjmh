@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Procedures\Tables;
 
+use App\Support\Categories\CategoryScope;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -14,6 +15,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class ProceduresTable
 {
@@ -50,7 +52,13 @@ class ProceduresTable
                     ]),
                 SelectFilter::make('category_id')
                     ->label('Categoria')
-                    ->relationship('category', 'name'),
+                    ->relationship(
+                        'category',
+                        'name',
+                        function (Builder $query): void {
+                            CategoryScope::applySubcategoryScope($query, CategoryScope::PROCEDURES);
+                        },
+                    ),
                 TrashedFilter::make(),
             ])
             ->recordActions([

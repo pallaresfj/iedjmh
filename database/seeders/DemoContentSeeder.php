@@ -33,7 +33,7 @@ class DemoContentSeeder extends Seeder
             ?? User::factory()->create(['email' => 'admin@iedagropivijay.edu.co', 'is_admin' => true]);
 
         $this->seedSettings();
-        $this->seedCategories($admin);
+        $this->seedCategories();
         $this->seedPages($admin);
         $this->seedBanners($admin);
         $this->seedCampuses($admin);
@@ -64,26 +64,9 @@ class DemoContentSeeder extends Seeder
         ]);
     }
 
-    private function seedCategories(User $admin): void
+    private function seedCategories(): void
     {
-        $names = [
-            'Noticias Institucionales', 'Eventos Academicos', 'Documentos Legales',
-            'Proyectos Pedagogicos', 'Tramites Academicos', 'Tramites Administrativos',
-            'General',
-        ];
-
-        foreach ($names as $i => $name) {
-            Category::query()->firstOrCreate(
-                ['slug' => Str::slug($name)],
-                [
-                    'name' => $name,
-                    'slug' => Str::slug($name),
-                    'status' => 'published',
-                    'sort_order' => $i,
-                    'created_by' => $admin->id,
-                ],
-            );
-        }
+        $this->call(CategoryCatalogSeeder::class);
     }
 
     private function seedPages(User $admin): void
@@ -260,7 +243,7 @@ class DemoContentSeeder extends Seeder
 
     private function seedProjects(User $admin): void
     {
-        $category = Category::query()->where('slug', 'proyectos-pedagogicos')->first();
+        $category = Category::query()->where('slug', 'proyectos-academicos-transversales')->first();
 
         $projects = [
             ['title' => 'Huerta Escolar Sostenible', 'summary' => 'Proyecto de produccion agricola limpia liderado por estudiantes.'],
@@ -361,7 +344,7 @@ class DemoContentSeeder extends Seeder
 
     private function seedDocuments(User $admin): void
     {
-        $category = Category::query()->where('slug', 'documentos-legales')->first();
+        $category = Category::query()->where('slug', 'documentos-institucionales')->first();
 
         $docs = [
             ['title' => 'Manual de Convivencia 2026', 'document_number' => 'DOC-0001'],
@@ -391,7 +374,7 @@ class DemoContentSeeder extends Seeder
 
     private function seedFaqs(User $admin): void
     {
-        $category = Category::query()->where('slug', 'general')->first();
+        $category = Category::query()->where('slug', 'preguntas-frecuentes-matricula')->first();
 
         $faqs = [
             ['question' => 'Como solicitar un certificado de estudios?', 'answer' => 'Debe acercarse a secretaria con fotocopia del documento de identidad y realizar la solicitud por escrito. El tiempo de respuesta es de 5 dias habiles.'],
@@ -418,13 +401,12 @@ class DemoContentSeeder extends Seeder
 
     private function seedProcedures(User $admin): void
     {
-        $catAcad = Category::query()->where('slug', 'tramites-academicos')->first();
-        $catAdmin = Category::query()->where('slug', 'tramites-administrativos')->first();
+        $catAcad = Category::query()->where('slug', 'tramites-y-servicios-academicos')->first();
 
         $procedures = [
             ['name' => 'Certificado de Estudios', 'summary' => 'Expedicion de certificados de calificaciones y constancias de estudio.', 'response_time' => '5 dias habiles', 'cost' => 'Gratuito', 'channel' => 'Presencial', 'category_id' => $catAcad?->id],
             ['name' => 'Matricula Nuevos Estudiantes', 'summary' => 'Proceso de inscripcion y matricula para estudiantes nuevos.', 'response_time' => 'Inmediato', 'cost' => 'Gratuito', 'channel' => 'Presencial', 'category_id' => $catAcad?->id],
-            ['name' => 'Solicitud de Permiso Especial', 'summary' => 'Tramite para permisos de ausencia justificada.', 'response_time' => '2 dias habiles', 'cost' => 'Gratuito', 'channel' => 'Presencial', 'category_id' => $catAdmin?->id],
+            ['name' => 'Solicitud de Permiso Especial', 'summary' => 'Tramite para permisos de ausencia justificada.', 'response_time' => '2 dias habiles', 'cost' => 'Gratuito', 'channel' => 'Presencial', 'category_id' => $catAcad?->id],
         ];
 
         foreach ($procedures as $i => $proc) {

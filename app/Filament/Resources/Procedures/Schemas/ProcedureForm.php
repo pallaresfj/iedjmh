@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Procedures\Schemas;
 
 use App\Models\Procedure;
+use App\Support\Categories\CategoryScope;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -13,6 +14,7 @@ use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class ProcedureForm
@@ -40,7 +42,15 @@ class ProcedureForm
                                     ->maxLength(255),
                                 Select::make('category_id')
                                     ->label('Categoria')
-                                    ->relationship('category', 'name')
+                                    ->relationship(
+                                        'category',
+                                        'name',
+                                        function (Builder $query): void {
+                                            CategoryScope::applySubcategoryScope($query, CategoryScope::PROCEDURES);
+                                        },
+                                    )
+                                    ->helperText(fn (): string => CategoryScope::helperText(CategoryScope::PROCEDURES, 'Tramites y servicios'))
+                                    ->disabled(fn (): bool => ! CategoryScope::hasParentCategory(CategoryScope::PROCEDURES))
                                     ->searchable()
                                     ->preload(),
                                 Select::make('status')
