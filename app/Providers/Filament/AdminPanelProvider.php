@@ -14,7 +14,6 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
-use Filament\Support\Colors\Color;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -35,9 +34,7 @@ class AdminPanelProvider extends PanelProvider
             ->login(Login::class)
             ->userMenu(position: UserMenuPosition::Sidebar)
             ->sidebarCollapsibleOnDesktop()
-            ->colors([
-                'primary' => Color::Green,
-            ])
+            ->colors(fn (): array => PublicSettings::filamentAdminColors())
             ->navigationGroups([
                 NavigationGroup::make()->label('Contenido'),
                 NavigationGroup::make()->label('Contratación'),

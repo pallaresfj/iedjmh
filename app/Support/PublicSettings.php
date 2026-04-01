@@ -132,6 +132,9 @@ class PublicSettings
         $primaryDark = static::themeColor('theme_primary_dark');
         $primaryLight = static::themeColor('theme_primary_light');
         $accent = static::themeColor('theme_accent');
+        $success = static::blendHexColors($primary, '#FFFFFF', 0.08);
+        $info = static::blendHexColors($primaryLight, '#FFFFFF', 0.05);
+        $danger = static::blendHexColors($accent, $primaryDark, 0.42);
         $gray900 = static::themeColor('theme_gray_900');
         $gray700 = static::themeColor('theme_gray_700');
         $gray600 = static::themeColor('theme_gray_600');
@@ -143,6 +146,10 @@ class PublicSettings
             '--color-ied-primary-dark' => $primaryDark,
             '--color-ied-primary-light' => $primaryLight,
             '--color-ied-accent' => $accent,
+            '--color-ied-success' => $success,
+            '--color-ied-info' => $info,
+            '--color-ied-warning' => $accent,
+            '--color-ied-danger' => $danger,
             '--color-ied-gray-900' => $gray900,
             '--color-ied-gray-700' => $gray700,
             '--color-ied-gray-600' => $gray600,
@@ -151,6 +158,41 @@ class PublicSettings
             '--color-ied-primary-rgb' => static::hexColorToRgbChannels($primary),
             '--color-ied-primary-dark-rgb' => static::hexColorToRgbChannels($primaryDark),
             '--color-ied-primary-light-rgb' => static::hexColorToRgbChannels($primaryLight),
+            '--color-ied-accent-rgb' => static::hexColorToRgbChannels($accent),
+            '--color-ied-success-rgb' => static::hexColorToRgbChannels($success),
+            '--color-ied-info-rgb' => static::hexColorToRgbChannels($info),
+            '--color-ied-warning-rgb' => static::hexColorToRgbChannels($accent),
+            '--color-ied-danger-rgb' => static::hexColorToRgbChannels($danger),
+            '--color-ied-gray-900-rgb' => static::hexColorToRgbChannels($gray900),
+            '--color-ied-gray-700-rgb' => static::hexColorToRgbChannels($gray700),
+            '--color-ied-gray-600-rgb' => static::hexColorToRgbChannels($gray600),
+            '--color-ied-gray-200-rgb' => static::hexColorToRgbChannels($gray200),
+            '--color-ied-gray-100-rgb' => static::hexColorToRgbChannels($gray100),
+        ];
+    }
+
+    /**
+     * @return array<string, string|array<int, string>>
+     */
+    public static function filamentAdminColors(): array
+    {
+        $primary = static::themeColor('theme_primary');
+        $primaryDark = static::themeColor('theme_primary_dark');
+        $primaryLight = static::themeColor('theme_primary_light');
+        $accent = static::themeColor('theme_accent');
+        $gray900 = static::themeColor('theme_gray_900');
+        $gray700 = static::themeColor('theme_gray_700');
+        $gray600 = static::themeColor('theme_gray_600');
+        $gray200 = static::themeColor('theme_gray_200');
+        $gray100 = static::themeColor('theme_gray_100');
+
+        return [
+            'primary' => $primary,
+            'success' => static::blendHexColors($primary, '#FFFFFF', 0.08),
+            'info' => static::blendHexColors($primaryLight, '#FFFFFF', 0.05),
+            'warning' => $accent,
+            'danger' => static::blendHexColors($accent, $primaryDark, 0.42),
+            'gray' => static::filamentAdminGrayPalette($gray100, $gray200, $gray600, $gray700, $gray900),
         ];
     }
 
@@ -399,17 +441,72 @@ class PublicSettings
 
     private static function hexColorToRgbChannels(string $value): string
     {
-        $sanitized = static::sanitizeHexColor($value);
+        $channels = static::hexToRgbChannels($value);
 
-        if ($sanitized === null) {
+        if ($channels === null) {
             return '0, 0, 0';
         }
 
-        return implode(', ', [
-            (string) hexdec(substr($sanitized, 1, 2)),
-            (string) hexdec(substr($sanitized, 3, 2)),
-            (string) hexdec(substr($sanitized, 5, 2)),
-        ]);
+        return implode(', ', array_map(static fn (int $channel): string => (string) $channel, $channels));
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private static function filamentAdminGrayPalette(
+        string $gray100,
+        string $gray200,
+        string $gray600,
+        string $gray700,
+        string $gray900,
+    ): array {
+        return [
+            50 => static::blendHexColors($gray100, '#FFFFFF', 0.65),
+            100 => $gray100,
+            200 => $gray200,
+            300 => static::blendHexColors($gray200, $gray600, 0.18),
+            400 => static::blendHexColors($gray200, $gray600, 0.42),
+            500 => static::blendHexColors($gray200, $gray600, 0.72),
+            600 => $gray600,
+            700 => $gray700,
+            800 => static::blendHexColors($gray700, $gray900, 0.5),
+            900 => $gray900,
+            950 => static::blendHexColors($gray900, '#000000', 0.36),
+        ];
+    }
+
+    private static function blendHexColors(string $baseColor, string $targetColor, float $targetWeight): string
+    {
+        $baseChannels = static::hexToRgbChannels($baseColor) ?? [0, 0, 0];
+        $targetChannels = static::hexToRgbChannels($targetColor) ?? [0, 0, 0];
+
+        $targetWeight = max(0, min(1, $targetWeight));
+        $baseWeight = 1 - $targetWeight;
+
+        return sprintf(
+            '#%02X%02X%02X',
+            (int) round(($baseChannels[0] * $baseWeight) + ($targetChannels[0] * $targetWeight)),
+            (int) round(($baseChannels[1] * $baseWeight) + ($targetChannels[1] * $targetWeight)),
+            (int) round(($baseChannels[2] * $baseWeight) + ($targetChannels[2] * $targetWeight)),
+        );
+    }
+
+    /**
+     * @return array{int, int, int}|null
+     */
+    private static function hexToRgbChannels(string $value): ?array
+    {
+        $sanitized = static::sanitizeHexColor($value);
+
+        if ($sanitized === null) {
+            return null;
+        }
+
+        return [
+            hexdec(substr($sanitized, 1, 2)),
+            hexdec(substr($sanitized, 3, 2)),
+            hexdec(substr($sanitized, 5, 2)),
+        ];
     }
 
     /**
