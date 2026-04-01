@@ -176,6 +176,9 @@ Esto evita perder archivos de `storage` al redeploy.
 
 Configura estas variables en la Application (pestaña `Environment`).
 
+> Importante: cuando uses la terminal de la app en Dokploy, ejecuta los comandos dentro de `/var/www/html`.
+> Puedes hacerlo con `cd /var/www/html && <comando>`.
+
 ## 7.1 Obligatorias (si faltan, el contenedor falla al arrancar)
 
 ```env
@@ -230,10 +233,10 @@ GOOGLE_REDIRECT_URI=https://tudominio.com/auth/google/callback
 
 ## 7.5 Generar un `APP_KEY` seguro
 
-Puedes generarlo localmente o en cualquier terminal con PHP:
+Si lo generas desde la terminal de la app en Dokploy:
 
 ```bash
-php -r "echo 'base64:'.base64_encode(random_bytes(32)).PHP_EOL;"
+cd /var/www/html && php -r "echo 'base64:'.base64_encode(random_bytes(32)).PHP_EOL;"
 ```
 
 Copia el resultado y pégalo en `APP_KEY` dentro de Dokploy.
@@ -309,7 +312,7 @@ Este proyecto trae seeders de roles/usuarios. Úsalos solo si necesitas poblar p
 Puedes ejecutarlo desde Dokploy (Run Command o consola del contenedor):
 
 ```bash
-php artisan db:seed --class=ShieldRolesAndUsersSeeder --force
+cd /var/www/html && php artisan db:seed --class=ShieldRolesAndUsersSeeder --force
 ```
 
 ### 10.2 Seed de contenido demo (opcional)
@@ -317,7 +320,7 @@ php artisan db:seed --class=ShieldRolesAndUsersSeeder --force
 Por defecto, en producción no carga demo salvo que habilites `SEED_DEMO_CONTENT=true`.
 
 ```bash
-php artisan db:seed --force
+cd /var/www/html && php artisan db:seed --force
 ```
 
 ### 10.3 Seguridad obligatoria después de seed
@@ -460,4 +463,3 @@ Flujo recomendado:
   - <https://docs.dokploy.com/docs/core/databases>
 - Hostinger: apuntar dominio al VPS:
   - <https://www.hostinger.com/support/1583227-how-to-point-a-domain-to-your-vps-at-hostinger/>
-
