@@ -112,6 +112,98 @@ test('public area plans page replaces header with linked banner when available',
         ->assertDontSee('Seccion institucional');
 });
 
+test('public area plans page falls back to canonical banner slug when banner is not linked by page id', function () {
+    Page::query()->updateOrCreate(
+        ['menu_binding' => 'academico.planes-area'],
+        [
+            'title' => 'Planes de Area CMS',
+            'slug' => 'academico-planes-area',
+            'status' => 'published',
+        ],
+    );
+
+    Banner::query()->create([
+        'title' => 'Banner canonico de planes',
+        'slug' => 'academico-planes-area',
+        'page_id' => null,
+        'description' => 'Banner por slug canonico sin page_id.',
+        'status' => 'published',
+        'starts_at' => now()->subHour(),
+        'ends_at' => now()->addHour(),
+    ]);
+
+    $this->get(route('academico.planes-area'))
+        ->assertOk()
+        ->assertSee('Banner canonico de planes')
+        ->assertSee('Banner por slug canonico sin page_id.')
+        ->assertDontSee('Seccion institucional');
+});
+
+test('public area plans page does not use non canonical slug banner fallback', function () {
+    Page::query()->updateOrCreate(
+        ['menu_binding' => 'academico.planes-area'],
+        [
+            'title' => 'Planes de Area CMS',
+            'slug' => 'academico-planes-area',
+            'status' => 'published',
+        ],
+    );
+
+    Banner::query()->create([
+        'title' => 'Banner slug no canonico',
+        'slug' => 'academico-planes-de-area',
+        'page_id' => null,
+        'description' => 'Este banner no debe mostrarse.',
+        'status' => 'published',
+        'starts_at' => now()->subHour(),
+        'ends_at' => now()->addHour(),
+    ]);
+
+    $this->get(route('academico.planes-area'))
+        ->assertOk()
+        ->assertSee('public-internal-banner--fallback', false)
+        ->assertDontSee('Banner slug no canonico')
+        ->assertDontSee('Este banner no debe mostrarse.');
+});
+
+test('public area plans page prioritizes page linked banner over canonical slug fallback', function () {
+    $page = Page::query()->updateOrCreate(
+        ['menu_binding' => 'academico.planes-area'],
+        [
+            'title' => 'Planes de Area CMS',
+            'slug' => 'academico-planes-area',
+            'status' => 'published',
+        ],
+    );
+
+    Banner::query()->create([
+        'title' => 'Banner fallback por slug',
+        'slug' => 'academico-planes-area',
+        'page_id' => null,
+        'description' => 'Fallback por slug.',
+        'status' => 'published',
+        'starts_at' => now()->subHour(),
+        'ends_at' => now()->addHour(),
+    ]);
+
+    Banner::query()->create([
+        'title' => 'Banner principal por pagina',
+        'slug' => 'banner-principal-planes-area',
+        'page_id' => $page->id,
+        'description' => 'Este banner debe ganar por page_id.',
+        'status' => 'published',
+        'starts_at' => now()->subHour(),
+        'ends_at' => now()->addHour(),
+    ]);
+
+    $this->get(route('academico.planes-area'))
+        ->assertOk()
+        ->assertSee('Banner principal por pagina')
+        ->assertSee('Este banner debe ganar por page_id.')
+        ->assertDontSee('Banner fallback por slug')
+        ->assertDontSee('Fallback por slug.');
+});
+
 function createPublishedTeacherForPublicAreaPlanTest(string $fullName): StaffMember
 {
     return StaffMember::query()->create([

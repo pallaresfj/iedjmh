@@ -56,7 +56,7 @@ class AcademicController extends Controller
         return view('public.academico.index', [
             'title' => $landingPage?->title ?: 'Académico',
             'lead' => $landingPage?->summary ?: 'Información curricular, recursos pedagógicos y servicios académicos para estudiantes y familias.',
-            'banner' => $this->resolvePageBanner($landingPage),
+            'banner' => $this->resolvePageBanner($landingPage, 'academico'),
             'academicPages' => $this->navigationItems($definitions),
             'cards' => $cards,
         ]);
@@ -88,7 +88,7 @@ class AcademicController extends Controller
             'pageKey' => $pageKey,
             'title' => $cmsPage?->title ?: $definition['title'],
             'lead' => $cmsPage?->summary ?: $definition['summary'],
-            'banner' => $this->resolvePageBanner($cmsPage),
+            'banner' => $this->resolvePageBanner($cmsPage, (string) ($definition['slug'] ?? '')),
             'blocks' => $this->resolveBlocks($cmsPage, $definition),
             'academicPages' => $this->navigationItems($definitions),
             'plans' => $pageKey === 'planes-area' ? $this->resolveAreaPlans() : collect(),

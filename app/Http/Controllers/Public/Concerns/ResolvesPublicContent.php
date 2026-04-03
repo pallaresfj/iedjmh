@@ -155,25 +155,42 @@ trait ResolvesPublicContent
      *     target: string
      * }|null
      */
-    protected function resolvePageBanner(?Page $page): ?array
+    protected function resolvePageBanner(?Page $page, ?string $canonicalSlug = null): ?array
     {
-        if (! $page || ! $this->canQueryColumn('banners', 'page_id')) {
+        if (! $this->canQueryTable('banners')) {
             return null;
         }
 
-        /** @var Banner|null $banner */
-        $banner = Banner::query()
+        $activeBannersQuery = static fn () => Banner::query()
             ->where('status', 'published')
-            ->where('page_id', $page->id)
             ->where(function ($query): void {
                 $query->whereNull('starts_at')->orWhere('starts_at', '<=', now());
             })
             ->where(function ($query): void {
                 $query->whereNull('ends_at')->orWhere('ends_at', '>=', now());
-            })
-            ->orderByDesc('starts_at')
-            ->orderByDesc('id')
-            ->first();
+            });
+
+        /** @var Banner|null $banner */
+        $banner = null;
+
+        if ($page && $this->canQueryColumn('banners', 'page_id')) {
+            $banner = $activeBannersQuery()
+                ->where('page_id', $page->id)
+                ->orderByDesc('starts_at')
+                ->orderByDesc('id')
+                ->first();
+        }
+
+        $normalizedCanonicalSlug = trim((string) $canonicalSlug);
+
+        if (! $banner && $normalizedCanonicalSlug !== '' && $this->canQueryColumn('banners', 'slug')) {
+            $banner = $activeBannersQuery()
+                ->whereNull('page_id')
+                ->where('slug', $normalizedCanonicalSlug)
+                ->orderByDesc('starts_at')
+                ->orderByDesc('id')
+                ->first();
+        }
 
         if (! $banner) {
             return null;
