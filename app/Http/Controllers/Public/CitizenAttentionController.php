@@ -394,6 +394,7 @@ class CitizenAttentionController extends Controller
             ['title' => 'Preguntas frecuentes', 'route' => 'atencion.faq'],
             ['title' => 'Mapa del sitio', 'route' => 'atencion.mapa-sitio'],
             ['title' => 'Participacion', 'route' => 'atencion.participacion'],
+            ['title' => 'Portal de Egresados', 'route' => 'egresados.index'],
         ]);
     }
 
