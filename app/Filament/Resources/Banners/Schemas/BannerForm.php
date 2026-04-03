@@ -44,13 +44,8 @@ class BannerForm
                                     ->maxLength(255),
                                 Select::make('page_id')
                                     ->label('Pagina vinculada')
-                                    ->relationship(
-                                        name: 'page',
-                                        titleAttribute: 'title',
-                                        modifyQueryUsing: fn ($query) => $query->orderBy('title'),
-                                    )
-                                    ->getOptionLabelFromRecordUsing(fn (Page $record): string => "{$record->title} ({$record->slug})")
-                                    ->searchable(['title', 'slug'])
+                                    ->options(fn (): array => static::pageOptions())
+                                    ->searchable()
                                     ->preload()
                                     ->native(false)
                                     ->visible(fn (): bool => static::hasPageIdColumn())
@@ -152,6 +147,26 @@ class BannerForm
             return DbSchema::hasColumn('banners', 'page_id');
         } catch (Throwable) {
             return false;
+        }
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private static function pageOptions(): array
+    {
+        if (! static::hasPageIdColumn()) {
+            return [];
+        }
+
+        try {
+            return Page::query()
+                ->orderBy('title')
+                ->get(['id', 'title', 'slug'])
+                ->mapWithKeys(fn (Page $record): array => [$record->id => "{$record->title} ({$record->slug})"])
+                ->all();
+        } catch (Throwable) {
+            return [];
         }
     }
 }

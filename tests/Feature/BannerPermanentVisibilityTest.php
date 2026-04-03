@@ -3,6 +3,7 @@
 use App\Filament\Resources\Banners\Pages\CreateBanner;
 use App\Filament\Resources\Banners\Pages\EditBanner;
 use App\Models\Banner;
+use App\Models\Page;
 use App\Models\User;
 use Filament\Facades\Filament;
 use Livewire\Livewire;
@@ -64,6 +65,36 @@ test('editing a banner and enabling permanent clears ends_at', function () {
     $banner->refresh();
 
     expect($banner->ends_at)->toBeNull();
+});
+
+test('editing a banner allows linking an existing page from the select field', function () {
+    $user = createBannerManager();
+    $this->actingAs($user);
+
+    $page = Page::query()->create([
+        'title' => 'Planes de Area',
+        'slug' => 'academico-planes-area',
+        'status' => 'published',
+    ]);
+
+    $banner = Banner::query()->create([
+        'title' => 'Banner sin pagina',
+        'slug' => 'banner-sin-pagina',
+        'status' => 'published',
+        'target' => '_self',
+    ]);
+
+    Livewire::test(EditBanner::class, ['record' => $banner->getKey()])
+        ->fillForm([
+            'page_id' => $page->id,
+        ])
+        ->call('save')
+        ->assertHasNoFormErrors()
+        ->assertRedirect();
+
+    $banner->refresh();
+
+    expect($banner->page_id)->toBe($page->id);
 });
 
 function createBannerManager(): User
