@@ -14,7 +14,7 @@
                     <span class="rounded-full border border-ied-primary/20 bg-ied-primary/5 px-2.5 py-0.5 font-semibold text-ied-primary-dark">{{ $item['category'] }}</span>
                 @endif
                 @if ($item['is_online'])
-                    <span class="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 font-semibold text-emerald-800">En linea</span>
+                    <span class="rounded-full border border-ied-primary/30 bg-ied-primary/10 px-2.5 py-0.5 font-semibold text-ied-primary-dark">En linea</span>
                 @endif
             </div>
 

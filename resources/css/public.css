@@ -50,44 +50,84 @@
 
     :root {
         --public-surface-base: var(--color-ied-gray-100);
-        --public-surface-low: #eef3f8;
-        --public-surface: #ffffff;
-        --public-surface-high: #ffffff;
-        --public-border: rgba(96, 112, 132, 0.2);
-        --public-border-strong: rgba(96, 112, 132, 0.34);
+        --public-surface-low: color-mix(in srgb, var(--color-ied-gray-100) 94%, white);
+        --public-surface: white;
+        --public-surface-high: white;
+        --public-border: color-mix(in srgb, var(--color-ied-gray-600) 20%, transparent);
+        --public-border-strong: color-mix(in srgb, var(--color-ied-gray-600) 34%, transparent);
         --public-heading: var(--color-ied-gray-900);
         --public-text: var(--color-ied-gray-700);
         --public-muted: var(--color-ied-gray-600);
         --public-topbar-bg: var(--color-ied-gray-900);
-        --public-topbar-text: #ffffff;
-        --public-header-bg: #ffffff;
-        --public-header-border: rgba(223, 229, 232, 0.95);
+        --public-topbar-text: white;
+        --public-header-bg: white;
+        --public-header-border: color-mix(in srgb, var(--color-ied-gray-200) 95%, transparent);
         --public-nav-link: var(--color-ied-gray-700);
         --public-nav-link-hover: var(--color-ied-gray-900);
         --public-nav-link-active: var(--color-ied-primary-dark);
         --public-nav-secondary: var(--color-ied-gray-700);
-        --public-nav-dropdown-bg: #ffffff;
-        --public-nav-dropdown-border: rgba(223, 229, 232, 0.92);
-        --public-footer-bg: linear-gradient(135deg, var(--color-ied-primary-dark) 0%, #102117 100%);
+        --public-nav-dropdown-bg: white;
+        --public-nav-dropdown-border: color-mix(in srgb, var(--color-ied-gray-200) 92%, transparent);
+        --public-footer-bg: linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--color-ied-primary-dark) 84%, black) 0%,
+            color-mix(in srgb, var(--color-ied-primary-dark) 58%, black) 100%
+        );
         --public-card-shadow: 0 16px 34px rgba(15, 23, 42, 0.1);
         --public-card-shadow-hover: 0 24px 38px rgba(15, 23, 42, 0.14);
-        --public-form-bg: #ffffff;
-        --public-form-border: rgba(96, 112, 132, 0.28);
+        --public-form-bg: white;
+        --public-form-border: color-mix(in srgb, var(--color-ied-gray-600) 28%, transparent);
         --public-form-text: var(--color-ied-gray-900);
-        --public-form-placeholder: #76859c;
-        --public-form-focus-ring: rgba(var(--color-ied-primary-rgb), 0.22);
-        --public-table-head-bg: #edf2f7;
-        --public-table-row-bg: #ffffff;
-        --public-table-border: rgba(96, 112, 132, 0.24);
-        --public-pagination-bg: #ffffff;
-        --public-pagination-border: rgba(96, 112, 132, 0.24);
+        --public-form-placeholder: color-mix(in srgb, var(--color-ied-gray-600) 72%, white);
+        --public-form-focus-ring: color-mix(in srgb, var(--color-ied-primary) 22%, transparent);
+        --public-table-head-bg: color-mix(in srgb, var(--color-ied-gray-100) 90%, white);
+        --public-table-row-bg: white;
+        --public-table-border: color-mix(in srgb, var(--color-ied-gray-600) 24%, transparent);
+        --public-pagination-bg: white;
+        --public-pagination-border: color-mix(in srgb, var(--color-ied-gray-600) 24%, transparent);
         --public-pagination-text: var(--color-ied-gray-700);
+        --public-header-bg-strong: var(--public-header-bg);
+        --public-header-shadow: 0 10px 26px rgba(15, 23, 42, 0.12);
+        --public-nav-panel-bg: var(--public-surface-low);
+        --public-nav-panel-shadow: inset 0 -1px 0 rgba(96, 112, 132, 0.24), 0 12px 24px rgba(15, 23, 42, 0.18);
+        --public-nav-dropdown-shadow: 0 24px 42px rgba(15, 23, 42, 0.24);
+        --public-focus-outline: color-mix(in srgb, var(--color-ied-primary-light) 80%, white);
+        --public-accent-contrast: var(--color-ied-primary-dark);
+        --public-accent-contrast-strong: var(--color-ied-primary-dark);
+        --public-accent-soft-bg: color-mix(in srgb, var(--color-ied-primary-light) 18%, transparent);
+        --public-accent-soft-bg-strong: color-mix(in srgb, var(--color-ied-primary-light) 24%, transparent);
+        --public-header-action-bg: color-mix(in srgb, var(--public-surface-high) 84%, transparent);
+        --public-header-action-border: color-mix(in srgb, var(--public-border-strong) 88%, transparent);
+        --public-header-action-border-hover: color-mix(in srgb, var(--color-ied-primary-light) 42%, transparent);
+        --public-header-action-text: var(--public-text);
+        --public-header-action-text-hover: var(--public-heading);
+        --public-header-action-primary-border: color-mix(in srgb, var(--color-ied-primary-light) 56%, transparent);
+        --public-header-action-primary-text: color-mix(in srgb, var(--color-ied-primary-dark) 86%, black);
+        --public-header-action-primary-text-hover: color-mix(in srgb, var(--color-ied-primary-dark) 92%, black);
+        --public-header-action-primary-gradient: linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--color-ied-primary-light) 74%, white) 0%,
+            color-mix(in srgb, var(--color-ied-primary) 68%, white) 100%
+        );
+        --public-header-action-primary-gradient-hover: linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--color-ied-primary-light) 82%, white) 0%,
+            color-mix(in srgb, var(--color-ied-primary) 76%, white) 100%
+        );
+        --public-header-action-primary-shadow: 0 8px 20px rgba(15, 23, 42, 0.24);
+        --public-mobile-action-border: var(--public-header-action-border);
+        --public-mobile-action-text: var(--public-header-action-text);
+        --public-mobile-action-bg: var(--public-header-action-bg);
+        --public-mobile-action-primary-border: var(--public-header-action-primary-border);
+        --public-mobile-action-primary-text: var(--public-header-action-primary-text);
+        --public-mobile-action-primary-gradient: var(--public-header-action-primary-gradient);
+        --public-bg-soft-dark: color-mix(in srgb, var(--public-surface) 46%, transparent);
         --home-hero-fallback: linear-gradient(
             108deg,
-            #0d223c 0%,
-            #12354f 32%,
-            #145243 66%,
-            #1d6b48 100%
+            color-mix(in srgb, var(--color-ied-gray-900) 88%, var(--color-ied-primary-dark)) 0%,
+            color-mix(in srgb, var(--color-ied-gray-900) 72%, var(--color-ied-primary-dark)) 32%,
+            color-mix(in srgb, var(--color-ied-gray-900) 56%, var(--color-ied-primary)) 66%,
+            color-mix(in srgb, var(--color-ied-primary-dark) 82%, var(--color-ied-primary)) 100%
         );
         --home-hero-overlay: linear-gradient(
                 92deg,
@@ -115,7 +155,7 @@
             145deg,
             rgba(var(--color-ied-primary-rgb), 0.08) 0%,
             rgba(var(--color-ied-primary-rgb), 0.03) 55%,
-            rgba(255, 255, 255, 0.9) 100%
+            color-mix(in srgb, var(--public-surface) 90%, transparent) 100%
         );
 
         /* Backward-compatible aliases for existing home component styles */
@@ -143,52 +183,89 @@
     }
 
     html[data-public-theme='dark'] {
-        --color-ied-gray-900: #e6eeff;
-        --color-ied-gray-700: #c7d3ec;
-        --color-ied-gray-600: #a7b4cf;
-        --color-ied-gray-400: #7f8fb0;
-        --color-ied-gray-300: #5a6b8d;
-        --color-ied-gray-200: #33435f;
-        --color-ied-gray-100: #0d182f;
-        --public-surface-base: #060e20;
-        --public-surface-low: #091328;
-        --public-surface: #0f1930;
-        --public-surface-high: #192540;
-        --public-border: rgba(109, 117, 140, 0.35);
-        --public-border-strong: rgba(129, 141, 169, 0.52);
-        --public-heading: #e6eeff;
-        --public-text: #c7d3ec;
-        --public-muted: #a7b4cf;
-        --public-topbar-bg: #060e20;
-        --public-topbar-text: #dee5ff;
-        --public-header-bg: rgba(6, 14, 32, 0.94);
-        --public-header-border: rgba(64, 72, 93, 0.82);
-        --public-nav-link: #e6eeff;
-        --public-nav-link-hover: #ffffff;
-        --public-nav-link-active: #91f78e;
-        --public-nav-secondary: #c7d3ec;
-        --public-nav-dropdown-bg: #0d182f;
-        --public-nav-dropdown-border: rgba(64, 72, 93, 0.88);
-        --public-footer-bg: linear-gradient(130deg, #0a1b34 0%, #0c271e 100%);
-        --public-card-shadow: 0 16px 34px rgba(0, 0, 0, 0.28);
-        --public-card-shadow-hover: 0 22px 42px rgba(0, 0, 0, 0.35);
-        --public-form-bg: #101d37;
-        --public-form-border: rgba(91, 104, 136, 0.88);
-        --public-form-text: #e6eeff;
-        --public-form-placeholder: #98a8c7;
-        --public-form-focus-ring: rgba(145, 247, 142, 0.24);
-        --public-table-head-bg: #101d37;
-        --public-table-row-bg: #0d182f;
-        --public-table-border: rgba(64, 72, 93, 0.86);
-        --public-pagination-bg: #0f1930;
-        --public-pagination-border: rgba(91, 104, 136, 0.88);
-        --public-pagination-text: #d5dff6;
+        --public-surface-base: color-mix(in srgb, var(--color-ied-gray-900) 84%, black);
+        --public-surface-low: color-mix(in srgb, var(--color-ied-gray-900) 76%, black);
+        --public-surface: color-mix(in srgb, var(--color-ied-gray-900) 68%, black);
+        --public-surface-high: color-mix(in srgb, var(--color-ied-gray-900) 58%, black);
+        --public-border: color-mix(in srgb, var(--color-ied-gray-200) 36%, transparent);
+        --public-border-strong: color-mix(in srgb, var(--color-ied-gray-200) 52%, transparent);
+        --public-heading: color-mix(in srgb, var(--color-ied-gray-100) 84%, white);
+        --public-text: color-mix(in srgb, var(--color-ied-gray-200) 80%, white);
+        --public-muted: color-mix(in srgb, var(--color-ied-gray-200) 66%, var(--color-ied-gray-700));
+        --public-topbar-bg: color-mix(in srgb, var(--public-surface-base) 88%, black);
+        --public-topbar-text: color-mix(in srgb, var(--public-heading) 92%, white);
+        --public-header-bg: color-mix(in srgb, var(--public-surface-base) 94%, transparent);
+        --public-header-border: color-mix(in srgb, var(--public-border-strong) 78%, transparent);
+        --public-nav-link: var(--public-heading);
+        --public-nav-link-hover: color-mix(in srgb, var(--public-heading) 96%, white);
+        --public-nav-link-active: color-mix(in srgb, var(--color-ied-primary-light) 78%, white);
+        --public-nav-secondary: var(--public-text);
+        --public-nav-dropdown-bg: color-mix(in srgb, var(--public-surface-low) 92%, black);
+        --public-nav-dropdown-border: color-mix(in srgb, var(--public-border-strong) 82%, transparent);
+        --public-footer-bg: linear-gradient(
+            130deg,
+            color-mix(in srgb, var(--color-ied-gray-900) 88%, black) 0%,
+            color-mix(in srgb, var(--color-ied-primary-dark) 64%, black) 100%
+        );
+        --public-card-shadow: 0 16px 34px color-mix(in srgb, black 28%, transparent);
+        --public-card-shadow-hover: 0 22px 42px color-mix(in srgb, black 35%, transparent);
+        --public-form-bg: color-mix(in srgb, var(--public-surface) 82%, var(--public-surface-high));
+        --public-form-border: color-mix(in srgb, var(--public-border-strong) 88%, transparent);
+        --public-form-text: var(--public-heading);
+        --public-form-placeholder: color-mix(in srgb, var(--public-muted) 90%, white);
+        --public-form-focus-ring: color-mix(in srgb, var(--public-nav-link-active) 32%, transparent);
+        --public-table-head-bg: color-mix(in srgb, var(--public-surface) 82%, var(--public-surface-high));
+        --public-table-row-bg: color-mix(in srgb, var(--public-surface) 96%, var(--public-surface-low));
+        --public-table-border: color-mix(in srgb, var(--public-border-strong) 84%, transparent);
+        --public-pagination-bg: var(--public-surface);
+        --public-pagination-border: color-mix(in srgb, var(--public-border-strong) 88%, transparent);
+        --public-pagination-text: color-mix(in srgb, var(--public-text) 88%, white);
+        --public-header-bg-strong: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--public-surface-base) 86%, black) 0%,
+            color-mix(in srgb, var(--public-surface-base) 80%, black) 100%
+        );
+        --public-header-shadow: 0 10px 26px color-mix(in srgb, black 22%, transparent);
+        --public-nav-panel-bg: color-mix(in srgb, var(--public-surface-low) 92%, black);
+        --public-nav-panel-shadow: inset 0 -1px 0 color-mix(in srgb, var(--public-border) 78%, transparent), 0 12px 24px color-mix(in srgb, black 36%, transparent);
+        --public-nav-dropdown-shadow: 0 24px 42px color-mix(in srgb, black 52%, transparent);
+        --public-focus-outline: var(--public-nav-link-active);
+        --public-accent-contrast: var(--public-nav-link-active);
+        --public-accent-contrast-strong: color-mix(in srgb, var(--public-nav-link-active) 88%, white);
+        --public-accent-soft-bg: color-mix(in srgb, var(--public-nav-link-active) 18%, transparent);
+        --public-accent-soft-bg-strong: color-mix(in srgb, var(--public-nav-link-active) 24%, transparent);
+        --public-header-action-bg: color-mix(in srgb, var(--public-surface-high) 70%, transparent);
+        --public-header-action-border: color-mix(in srgb, var(--public-border-strong) 74%, transparent);
+        --public-header-action-border-hover: color-mix(in srgb, var(--public-nav-link-active) 56%, transparent);
+        --public-header-action-text: color-mix(in srgb, var(--public-heading) 78%, white);
+        --public-header-action-text-hover: color-mix(in srgb, var(--public-heading) 92%, white);
+        --public-header-action-primary-border: color-mix(in srgb, var(--public-nav-link-active) 72%, transparent);
+        --public-header-action-primary-text: color-mix(in srgb, var(--color-ied-primary-dark) 84%, black);
+        --public-header-action-primary-text-hover: color-mix(in srgb, var(--color-ied-primary-dark) 90%, black);
+        --public-header-action-primary-gradient: linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--color-ied-primary-light) 80%, white) 0%,
+            color-mix(in srgb, var(--color-ied-primary) 76%, white) 100%
+        );
+        --public-header-action-primary-gradient-hover: linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--color-ied-primary-light) 88%, white) 0%,
+            color-mix(in srgb, var(--color-ied-primary) 84%, white) 100%
+        );
+        --public-header-action-primary-shadow: 0 8px 20px color-mix(in srgb, black 30%, transparent);
+        --public-mobile-action-border: color-mix(in srgb, var(--public-border-strong) 70%, transparent);
+        --public-mobile-action-text: color-mix(in srgb, var(--public-heading) 74%, white);
+        --public-mobile-action-bg: color-mix(in srgb, var(--public-surface-high) 68%, transparent);
+        --public-mobile-action-primary-border: var(--public-header-action-primary-border);
+        --public-mobile-action-primary-text: color-mix(in srgb, var(--color-ied-primary-dark) 92%, black);
+        --public-mobile-action-primary-gradient: var(--public-header-action-primary-gradient);
+        --public-bg-soft-dark: color-mix(in srgb, var(--public-surface) 56%, transparent);
         --home-hero-fallback: linear-gradient(
             108deg,
-            #050d18 0%,
-            #08192b 32%,
-            #0d2a28 66%,
-            #14503a 100%
+            color-mix(in srgb, var(--color-ied-gray-900) 92%, black) 0%,
+            color-mix(in srgb, var(--color-ied-gray-900) 86%, var(--color-ied-primary-dark)) 32%,
+            color-mix(in srgb, var(--color-ied-gray-900) 76%, var(--color-ied-primary)) 66%,
+            color-mix(in srgb, var(--color-ied-primary-dark) 76%, black) 100%
         );
         --home-hero-overlay: linear-gradient(
                 92deg,
@@ -212,7 +289,11 @@
                 rgba(2, 11, 22, 0.52) 100%
             );
         --home-hero-image-filter: brightness(0.5) contrast(1.15) saturate(1.05);
-        --home-feature-bg: linear-gradient(145deg, rgba(5, 35, 28, 0.95) 0%, rgba(7, 52, 40, 0.86) 100%);
+        --home-feature-bg: linear-gradient(
+            145deg,
+            color-mix(in srgb, var(--color-ied-primary-dark) 72%, black) 0%,
+            color-mix(in srgb, var(--color-ied-primary) 56%, black) 100%
+        );
 
         --home-surface-base: var(--public-surface-base);
         --home-surface-low: var(--public-surface-low);
@@ -532,9 +613,9 @@
     }
 
     html[data-public-theme='dark'] .public-site .public-header {
-        background: linear-gradient(180deg, rgba(8, 16, 34, 0.95) 0%, rgba(8, 17, 36, 0.9) 100%);
-        border-color: rgba(64, 72, 93, 0.78);
-        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
+        background: var(--public-header-bg-strong);
+        border-color: var(--public-header-border);
+        box-shadow: var(--public-header-shadow);
     }
 
     html[data-public-theme='dark'] .public-site .public-header__main-row {
@@ -542,11 +623,11 @@
     }
 
     html[data-public-theme='dark'] .public-site .public-header__title {
-        color: #edf4ff;
+        color: var(--public-heading);
     }
 
     html[data-public-theme='dark'] .public-site .public-header__meta {
-        color: #9ca7c3;
+        color: var(--public-muted);
     }
 
     html[data-public-theme='dark'] .public-site .public-header__actions {
@@ -554,53 +635,53 @@
     }
 
     html[data-public-theme='dark'] .public-site .public-header__action {
-        border-color: rgba(109, 117, 140, 0.48);
-        color: #dbe6ff;
-        background-color: rgba(25, 37, 64, 0.7);
+        border-color: var(--public-header-action-border);
+        color: var(--public-header-action-text);
+        background-color: var(--public-header-action-bg);
     }
 
     html[data-public-theme='dark'] .public-site .public-header__action:hover {
-        border-color: rgba(145, 247, 142, 0.48);
-        color: #f2ffef;
-        background-color: rgba(24, 52, 40, 0.8);
+        border-color: var(--public-header-action-border-hover);
+        color: var(--public-header-action-text-hover);
+        background-color: var(--public-accent-soft-bg);
     }
 
     html[data-public-theme='dark'] .public-site .public-header__action--primary {
-        color: #0b2f12;
-        border-color: rgba(145, 247, 142, 0.72);
-        background: linear-gradient(135deg, #91f78e 0%, #52b555 100%);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        color: var(--public-header-action-primary-text);
+        border-color: var(--public-header-action-primary-border);
+        background: var(--public-header-action-primary-gradient);
+        box-shadow: var(--public-header-action-primary-shadow);
     }
 
     html[data-public-theme='dark'] .public-site .public-header__action--primary:hover {
-        color: #07260d;
-        border-color: rgba(173, 255, 170, 0.8);
-        background: linear-gradient(135deg, #a7ffa4 0%, #66c96a 100%);
+        color: var(--public-header-action-primary-text-hover);
+        border-color: color-mix(in srgb, var(--public-header-action-primary-border) 88%, white);
+        background: var(--public-header-action-primary-gradient-hover);
     }
 
     html[data-public-theme='dark'] .public-site .public-header__desktop-nav,
     html[data-public-theme='dark'] .public-site .public-header__mobile-nav {
-        background-color: #081327;
-        border-color: rgba(64, 72, 93, 0.86);
+        background-color: var(--public-nav-panel-bg);
+        border-color: var(--public-nav-dropdown-border);
     }
 
     html[data-public-theme='dark'] .public-site .public-header__desktop-nav {
-        background: #081327;
-        border-top-color: rgba(64, 72, 93, 0.86);
-        border-bottom-color: rgba(64, 72, 93, 0.86);
-        box-shadow: inset 0 -1px 0 rgba(64, 72, 93, 0.62), 0 12px 24px rgba(0, 0, 0, 0.36);
+        background: var(--public-nav-panel-bg);
+        border-top-color: var(--public-nav-dropdown-border);
+        border-bottom-color: var(--public-nav-dropdown-border);
+        box-shadow: var(--public-nav-panel-shadow);
     }
 
     html[data-public-theme='dark'] .public-site .public-nav--desktop .public-nav__trigger,
     html[data-public-theme='dark'] .public-site .public-nav--desktop .public-nav__link {
-        color: #e6eeff;
+        color: var(--public-nav-link);
         border-bottom-color: transparent;
     }
 
     html[data-public-theme='dark'] .public-site .public-nav--desktop .public-nav__trigger:hover,
     html[data-public-theme='dark'] .public-site .public-nav--desktop .public-nav__link:hover {
-        color: #ffffff;
-        border-bottom-color: rgba(145, 247, 142, 0.72);
+        color: var(--public-nav-link-hover);
+        border-bottom-color: var(--public-accent-contrast);
     }
 
     html[data-public-theme='dark'] .public-site .public-nav--desktop .public-nav__trigger:focus-visible,
@@ -608,86 +689,165 @@
     html[data-public-theme='dark'] .public-site .public-nav--desktop .public-nav__dropdown-link:focus-visible,
     html[data-public-theme='dark'] .public-site .public-nav--mobile .public-nav__mobile-summary:focus-visible,
     html[data-public-theme='dark'] .public-site .public-nav--mobile .public-nav__mobile-link:focus-visible {
-        outline: 2px solid #91f78e;
+        outline: 2px solid var(--public-focus-outline);
         outline-offset: 2px;
     }
 
     html[data-public-theme='dark'] .public-site .public-nav--desktop .public-nav__trigger[aria-current='page'],
     html[data-public-theme='dark'] .public-site .public-nav--desktop .public-nav__link[aria-current='page'] {
-        color: #91f78e;
-        border-bottom-color: #91f78e;
+        color: var(--public-accent-contrast);
+        border-bottom-color: var(--public-accent-contrast);
     }
 
     html[data-public-theme='dark'] .public-site .public-nav--desktop .public-nav__dropdown {
-        background-color: #0d182f;
-        border-color: rgba(64, 72, 93, 0.88);
-        box-shadow: 0 24px 42px rgba(0, 0, 0, 0.52);
+        background-color: var(--public-nav-dropdown-bg);
+        border-color: var(--public-nav-dropdown-border);
+        box-shadow: var(--public-nav-dropdown-shadow);
     }
 
     html[data-public-theme='dark'] .public-site .public-nav--desktop .public-nav__dropdown-link {
-        color: #c7d3ec;
+        color: var(--public-text);
     }
 
     html[data-public-theme='dark'] .public-site .public-nav--desktop .public-nav__dropdown-link:hover,
     html[data-public-theme='dark'] .public-site .public-nav--desktop .public-nav__dropdown-link[aria-current='page'] {
-        color: #ffffff;
-        background-color: rgba(145, 247, 142, 0.18);
+        color: var(--public-nav-link-hover);
+        background-color: var(--public-accent-soft-bg);
     }
 
     html[data-public-theme='dark'] .public-site .public-nav--desktop .public-nav__dropdown-link--active,
     html[data-public-theme='dark'] .public-site .public-nav--desktop .public-nav__dropdown-link[aria-current='page'] {
-        color: #91f78e;
-        background-color: rgba(145, 247, 142, 0.22);
+        color: var(--public-accent-contrast);
+        background-color: var(--public-accent-soft-bg-strong);
     }
 
     html[data-public-theme='dark'] .public-site .public-header__mobile-summary,
     html[data-public-theme='dark'] .public-site .public-header__mobile-panel {
-        background-color: #0d182f;
-        border-color: rgba(64, 72, 93, 0.86);
-        color: #e6eeff;
+        background-color: var(--public-nav-dropdown-bg);
+        border-color: var(--public-nav-dropdown-border);
+        color: var(--public-heading);
     }
 
     html[data-public-theme='dark'] .public-site .public-nav--mobile .public-nav__mobile-group {
-        background-color: #0d182f;
-        border-color: rgba(64, 72, 93, 0.84);
+        background-color: var(--public-nav-dropdown-bg);
+        border-color: color-mix(in srgb, var(--public-nav-dropdown-border) 92%, transparent);
     }
 
     html[data-public-theme='dark'] .public-site .public-nav--mobile .public-nav__mobile-summary,
     html[data-public-theme='dark'] .public-site .public-nav--mobile .public-nav__mobile-link {
-        color: #e6eeff;
+        color: var(--public-nav-link);
     }
 
     html[data-public-theme='dark'] .public-site .public-nav--mobile .public-nav__mobile-link:hover,
     html[data-public-theme='dark'] .public-site .public-nav--mobile .public-nav__mobile-summary:hover {
-        background-color: rgba(145, 247, 142, 0.18);
-        color: #ffffff;
+        background-color: var(--public-accent-soft-bg);
+        color: var(--public-nav-link-hover);
     }
 
     html[data-public-theme='dark'] .public-site .public-nav--mobile .public-nav__mobile-link--active,
     html[data-public-theme='dark'] .public-site .public-nav--mobile .public-nav__mobile-link[aria-current='page'] {
-        background-color: rgba(145, 247, 142, 0.24);
-        color: #91f78e;
+        background-color: var(--public-accent-soft-bg-strong);
+        color: var(--public-accent-contrast);
     }
 
     html[data-public-theme='dark'] .public-site .public-header__mobile-actions {
-        border-color: rgba(109, 117, 140, 0.42);
+        border-color: var(--public-mobile-action-border);
     }
 
     html[data-public-theme='dark'] .public-site .public-header__mobile-action {
-        border-color: rgba(109, 117, 140, 0.46);
-        color: #d4def7;
-        background-color: rgba(25, 37, 64, 0.68);
+        border-color: var(--public-mobile-action-border);
+        color: var(--public-mobile-action-text);
+        background-color: var(--public-mobile-action-bg);
     }
 
     html[data-public-theme='dark'] .public-site .public-header__mobile-action--primary {
-        background: linear-gradient(135deg, #91f78e 0%, #52b555 100%);
-        border-color: rgba(145, 247, 142, 0.72);
-        color: #05240b;
+        background: var(--public-mobile-action-primary-gradient);
+        border-color: var(--public-mobile-action-primary-border);
+        color: var(--public-mobile-action-primary-text);
     }
 
     .public-site .public-footer {
         background: var(--home-footer-bg);
         border-top-color: rgba(255, 255, 255, 0.14);
+    }
+
+    .public-alert {
+        border-radius: 0.75rem;
+        border: 1px solid var(--public-border);
+        background-color: var(--public-surface);
+        padding: 1rem;
+        font-size: 0.875rem;
+        color: var(--public-text);
+    }
+
+    .public-alert--success {
+        border-color: color-mix(in srgb, var(--color-ied-primary) 36%, transparent);
+        background-color: color-mix(in srgb, var(--color-ied-primary-light) 18%, var(--public-surface));
+        color: var(--public-accent-contrast);
+    }
+
+    .public-alert__link {
+        color: var(--public-accent-contrast);
+        font-weight: 600;
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 2px;
+        transition: color 0.2s ease;
+    }
+
+    .public-alert__link:hover {
+        color: var(--public-accent-contrast-strong);
+    }
+
+    .public-status-pill {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 9999px;
+        border: 1px solid transparent;
+        padding: 0.125rem 0.625rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        line-height: 1rem;
+    }
+
+    .public-status-pill--received {
+        border-color: color-mix(in srgb, var(--color-ied-info) 34%, transparent);
+        background-color: color-mix(in srgb, var(--color-ied-info) 16%, transparent);
+        color: color-mix(in srgb, var(--color-ied-info) 76%, black);
+    }
+
+    .public-status-pill--in-progress {
+        border-color: color-mix(in srgb, var(--color-ied-warning) 34%, transparent);
+        background-color: color-mix(in srgb, var(--color-ied-warning) 18%, transparent);
+        color: color-mix(in srgb, var(--color-ied-warning) 74%, black);
+    }
+
+    .public-status-pill--resolved {
+        border-color: color-mix(in srgb, var(--color-ied-success) 38%, transparent);
+        background-color: color-mix(in srgb, var(--color-ied-success) 18%, transparent);
+        color: color-mix(in srgb, var(--color-ied-success) 78%, black);
+    }
+
+    .public-status-pill--closed {
+        border-color: color-mix(in srgb, var(--color-ied-gray-700) 34%, transparent);
+        background-color: color-mix(in srgb, var(--color-ied-gray-700) 18%, transparent);
+        color: color-mix(in srgb, var(--color-ied-gray-700) 78%, black);
+    }
+
+    html[data-public-theme='dark'] .public-site .public-status-pill--received {
+        color: color-mix(in srgb, var(--color-ied-info) 78%, white);
+    }
+
+    html[data-public-theme='dark'] .public-site .public-status-pill--in-progress {
+        color: color-mix(in srgb, var(--color-ied-warning) 82%, white);
+    }
+
+    html[data-public-theme='dark'] .public-site .public-status-pill--resolved {
+        color: color-mix(in srgb, var(--color-ied-success) 84%, white);
+    }
+
+    html[data-public-theme='dark'] .public-site .public-status-pill--closed {
+        color: color-mix(in srgb, var(--public-text) 88%, white);
     }
 
     .public-banner-full-bleed {
@@ -1534,27 +1694,27 @@
     }
 
     html[data-public-theme='dark'] .public-symbols-hymn {
-        background-color: rgba(13, 24, 47, 0.56);
-        border-color: rgba(64, 72, 93, 0.78);
+        background-color: color-mix(in srgb, var(--public-surface-low) 56%, transparent);
+        border-color: color-mix(in srgb, var(--public-nav-dropdown-border) 78%, transparent);
     }
 
     html[data-public-theme='dark'] .public-symbols-audio,
     html[data-public-theme='dark'] .public-symbols-lyrics,
     html[data-public-theme='dark'] .public-symbols-shield-item {
-        background-color: rgba(15, 25, 48, 0.94);
-        border-color: rgba(64, 72, 93, 0.78);
+        background-color: color-mix(in srgb, var(--public-surface) 94%, transparent);
+        border-color: color-mix(in srgb, var(--public-nav-dropdown-border) 78%, transparent);
     }
 
     html[data-public-theme='dark'] .public-symbols-audio__empty {
-        background-color: rgba(16, 29, 55, 0.9);
-        border-color: rgba(91, 104, 136, 0.72);
-        color: #c7d3ec;
+        background-color: color-mix(in srgb, var(--public-form-bg) 90%, transparent);
+        border-color: color-mix(in srgb, var(--public-form-border) 82%, transparent);
+        color: var(--public-text);
     }
 
     html[data-public-theme='dark'] .public-symbols-shield-art__placeholder {
-        background-color: rgba(16, 29, 55, 0.9);
-        border-color: rgba(91, 104, 136, 0.72);
-        color: #c7d3ec;
+        background-color: color-mix(in srgb, var(--public-form-bg) 90%, transparent);
+        border-color: color-mix(in srgb, var(--public-form-border) 82%, transparent);
+        color: var(--public-text);
     }
 
     .public-ios-switch {
@@ -1611,8 +1771,8 @@
     }
 
     html[data-public-theme='dark'] .public-ios-switch__track {
-        border-color: rgba(129, 141, 169, 0.62);
-        background-color: rgba(91, 104, 136, 0.72);
+        border-color: color-mix(in srgb, var(--public-border-strong) 74%, transparent);
+        background-color: color-mix(in srgb, var(--public-form-border) 72%, transparent);
     }
 
     html[data-public-theme='dark'] .public-ios-switch__track::after {
@@ -1620,7 +1780,7 @@
     }
 
     html[data-public-theme='dark'] .public-ios-switch__input:checked + .public-ios-switch__track {
-        border-color: rgba(145, 247, 142, 0.65);
+        border-color: color-mix(in srgb, var(--public-nav-link-active) 65%, transparent);
         background-color: rgba(var(--color-ied-primary-rgb), 0.92);
     }
 
@@ -2028,7 +2188,7 @@
     }
 
     html[data-public-theme='dark'] .public-site .bg-ied-gray-100\/40 {
-        background-color: rgba(15, 25, 48, 0.46);
+        background-color: var(--public-bg-soft-dark);
     }
 
     html[data-public-theme='dark'] .public-site .text-ied-gray-900,
@@ -2074,10 +2234,10 @@
     }
 
     html[data-public-theme='dark'] .public-site .hover\:text-ied-gray-900:hover {
-        color: #ffffff;
+        color: var(--public-nav-link-hover);
     }
 
     html[data-public-theme='dark'] .public-site .text-ied-primary-dark {
-        color: #9cfb99;
+        color: var(--public-accent-contrast-strong);
     }
 }

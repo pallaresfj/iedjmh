@@ -83,15 +83,15 @@
                             <div>
                                 <dt class="font-semibold text-ied-gray-700">Estado</dt>
                                 <dd>
-                                    <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
-                                        @switch($pqrs->status)
-                                            @case('received') bg-blue-100 text-blue-800 @break
-                                            @case('in_progress') bg-yellow-100 text-yellow-800 @break
-                                            @case('resolved') bg-emerald-100 text-emerald-800 @break
-                                            @case('closed') bg-gray-100 text-gray-800 @break
-                                            @default bg-gray-100 text-gray-800
-                                        @endswitch
-                                    ">
+                                    @php
+                                        $statusPillClass = match ($pqrs->status) {
+                                            'received' => 'public-status-pill--received',
+                                            'in_progress' => 'public-status-pill--in-progress',
+                                            'resolved' => 'public-status-pill--resolved',
+                                            default => 'public-status-pill--closed',
+                                        };
+                                    @endphp
+                                    <span class="public-status-pill {{ $statusPillClass }}">
                                         @switch($pqrs->status)
                                             @case('received') Recibido @break
                                             @case('in_progress') En tramite @break

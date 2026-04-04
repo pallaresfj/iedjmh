@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Setting;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
 
@@ -340,6 +341,36 @@ test('public layout injects theme colors from settings', function () {
         ->assertSee('--color-ied-primary-dark-rgb: 16, 32, 48;', false)
         ->assertSee('--color-ied-primary-light-rgb: 221, 238, 255;', false)
         ->assertSee('--color-ied-gray-100: #F3F4F6;', false);
+});
+
+test('auth and settings layouts inject theme colors from settings', function () {
+    Setting::query()->create([
+        'institution_name' => 'IED Tema Compartido',
+        'theme_primary' => '#123ABC',
+        'theme_primary_dark' => '#102030',
+        'theme_primary_light' => '#DDEEFF',
+        'theme_accent' => '#FF9900',
+        'theme_gray_900' => '#1F2937',
+        'theme_gray_700' => '#374151',
+        'theme_gray_600' => '#4B5563',
+        'theme_gray_200' => '#E5E7EB',
+        'theme_gray_100' => '#F3F4F6',
+        'singleton' => 1,
+    ]);
+
+    $this->get('/login')
+        ->assertOk()
+        ->assertSee('--color-ied-primary: #123ABC;', false)
+        ->assertSee('--color-ied-primary-dark-rgb: 16, 32, 48;', false)
+        ->assertSee('--color-ied-primary-light-rgb: 221, 238, 255;', false);
+
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->get(route('profile.edit'))
+        ->assertOk()
+        ->assertSee('--color-ied-primary: #123ABC;', false)
+        ->assertSee('--color-ied-accent: #FF9900;', false);
 });
 
 test('invalid theme color value falls back to safe default', function () {

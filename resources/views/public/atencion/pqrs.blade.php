@@ -16,9 +16,9 @@
             @endif
 
             @if (session('pqrs_success'))
-                <section class="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
+                <section class="public-alert public-alert--success">
                     {{ session('pqrs_success') }}
-                    <a href="{{ route('atencion.pqrs.track') }}" class="mt-2 inline-block font-semibold text-emerald-700 underline hover:text-emerald-900">Consultar estado de mi solicitud</a>
+                    <a href="{{ route('atencion.pqrs.track') }}" class="public-alert__link mt-2 inline-block">Consultar estado de mi solicitud</a>
                 </section>
             @endif
 

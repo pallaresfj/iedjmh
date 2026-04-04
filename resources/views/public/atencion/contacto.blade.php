@@ -22,7 +22,7 @@
             @endif
 
             @if (session('pqrs_success'))
-                <section class="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800" role="status">
+                <section class="public-alert public-alert--success" role="status">
                     {{ session('pqrs_success') }}
                 </section>
             @endif
