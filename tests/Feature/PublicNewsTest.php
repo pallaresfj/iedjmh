@@ -3,6 +3,7 @@
 use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 
 uses(RefreshDatabase::class);
 
@@ -162,4 +163,21 @@ test('news pagination uses custom public template and keeps query string', funct
         ->assertSee('page=2', false)
         ->assertSee('q=boletin', false)
         ->assertSee('data-public-pagination-link', false);
+});
+
+test('news renders public storage image urls for cover image', function () {
+    Storage::disk('public')->put('posts/noticia-prueba.jpg', 'contenido');
+
+    Post::query()->create([
+        'title' => 'Noticia con imagen',
+        'slug' => 'noticia-con-imagen',
+        'excerpt' => 'Resumen de noticia con imagen.',
+        'status' => 'published',
+        'published_at' => now(),
+        'cover_image_path' => 'posts/noticia-prueba.jpg',
+    ]);
+
+    $this->get(route('noticias.index'))
+        ->assertOk()
+        ->assertSee('/storage/posts/noticia-prueba.jpg', false);
 });

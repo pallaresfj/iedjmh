@@ -199,12 +199,6 @@ trait ResolvesPublicContent
                 ? Str::after($normalizedPath, 'public/')
                 : $normalizedPath,
         ])));
-        $localCandidates = array_values(array_unique(array_filter([
-            $normalizedPath,
-            Str::startsWith($normalizedPath, 'public/')
-                ? Str::after($normalizedPath, 'public/')
-                : null,
-        ])));
 
         if (Str::startsWith($normalizedPath, 'storage/')) {
             return '/'.$normalizedPath;
@@ -214,16 +208,6 @@ trait ResolvesPublicContent
             foreach ($publicCandidates as $candidate) {
                 if (Storage::disk('public')->exists($candidate)) {
                     return Storage::disk('public')->url($candidate);
-                }
-            }
-        } catch (Throwable) {
-            // Ignore disk errors and continue with fallback strategy.
-        }
-
-        try {
-            foreach ($localCandidates as $candidate) {
-                if (Storage::disk('local')->exists($candidate)) {
-                    return Storage::disk('local')->temporaryUrl($candidate, now()->addMinutes(30));
                 }
             }
         } catch (Throwable) {

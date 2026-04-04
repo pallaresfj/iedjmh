@@ -3,6 +3,7 @@
 use App\Models\Campus;
 use App\Models\StaffMember;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 
 uses(RefreshDatabase::class);
 
@@ -155,4 +156,21 @@ test('equipo institucional shows empty state when there are no matching directiv
     $this->get(route('institucion.equipo-institucional', ['q' => 'No existe']))
         ->assertOk()
         ->assertSee('No se encontraron integrantes con los filtros aplicados.');
+});
+
+test('equipo institucional renders public storage image urls for profile photos', function () {
+    Storage::disk('public')->put('staff-members/directivo-prueba.jpg', 'contenido');
+
+    $campus = createCampus();
+
+    createStaffMember([
+        'full_name' => 'Directiva con Foto',
+        'position_title' => 'Coordinadora',
+        'profile_photo_path' => 'staff-members/directivo-prueba.jpg',
+        'campus_id' => $campus->id,
+    ]);
+
+    $this->get(route('institucion.equipo-institucional'))
+        ->assertOk()
+        ->assertSee('/storage/staff-members/directivo-prueba.jpg', false);
 });

@@ -110,6 +110,7 @@ class ProjectForm
                                         'undo',
                                         'redo',
                                     ])
+                                    ->fileAttachmentsDisk('public')
                                     ->fileAttachmentsDirectory('projects/editor'),
                                 TextInput::make('external_url')
                                     ->label('URL de referencia')
@@ -134,6 +135,7 @@ class ProjectForm
                                 FileUpload::make('cover_image_path')
                                     ->label('Imagen principal')
                                     ->image()
+                                    ->disk('public')
                                     ->directory('projects'),
                                 FileUpload::make('gallery_image_paths')
                                     ->label('Galeria de imagenes')
@@ -141,6 +143,7 @@ class ProjectForm
                                     ->image()
                                     ->multiple()
                                     ->reorderable()
+                                    ->disk('public')
                                     ->directory('projects/gallery')
                                     ->maxFiles(fn (Get $get): int => filled($get('cover_image_path')) ? 4 : 5)
                                     ->rule(fn (Get $get): Closure => function (string $attribute, mixed $value, Closure $fail) use ($get): void {

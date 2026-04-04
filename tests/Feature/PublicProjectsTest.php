@@ -115,8 +115,8 @@ test('projects filters by search and category', function () {
 
 });
 
-test('projects page renders accessible image urls stored on local disk', function () {
-    Storage::disk('local')->put('projects/proyecto-prueba.jpg', 'contenido');
+test('projects page renders accessible image urls stored on public disk', function () {
+    Storage::disk('public')->put('projects/proyecto-prueba.jpg', 'contenido');
 
     Project::query()->create([
         'title' => 'Proyecto con imagen',
@@ -138,8 +138,7 @@ test('projects page renders accessible image urls stored on local disk', functio
     $parsed = parse_url($imageUrl);
     $query = $parsed['query'] ?? '';
 
-    expect($query)->toContain('expires=')
-        ->and($query)->toContain('signature=');
+    expect($query)->toBe('');
 });
 
 test('project detail shows external reference button and gallery thumbnails', function () {

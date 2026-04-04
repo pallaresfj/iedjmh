@@ -70,6 +70,7 @@ class StaffMemberForm
                 FileUpload::make('profile_photo_path')
                     ->label('Foto de perfil')
                     ->image()
+                    ->disk('public')
                     ->directory('staff-members')
                     ->columnSpanFull(),
             ]);

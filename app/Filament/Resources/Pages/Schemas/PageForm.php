@@ -105,7 +105,9 @@ class PageForm
                                         'redo',
                                         'table',
                                         'attachFiles',
-                                    ]),
+                                    ])
+                                    ->fileAttachmentsDisk('public')
+                                    ->fileAttachmentsDirectory('pages/editor'),
                             ]),
                     ]),
             ]);

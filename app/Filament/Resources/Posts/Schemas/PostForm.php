@@ -103,11 +103,14 @@ class PostForm
                             ->schema([
                                 RichEditor::make('content')
                                     ->label('Contenido')
-                                    ->helperText('Usa formato enriquecido. El contenido se guarda como HTML.'),
+                                    ->helperText('Usa formato enriquecido. El contenido se guarda como HTML.')
+                                    ->fileAttachmentsDisk('public')
+                                    ->fileAttachmentsDirectory('posts/editor'),
                                 FileUpload::make('cover_image_path')
                                     ->label('Imagen principal')
                                     ->helperText('Imagen destacada de la noticia. Recomendado: 1200x630 px (JPG o PNG).')
                                     ->image()
+                                    ->disk('public')
                                     ->directory('posts'),
                             ]),
                     ]),
