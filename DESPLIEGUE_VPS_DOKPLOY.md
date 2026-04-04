@@ -199,9 +199,9 @@ DB_PASSWORD=tu_password_fuerte
 ```env
 APP_ENV=production
 APP_DEBUG=false
-QUEUE_CONNECTION=database
-CACHE_STORE=database
-SESSION_DRIVER=file
+QUEUE_CONNECTION=redis
+CACHE_STORE=redis
+SESSION_DRIVER=redis
 SESSION_ENCRYPT=true
 SESSION_DOMAIN=tudominio.com
 SESSION_SECURE_COOKIE=true
@@ -209,10 +209,15 @@ SESSION_SAME_SITE=lax
 APP_TIMEZONE=America/Bogota
 APP_LOCALE=es
 APP_FALLBACK_LOCALE=es
+REDIS_CLIENT=phpredis
+REDIS_HOST=nombre-servicio-redis-en-dokploy
+REDIS_PASSWORD=null
+REDIS_PORT=6379
 ```
 
 > Usa un solo dominio canónico. `APP_URL` y `SESSION_DOMAIN` deben coincidir con el host real donde operas `/admin`.
-> En despliegues con una sola réplica (como INEDSAB), `SESSION_DRIVER=file` reduce contención frente a `database` en requests Livewire concurrentes.
+> En INEDSAB se recomienda Redis para `queue`, `cache` y `session` para reducir contención en requests Livewire concurrentes.
+> Si todavía no tienes servicio Redis, usa temporalmente `SESSION_DRIVER=file` y mantén `QUEUE_CONNECTION` / `CACHE_STORE` en `database`.
 
 ## 7.3 Correo (SMTP) recomendado
 
