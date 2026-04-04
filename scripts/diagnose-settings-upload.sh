@@ -61,14 +61,23 @@ REPORT_FILE="$OUT_DIR/settings-upload-diagnosis-${HOSTNAME_SAFE}-${TIMESTAMP}.lo
     tail -n 120 /var/log/nginx/error.log 2>&1 || true
     echo
 
+    echo "## Last nginx access lines (livewire/admin)"
+    tail -n 300 /var/log/nginx/access.log 2>&1 | grep -E "livewire-|/admin/" || true
+    echo
+
+    echo "## Livewire status summary from nginx access log"
+    tail -n 1000 /var/log/nginx/access.log 2>&1 | grep -E "livewire-" | awk '{print $9}' | sort | uniq -c || true
+    echo
+
     cat <<'EOF'
 ## Manual reproduction (run in separate terminals during upload test)
 tail -f /var/www/html/storage/logs/laravel.log
+tail -f /var/log/nginx/access.log
 tail -f /var/log/nginx/error.log
 
 ## Browser evidence to capture (DevTools -> Network)
-- POST /livewire/upload-file
-- POST /livewire/update
+- POST /livewire-*/upload-file
+- POST /livewire-*/update
 Record: status code, response body, and whether request stays pending > 10s.
 EOF
 } | tee "$REPORT_FILE"

@@ -139,12 +139,16 @@ class ProjectForm
                                     ->directory('projects'),
                                 FileUpload::make('gallery_image_paths')
                                     ->label('Galeria de imagenes')
-                                    ->helperText('Maximo 5 imagenes en total, incluyendo la portada.')
+                                    ->helperText('Maximo 5 imagenes en total, incluyendo la portada. Cada imagen de galeria debe ser de maximo 2MB.')
                                     ->image()
                                     ->multiple()
                                     ->reorderable()
                                     ->disk('public')
                                     ->directory('projects/gallery')
+                                    ->maxSize(2048)
+                                    ->validationMessages([
+                                        'max' => 'Cada imagen de la galeria debe pesar maximo 2MB.',
+                                    ])
                                     ->maxFiles(fn (Get $get): int => filled($get('cover_image_path')) ? 4 : 5)
                                     ->rule(fn (Get $get): Closure => function (string $attribute, mixed $value, Closure $fail) use ($get): void {
                                         if (! is_array($value)) {

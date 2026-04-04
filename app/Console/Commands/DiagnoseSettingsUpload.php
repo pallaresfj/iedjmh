@@ -28,6 +28,7 @@ class DiagnoseSettingsUpload extends Command
             'filesystem' => $this->filesystemSection(),
             'database' => $this->databaseSection(),
             'livewire_routes' => $this->livewireRoutesSection(),
+            'livewire_http_status' => $this->livewireHttpStatusSection(),
         ];
 
         $findings = $this->buildFindings($report);
@@ -47,6 +48,7 @@ class DiagnoseSettingsUpload extends Command
         $this->renderSection('Session', $report['session']);
         $this->renderSection('Filesystem', $report['filesystem']);
         $this->renderSection('Database', $report['database']);
+        $this->renderSection('Livewire HTTP status', $report['livewire_http_status']);
 
         $this->line('Livewire routes:');
         if ($report['livewire_routes'] === []) {
@@ -73,9 +75,10 @@ class DiagnoseSettingsUpload extends Command
 
         $this->newLine();
         $this->line('Suggested next checks (manual, in production):');
-        $this->line('  1) DevTools Network -> inspect POST /livewire/upload-file and /livewire/update.');
+        $this->line('  1) DevTools Network -> inspect POST /livewire-*/upload-file and /livewire-*/update.');
         $this->line('  2) Tail logs while reproducing:');
         $this->line('     - tail -f /var/www/html/storage/logs/laravel.log');
+        $this->line('     - tail -f /var/log/nginx/access.log');
         $this->line('     - tail -f /var/log/nginx/error.log');
 
         return $this->hasCriticalFindings($findings) ? self::FAILURE : self::SUCCESS;
@@ -233,6 +236,91 @@ class DiagnoseSettingsUpload extends Command
     }
 
     /**
+     * @return array<string, mixed>
+     */
+    private function livewireHttpStatusSection(): array
+    {
+        $accessLogPath = '/var/log/nginx/access.log';
+        $maxLines = 1200;
+
+        $section = [
+            'access_log_path' => $accessLogPath,
+            'access_log_readable' => is_readable($accessLogPath),
+            'lines_scanned' => 0,
+            'matched_livewire_requests' => 0,
+            'update_requests' => 0,
+            'upload_requests' => 0,
+            'other_livewire_requests' => 0,
+            'status_counts' => [],
+            'non_2xx_count' => 0,
+            'sample_non_2xx' => [],
+        ];
+
+        if (! $section['access_log_readable']) {
+            return $section;
+        }
+
+        try {
+            $lines = file($accessLogPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        } catch (Throwable $exception) {
+            $section['access_log_readable'] = false;
+            $section['access_log_error'] = $exception->getMessage();
+
+            return $section;
+        }
+
+        if (! is_array($lines) || $lines === []) {
+            return $section;
+        }
+
+        $tailLines = array_slice($lines, -$maxLines);
+        $section['lines_scanned'] = count($tailLines);
+        $statusCounts = [];
+        $non2xxSamples = [];
+
+        foreach ($tailLines as $line) {
+            if (! preg_match('/"(?P<method>[A-Z]+)\s+(?P<uri>\S+)\s+HTTP\/[0-9.]+"\s+(?P<status>[0-9]{3})\s+/', $line, $matches)) {
+                continue;
+            }
+
+            $uriRaw = (string) ($matches['uri'] ?? '');
+            $uriPath = (string) (parse_url($uriRaw, PHP_URL_PATH) ?? $uriRaw);
+
+            if (! Str::contains($uriPath, '/livewire-')) {
+                continue;
+            }
+
+            $section['matched_livewire_requests']++;
+
+            if (Str::endsWith($uriPath, '/update')) {
+                $section['update_requests']++;
+            } elseif (Str::endsWith($uriPath, '/upload-file')) {
+                $section['upload_requests']++;
+            } else {
+                $section['other_livewire_requests']++;
+            }
+
+            $status = (string) ($matches['status'] ?? '');
+            $statusCounts[$status] = ($statusCounts[$status] ?? 0) + 1;
+
+            if (! Str::startsWith($status, '2')) {
+                $section['non_2xx_count']++;
+
+                if (count($non2xxSamples) < 12) {
+                    $non2xxSamples[] = sprintf('%s %s', $status, $uriPath);
+                }
+            }
+        }
+
+        ksort($statusCounts);
+
+        $section['status_counts'] = $statusCounts;
+        $section['sample_non_2xx'] = $non2xxSamples;
+
+        return $section;
+    }
+
+    /**
      * @param  array<string, mixed>  $report
      * @return array<int, array{severity: string, message: string}>
      */
@@ -318,6 +406,46 @@ class DiagnoseSettingsUpload extends Command
             $findings[] = [
                 'severity' => 'critical',
                 'message' => 'No se detectaron correctamente las rutas de Livewire upload/update en runtime.',
+            ];
+        }
+
+        $livewireStatus = (array) data_get($report, 'livewire_http_status', []);
+        $statusCounts = (array) ($livewireStatus['status_counts'] ?? []);
+
+        if ((bool) ($livewireStatus['access_log_readable'] ?? false) === false) {
+            $findings[] = [
+                'severity' => 'warning',
+                'message' => 'No se pudo leer /var/log/nginx/access.log para auditar estados HTTP de Livewire.',
+            ];
+        } elseif ((int) ($livewireStatus['matched_livewire_requests'] ?? 0) === 0) {
+            $findings[] = [
+                'severity' => 'warning',
+                'message' => 'No se encontraron requests Livewire recientes en access.log. Reproduce un guardado y vuelve a ejecutar el diagnóstico.',
+            ];
+        }
+
+        if ((int) ($statusCounts['419'] ?? 0) > 0) {
+            $findings[] = [
+                'severity' => 'warning',
+                'message' => 'Se detectaron respuestas 419 en requests Livewire recientes (sesión/cookies/CSRF).',
+            ];
+        }
+
+        if ((int) ($statusCounts['422'] ?? 0) > 0) {
+            $findings[] = [
+                'severity' => 'warning',
+                'message' => 'Se detectaron respuestas 422 en requests Livewire recientes (validación de formulario).',
+            ];
+        }
+
+        $serverErrorCount = collect($statusCounts)
+            ->filter(fn (int $count, string $status): bool => (int) $status >= 500)
+            ->sum();
+
+        if ($serverErrorCount > 0) {
+            $findings[] = [
+                'severity' => 'critical',
+                'message' => 'Se detectaron respuestas 5xx en requests Livewire recientes (backend/proxy inestable).',
             ];
         }
 

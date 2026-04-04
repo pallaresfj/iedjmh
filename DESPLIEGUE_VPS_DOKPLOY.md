@@ -203,10 +203,15 @@ QUEUE_CONNECTION=database
 CACHE_STORE=database
 SESSION_DRIVER=database
 SESSION_ENCRYPT=true
+SESSION_DOMAIN=tudominio.com
+SESSION_SECURE_COOKIE=true
+SESSION_SAME_SITE=lax
 APP_TIMEZONE=America/Bogota
 APP_LOCALE=es
 APP_FALLBACK_LOCALE=es
 ```
+
+> Usa un solo dominio canónico. `APP_URL` y `SESSION_DOMAIN` deben coincidir con el host real donde operas `/admin`.
 
 ## 7.3 Correo (SMTP) recomendado
 
@@ -349,6 +354,31 @@ Flujo recomendado:
 - [ ] Home pública carga.
 - [ ] Admin carga.
 - [ ] No hay errores críticos en logs.
+- [ ] Ejecuté `php artisan optimize:clear && php artisan config:cache && php artisan route:cache && php artisan view:cache`.
+- [ ] Probé guardado en al menos 2 recursos admin distintos.
+- [ ] Los `POST /livewire-*/update` responden `200` (sin pending > 10s).
+
+### Verificar versión activa (evitar estados inconsistentes tras deploy)
+
+En la terminal del contenedor activo:
+
+```bash
+cd /var/www/html
+hostname
+tail -n 100 /var/log/nginx/access.log | grep 'GET /up' | tail -n 5
+```
+
+Abre en navegador:
+
+`https://tudominio.com/up?probe=release-check`
+
+Luego valida en el mismo contenedor:
+
+```bash
+tail -n 100 /var/log/nginx/access.log | grep 'probe=release-check' || echo "NO_LLEGA_A_ESTE_CONTENEDOR"
+```
+
+Si no llega al contenedor esperado, hay inconsistencia de enrutamiento/instancias.
 
 ### Qué revisar si falla
 
@@ -360,6 +390,31 @@ Flujo recomendado:
 ---
 
 ## 12) Anexo de troubleshooting (errores comunes)
+
+### Error recurrente: después de un deploy ya no guarda en recursos admin
+
+#### Síntoma
+
+- Botón "Guardar" se queda cargando o falla intermitente en varios recursos.
+
+#### Solución
+
+1. Confirmar variables:
+   - `APP_URL=https://tudominio.com`
+   - `SESSION_DOMAIN=tudominio.com`
+   - `SESSION_SECURE_COOKIE=true`
+   - `SESSION_SAME_SITE=lax`
+2. Forzar rebuild de cachés:
+   - `php artisan optimize:clear`
+   - `php artisan config:cache`
+   - `php artisan route:cache`
+   - `php artisan view:cache`
+3. Validar rutas Livewire:
+   - `php artisan route:list --path=livewire`
+4. Reproducir guardado con logs en vivo:
+   - `tail -f /var/log/nginx/access.log`
+   - `tail -f /var/www/html/storage/logs/laravel.log`
+5. Si cambiaste dominio/cookies/sesión, cierra sesión en `/admin` y limpia cookies del dominio antes de reintentar.
 
 ## Error A: "Missing required env vars"
 
