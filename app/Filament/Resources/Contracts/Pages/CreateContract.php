@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Contracts\Pages;
 
 use App\Filament\Resources\Contracts\ContractResource;
+use App\Filament\Resources\Contracts\Pages\Concerns\HandlesContractValidationFeedback;
 use App\Models\Contract;
 use App\Support\Contracts\ContractPublicationValidator;
 use App\Support\Contracts\ContractTimelineValidator;
@@ -11,6 +12,8 @@ use Illuminate\Validation\ValidationException;
 
 class CreateContract extends CreateRecord
 {
+    use HandlesContractValidationFeedback;
+
     protected static string $resource = ContractResource::class;
 
     protected function beforeCreate(): void
@@ -21,7 +24,10 @@ class CreateContract extends CreateRecord
         );
 
         if ($errors !== []) {
-            throw ValidationException::withMessages($errors);
+            $exception = ValidationException::withMessages($errors);
+            $this->onValidationError($exception);
+
+            throw $exception;
         }
     }
 

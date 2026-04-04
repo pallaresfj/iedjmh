@@ -454,21 +454,24 @@ class ContractForm
                                 Select::make('stage')
                                     ->label('Etapa')
                                     ->options(ContractDocument::STAGE_OPTIONS)
+                                    ->live()
+                                    ->afterStateUpdated(fn (Get $get, Set $set, ?string $state) => static::syncDocumentTypeFromStage($get, $set, $state))
                                     ->required()
                                     ->native(false)
                                     ->columnSpan(['default' => 'full', 'lg' => 2]),
                                 Select::make('document_type')
                                     ->label('Tipo de documento')
-                                    ->options(ContractDocument::DOCUMENT_TYPE_OPTIONS)
+                                    ->options(fn (Get $get): array => ContractDocument::documentTypeOptionsForStage(static::normalizeStringValue($get('stage'))))
                                     ->required()
                                     ->native(false)
                                     ->live()
-                                    ->afterStateUpdated(fn (Set $set, ?string $state) => static::syncStageFromDocumentType($set, $state))
                                     ->columnSpan(['default' => 'full', 'lg' => 3]),
                                 TextInput::make('title')
                                     ->label('Titulo del documento')
                                     ->placeholder('Obligatorio cuando el tipo es "Otro"')
                                     ->visible(fn (Get $get): bool => $get('document_type') === 'otro')
+                                    ->dehydratedWhenHidden()
+                                    ->dehydrateStateUsing(fn (Get $get, mixed $state): string => static::resolveDocumentTitle($get, $state))
                                     ->maxLength(255)
                                     ->columnSpan(['default' => 'full', 'lg' => 2]),
                                 TextInput::make('external_url')
@@ -524,16 +527,16 @@ class ContractForm
         $set('process_code', Contract::nextProcessCode($year));
     }
 
-    private static function syncStageFromDocumentType(Set $set, ?string $documentType): void
+    private static function syncDocumentTypeFromStage(Get $get, Set $set, ?string $stage): void
     {
-        if (! is_string($documentType) || $documentType === '') {
+        $documentType = static::normalizeStringValue($get('document_type'));
+
+        if ($documentType === '') {
             return;
         }
 
-        $expectedStage = ContractDocument::expectedStageFor($documentType);
-
-        if ($expectedStage !== null) {
-            $set('stage', $expectedStage);
+        if (! ContractDocument::isDocumentTypeAllowedForStage($stage, $documentType)) {
+            $set('document_type', null);
         }
     }
 
@@ -761,16 +764,14 @@ class ContractForm
                 return;
             }
 
+            if (! ContractDocument::isDocumentTypeAllowedForStage($stage, $type)) {
+                $fail('El tipo de documento no corresponde a la etapa seleccionada.');
+
+                return;
+            }
+
             if (ContractDocument::isOfficialType($type)) {
                 $officialCounts[$type] = ($officialCounts[$type] ?? 0) + 1;
-
-                $expectedStage = ContractDocument::expectedStageFor($type);
-
-                if ($expectedStage !== null && $stage !== $expectedStage) {
-                    $fail('Uno o mas tipos documentales oficiales tienen etapa incorrecta.');
-
-                    return;
-                }
             }
         }
 
@@ -892,5 +893,22 @@ class ContractForm
         $scheme = strtolower((string) parse_url($value, PHP_URL_SCHEME));
 
         return in_array($scheme, ['http', 'https'], true);
+    }
+
+    private static function resolveDocumentTitle(Get $get, mixed $state): string
+    {
+        $title = static::normalizeStringValue($state);
+
+        if ($title !== '') {
+            return $title;
+        }
+
+        $documentType = static::normalizeStringValue($get('document_type'));
+
+        if ($documentType === '') {
+            return '';
+        }
+
+        return ContractDocument::labelForType($documentType);
     }
 }

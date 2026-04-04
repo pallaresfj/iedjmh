@@ -37,13 +37,12 @@ class ContractPublicationValidator
 
             $presentDocumentTypes[] = $documentType;
 
+            if (! ContractDocument::isDocumentTypeAllowedForStage($stage, $documentType)) {
+                $errors["documents.{$index}.stage"] = 'La etapa no corresponde al tipo de documento seleccionado.';
+            }
+
             if (ContractDocument::isOfficialType($documentType)) {
                 $officialCounts[$documentType] = ($officialCounts[$documentType] ?? 0) + 1;
-                $expectedStage = ContractDocument::expectedStageFor($documentType);
-
-                if ($expectedStage !== null && $stage !== $expectedStage) {
-                    $errors["documents.{$index}.stage"] = 'La etapa no corresponde al tipo de documento seleccionado.';
-                }
             }
 
             if ($documentType === 'otro' && $title === '') {

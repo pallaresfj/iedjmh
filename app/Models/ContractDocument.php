@@ -70,6 +70,52 @@ class ContractDocument extends Model
         return self::DOCUMENT_STAGE_MAP[$documentType] ?? null;
     }
 
+    /**
+     * @return array<string, string>
+     */
+    public static function documentTypeOptionsForStage(?string $stage): array
+    {
+        $stage = self::normalizeCatalogValue($stage);
+
+        if (! array_key_exists($stage, self::STAGE_OPTIONS)) {
+            return [];
+        }
+
+        $options = [];
+
+        foreach (self::DOCUMENT_TYPE_OPTIONS as $type => $label) {
+            if (! self::isDocumentTypeAllowedForStage($stage, $type)) {
+                continue;
+            }
+
+            $options[$type] = $label;
+        }
+
+        return $options;
+    }
+
+    public static function isDocumentTypeAllowedForStage(?string $stage, ?string $type): bool
+    {
+        $stage = self::normalizeCatalogValue($stage);
+        $type = self::normalizeCatalogValue($type);
+
+        if (! array_key_exists($stage, self::STAGE_OPTIONS)) {
+            return false;
+        }
+
+        if (! array_key_exists($type, self::DOCUMENT_TYPE_OPTIONS)) {
+            return false;
+        }
+
+        if ($type === 'otro') {
+            return true;
+        }
+
+        $expectedStage = self::expectedStageFor($type);
+
+        return $expectedStage !== null && $expectedStage === $stage;
+    }
+
     public static function isOfficialType(string $documentType): bool
     {
         return in_array($documentType, self::OFFICIAL_DOCUMENT_TYPES, true);
@@ -78,5 +124,14 @@ class ContractDocument extends Model
     public static function labelForType(string $documentType): string
     {
         return self::DOCUMENT_TYPE_OPTIONS[$documentType] ?? $documentType;
+    }
+
+    private static function normalizeCatalogValue(mixed $value): string
+    {
+        if (! is_string($value)) {
+            return '';
+        }
+
+        return trim($value);
     }
 }

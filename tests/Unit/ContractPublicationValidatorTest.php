@@ -129,3 +129,17 @@ test('validator rejects duplicated participants by nit', function () {
 
     expect($errors)->toHaveKey('participants.1.nit');
 });
+
+test('validator rejects incompatible document stage and type combinations', function () {
+    $errors = ContractPublicationValidator::validate([
+        'status' => 'published',
+        'process_status' => 'en_curso',
+        'documents' => [
+            ['stage' => 'adjudicacion', 'document_type' => 'estudios_previos', 'external_url' => 'https://example.test/a.pdf'],
+            ['stage' => 'convocatoria', 'document_type' => 'invitacion_pliegos', 'external_url' => 'https://example.test/b.pdf'],
+            ['stage' => 'convocatoria', 'document_type' => 'formato_propuesta', 'external_url' => 'https://example.test/c.pdf'],
+        ],
+    ]);
+
+    expect($errors)->toHaveKey('documents.0.stage');
+});
