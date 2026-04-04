@@ -112,8 +112,8 @@ RUN { \
     echo "opcache.max_accelerated_files=20000"; \
     echo "opcache.validate_timestamps=0"; \
     echo "opcache.save_comments=1"; \
-    echo "opcache.jit=1255"; \
-    echo "opcache.jit_buffer_size=128M"; \
+    echo "opcache.jit=0"; \
+    echo "opcache.jit_buffer_size=0"; \
     } > "$PHP_INI_DIR/conf.d/opcache.ini"
 
 # PHP-FPM: keep default TCP listener on port 9000

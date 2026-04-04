@@ -201,7 +201,7 @@ APP_ENV=production
 APP_DEBUG=false
 QUEUE_CONNECTION=database
 CACHE_STORE=database
-SESSION_DRIVER=database
+SESSION_DRIVER=file
 SESSION_ENCRYPT=true
 SESSION_DOMAIN=tudominio.com
 SESSION_SECURE_COOKIE=true
@@ -212,6 +212,7 @@ APP_FALLBACK_LOCALE=es
 ```
 
 > Usa un solo dominio canónico. `APP_URL` y `SESSION_DOMAIN` deben coincidir con el host real donde operas `/admin`.
+> En despliegues con una sola réplica (como INEDSAB), `SESSION_DRIVER=file` reduce contención frente a `database` en requests Livewire concurrentes.
 
 ## 7.3 Correo (SMTP) recomendado
 
