@@ -95,21 +95,18 @@ test('contract create accepts valid published payload with consistent documents'
                 [
                     'stage' => 'convocatoria',
                     'document_type' => 'estudios_previos',
-                    'title' => 'Estudios previos',
                     'external_url' => 'https://example.test/estudios.pdf',
                     'sort_order' => 1,
                 ],
                 [
                     'stage' => 'convocatoria',
                     'document_type' => 'invitacion_pliegos',
-                    'title' => 'Invitacion',
                     'external_url' => 'https://example.test/invitacion.pdf',
                     'sort_order' => 2,
                 ],
                 [
                     'stage' => 'convocatoria',
                     'document_type' => 'formato_propuesta',
-                    'title' => 'Formato',
                     'external_url' => 'https://example.test/propuesta.pdf',
                     'sort_order' => 3,
                 ],
@@ -119,7 +116,12 @@ test('contract create accepts valid published payload with consistent documents'
         ->assertHasNoFormErrors()
         ->assertRedirect();
 
-    expect(Contract::query()->count())->toBe(1);
+    $created = Contract::query()->with('documents')->firstOrFail();
+
+    expect(Contract::query()->count())->toBe(1)
+        ->and($created->documents)->toHaveCount(3)
+        ->and($created->documents->pluck('title')->filter()->count())->toBe(3);
+
     FilamentNotification::assertNotNotified('No se pudo guardar el contrato');
 });
 

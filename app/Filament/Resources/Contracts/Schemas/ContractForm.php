@@ -398,6 +398,8 @@ class ContractForm
                             ->label('Documentos del proceso')
                             ->helperText(fn (Get $get): ?string => static::publicationRequirementsHint((string) ($get('process_status') ?? $get('../process_status'))))
                             ->relationship('documents')
+                            ->mutateRelationshipDataBeforeCreateUsing(fn (array $data): array => static::normalizeDocumentRelationshipData($data))
+                            ->mutateRelationshipDataBeforeSaveUsing(fn (array $data): array => static::normalizeDocumentRelationshipData($data))
                             ->extraAttributes(static function (Repeater $component): array {
                                 $statePath = $component->getStatePath();
 
@@ -454,6 +456,7 @@ class ContractForm
                                 Select::make('stage')
                                     ->label('Etapa')
                                     ->options(ContractDocument::STAGE_OPTIONS)
+                                    ->default('convocatoria')
                                     ->live()
                                     ->afterStateUpdated(fn (Get $get, Set $set, ?string $state) => static::syncDocumentTypeFromStage($get, $set, $state))
                                     ->required()
@@ -462,6 +465,8 @@ class ContractForm
                                 Select::make('document_type')
                                     ->label('Tipo de documento')
                                     ->options(fn (Get $get): array => ContractDocument::documentTypeOptionsForStage(static::normalizeStringValue($get('stage'))))
+                                    ->disabled(fn (Get $get): bool => static::normalizeStringValue($get('stage')) === '')
+                                    ->helperText('Selecciona la etapa para cargar los tipos disponibles.')
                                     ->required()
                                     ->native(false)
                                     ->live()
@@ -471,7 +476,6 @@ class ContractForm
                                     ->placeholder('Obligatorio cuando el tipo es "Otro"')
                                     ->visible(fn (Get $get): bool => $get('document_type') === 'otro')
                                     ->dehydratedWhenHidden()
-                                    ->dehydrateStateUsing(fn (Get $get, mixed $state): string => static::resolveDocumentTitle($get, $state))
                                     ->maxLength(255)
                                     ->columnSpan(['default' => 'full', 'lg' => 2]),
                                 TextInput::make('external_url')
@@ -895,20 +899,23 @@ class ContractForm
         return in_array($scheme, ['http', 'https'], true);
     }
 
-    private static function resolveDocumentTitle(Get $get, mixed $state): string
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    private static function normalizeDocumentRelationshipData(array $data): array
     {
-        $title = static::normalizeStringValue($state);
+        $documentType = static::normalizeStringValue($data['document_type'] ?? null);
+        $title = static::normalizeStringValue($data['title'] ?? null);
 
-        if ($title !== '') {
-            return $title;
+        if ($documentType !== '' && $documentType !== 'otro' && $title === '') {
+            $data['title'] = ContractDocument::labelForType($documentType);
+
+            return $data;
         }
 
-        $documentType = static::normalizeStringValue($get('document_type'));
+        $data['title'] = $title;
 
-        if ($documentType === '') {
-            return '';
-        }
-
-        return ContractDocument::labelForType($documentType);
+        return $data;
     }
 }

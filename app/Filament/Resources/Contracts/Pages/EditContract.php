@@ -11,7 +11,6 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;
 use Filament\Resources\Pages\EditRecord;
-use Illuminate\Validation\ValidationException;
 
 class EditContract extends EditRecord
 {
@@ -27,10 +26,10 @@ class EditContract extends EditRecord
         );
 
         if ($errors !== []) {
-            $exception = ValidationException::withMessages($errors);
-            $this->onValidationError($exception);
+            $this->reportContractValidationErrors($errors);
+            $this->halt();
 
-            throw $exception;
+            return;
         }
     }
 

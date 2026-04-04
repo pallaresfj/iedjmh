@@ -8,7 +8,6 @@ use App\Models\Contract;
 use App\Support\Contracts\ContractPublicationValidator;
 use App\Support\Contracts\ContractTimelineValidator;
 use Filament\Resources\Pages\CreateRecord;
-use Illuminate\Validation\ValidationException;
 
 class CreateContract extends CreateRecord
 {
@@ -24,10 +23,10 @@ class CreateContract extends CreateRecord
         );
 
         if ($errors !== []) {
-            $exception = ValidationException::withMessages($errors);
-            $this->onValidationError($exception);
+            $this->reportContractValidationErrors($errors);
+            $this->halt();
 
-            throw $exception;
+            return;
         }
     }
 
