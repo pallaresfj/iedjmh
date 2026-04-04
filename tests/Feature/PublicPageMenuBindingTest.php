@@ -155,7 +155,6 @@ test('selected institution routes force fallback internal banner style', functio
         'institucion.sedes',
         'institucion.pei',
         'institucion.manual-convivencia',
-        'institucion.directorio',
     ];
 
     foreach ($routes as $routeName) {

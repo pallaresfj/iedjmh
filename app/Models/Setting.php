@@ -28,6 +28,8 @@ class Setting extends Model
         'aula_virtual',
         'aula_virtual_name',
         'siee_document_id',
+        'pei_document_id',
+        'manual_convivencia_document_id',
         'logo_path',
         'allies',
         'theme_primary',
@@ -83,6 +85,16 @@ class Setting extends Model
     public function sieeDocument(): BelongsTo
     {
         return $this->belongsTo(Document::class, 'siee_document_id');
+    }
+
+    public function peiDocument(): BelongsTo
+    {
+        return $this->belongsTo(Document::class, 'pei_document_id');
+    }
+
+    public function manualConvivenciaDocument(): BelongsTo
+    {
+        return $this->belongsTo(Document::class, 'manual_convivencia_document_id');
     }
 
     public static function singleton(): self

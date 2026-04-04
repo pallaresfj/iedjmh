@@ -493,7 +493,6 @@ class CitizenAttentionController extends Controller
                     ['label' => 'Sedes', 'route' => 'institucion.sedes'],
                     ['label' => 'PEI', 'route' => 'institucion.pei'],
                     ['label' => 'Manual de Convivencia', 'route' => 'institucion.manual-convivencia'],
-                    ['label' => 'Directorio', 'route' => 'institucion.directorio'],
                 ],
             ],
             [

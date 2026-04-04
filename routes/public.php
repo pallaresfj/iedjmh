@@ -66,7 +66,6 @@ Route::prefix('institucion')->group(function () {
     Route::get('/sedes', [InstitutionController::class, 'page'])->defaults('pageKey', 'sedes')->name('institucion.sedes');
     Route::get('/pei', [InstitutionController::class, 'page'])->defaults('pageKey', 'pei')->name('institucion.pei');
     Route::get('/manual-convivencia', [InstitutionController::class, 'page'])->defaults('pageKey', 'manual-convivencia')->name('institucion.manual-convivencia');
-    Route::get('/directorio', [InstitutionController::class, 'page'])->defaults('pageKey', 'directorio')->name('institucion.directorio');
 });
 
 Route::prefix('academico')->group(function () {

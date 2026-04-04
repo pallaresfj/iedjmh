@@ -62,6 +62,59 @@
                 </section>
             @endforeach
 
+            @if (in_array($pageKey, ['pei', 'manual-convivencia'], true))
+                <section class="space-y-4 border-t border-ied-gray-200 pt-6">
+                    <article class="rounded-2xl border border-ied-gray-200 bg-white p-5 sm:p-6">
+                        <div class="flex items-start gap-4">
+                            <span class="inline-flex size-12 shrink-0 items-center justify-center rounded-xl bg-ied-primary-light/30">
+                                <span class="material-symbols-outlined text-2xl text-ied-primary" aria-hidden="true">description</span>
+                            </span>
+
+                            <div class="min-w-0 space-y-0.5">
+                                <h2 class="public-heading text-lg font-extrabold text-ied-gray-900">Documento oficial</h2>
+                                <p class="text-sm leading-relaxed text-ied-gray-600">
+                                    Consulta la versión vigente publicada por la institución.
+                                </p>
+                            </div>
+                        </div>
+
+                        @if ($institutionDocument)
+                            <div class="mt-4 space-y-2">
+                                <h3 class="text-base font-semibold text-ied-gray-900">{{ $institutionDocument['title'] }}</h3>
+                                @if (filled($institutionDocument['summary'] ?? null))
+                                    <p class="text-sm leading-relaxed text-ied-gray-700">{{ $institutionDocument['summary'] }}</p>
+                                @endif
+                            </div>
+
+                            <a
+                                href="{{ $institutionDocument['url'] }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="mt-5 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-ied-primary-dark transition hover:text-ied-primary"
+                            >
+                                Abrir documento
+                                <svg class="size-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z" clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                        @else
+                            <p class="mt-4 text-sm leading-relaxed text-ied-gray-700">
+                                Documento no disponible en este momento.
+                            </p>
+                            <a
+                                href="{{ route('transparencia.documentos') }}"
+                                class="mt-5 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-ied-primary-dark transition hover:text-ied-primary"
+                            >
+                                Ver documentos de transparencia
+                                <svg class="size-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.19l-3.72-3.72a.75.75 0 111.06-1.06l5 5a.75.75 0 010 1.06l-5 5a.75.75 0 11-1.06-1.06l3.72-3.72H3.75A.75.75 0 013 10z" clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                        @endif
+                    </article>
+                </section>
+            @endif
+
             @if ($pageKey === 'simbolos')
                 <section class="space-y-6 border-t border-ied-gray-200 pt-6">
                     <div class="grid gap-6 lg:grid-cols-2">

@@ -1,7 +1,9 @@
 <?php
 
 use App\Models\Campus;
+use App\Models\Document;
 use App\Models\Page;
+use App\Models\Setting;
 use App\Models\StaffMember;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -17,11 +19,13 @@ test('institution landing shows navigation cards for all sub-pages', function ()
     $this->get(route('institucion.index'))
         ->assertOk()
         ->assertSee('Historia')
-        ->assertSee('Mision y Vision')
-        ->assertSee('Simbolos')
+        ->assertSee('Misión y Visión')
+        ->assertSee('Símbolos')
         ->assertSee('Equipo Institucional')
         ->assertSee('Sedes')
-        ->assertSee('PEI');
+        ->assertSee('PEI')
+        ->assertSee('Manual de Convivencia')
+        ->assertDontSee('Directorio');
 });
 
 test('institution history page loads with fallback content', function () {
@@ -49,13 +53,13 @@ test('institution history page uses cms content when available', function () {
 test('institution mision vision page loads', function () {
     $this->get(route('institucion.mision-vision'))
         ->assertOk()
-        ->assertSee('Mision y Vision');
+        ->assertSee('Misión y Visión');
 });
 
 test('institution simbolos page loads', function () {
     $this->get(route('institucion.simbolos'))
         ->assertOk()
-        ->assertSee('Simbolos');
+        ->assertSee('Símbolos');
 });
 
 test('institution equipo institucional page loads', function () {
@@ -128,8 +132,70 @@ test('institution manual convivencia page loads', function () {
         ->assertSee('Manual de Convivencia');
 });
 
-test('institution directorio page loads', function () {
-    $this->get(route('institucion.directorio'))
+test('institution directorio route returns 404', function () {
+    $this->get('/institucion/directorio')
+        ->assertNotFound();
+});
+
+test('institution pei page shows configured document from settings', function () {
+    $document = Document::query()->create([
+        'title' => 'PEI 2026',
+        'slug' => 'pei-2026',
+        'summary' => 'Documento institucional del PEI.',
+        'external_url' => 'https://example.com/pei-2026.pdf',
+        'status' => 'published',
+        'published_at' => now(),
+    ]);
+
+    Setting::query()->create([
+        'singleton' => 1,
+        'institution_name' => 'IED PEI',
+        'pei_document_id' => $document->id,
+    ]);
+
+    $this->get(route('institucion.pei'))
         ->assertOk()
-        ->assertSee('Directorio');
+        ->assertSee('PEI 2026')
+        ->assertSee('Documento institucional del PEI.')
+        ->assertSee('href="https://example.com/pei-2026.pdf"', false)
+        ->assertSee('target="_blank"', false);
+});
+
+test('institution manual convivencia page shows configured file document from settings', function () {
+    $document = Document::query()->create([
+        'title' => 'Manual de convivencia 2026',
+        'slug' => 'manual-convivencia-2026',
+        'summary' => 'Reglas institucionales vigentes.',
+        'file_path' => 'manuales/manual-convivencia-2026.pdf',
+        'status' => 'published',
+        'published_at' => now(),
+    ]);
+
+    Setting::query()->create([
+        'singleton' => 1,
+        'institution_name' => 'IED Manual',
+        'manual_convivencia_document_id' => $document->id,
+    ]);
+
+    $this->get(route('institucion.manual-convivencia'))
+        ->assertOk()
+        ->assertSee('Manual de convivencia 2026')
+        ->assertSee('Reglas institucionales vigentes.')
+        ->assertSee('href="/storage/manuales/manual-convivencia-2026.pdf"', false)
+        ->assertSee('target="_blank"', false);
+});
+
+test('institution pei and manual pages show empty state when settings document is missing', function () {
+    Setting::query()->create([
+        'singleton' => 1,
+        'institution_name' => 'IED Sin Documento',
+    ]);
+
+    foreach (['institucion.pei', 'institucion.manual-convivencia'] as $routeName) {
+        $this->get(route($routeName))
+            ->assertOk()
+            ->assertSee('Documento no disponible en este momento.')
+            ->assertSee(route('transparencia.documentos'))
+            ->assertSee('Ver documentos de transparencia');
+    }
 });

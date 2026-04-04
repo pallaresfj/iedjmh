@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Public;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Public\Concerns\ResolvesPublicContent;
 use App\Models\Campus;
+use App\Models\Document;
 use App\Models\Page;
+use App\Models\Setting;
 use App\Models\StaffMember;
 use App\Support\PageMenuCatalog;
 use App\Support\PublicSettings;
@@ -69,6 +71,9 @@ class InstitutionController extends Controller
         $title = $cmsPage?->title ?: $definition['title'];
         $lead = $cmsPage?->summary ?: $definition['summary'];
         $symbols = $pageKey === 'simbolos' ? PublicSettings::symbols() : [];
+        $institutionDocument = in_array($pageKey, ['pei', 'manual-convivencia'], true)
+            ? $this->resolveInstitutionDocumentResource($pageKey)
+            : null;
 
         $directiveDirectory = $pageKey === 'equipo-institucional'
             ? $this->resolveDirectiveStaffDirectory($request)
@@ -91,6 +96,7 @@ class InstitutionController extends Controller
             'hasStaffActiveFilters' => $directiveDirectory['has_active_filters'],
             'institutionPages' => $this->navigationItems($definitions),
             'symbols' => $symbols,
+            'institutionDocument' => $institutionDocument,
         ]);
     }
 
@@ -202,20 +208,6 @@ class InstitutionController extends Controller
                     ],
                 ],
             ],
-            'directorio' => [
-                'title' => 'Directorio Institucional',
-                'route' => 'institucion.directorio',
-                'slug' => 'institucion-directorio',
-                'menu_binding' => null,
-                'icon' => 'contact_phone',
-                'summary' => 'Canales de contacto institucional para comunidad y ciudadanos.',
-                'blocks' => [
-                    [
-                        'title' => 'Canales de atención',
-                        'body' => 'Encuentra datos de contacto de áreas institucionales y orientación para solicitudes de información.',
-                    ],
-                ],
-            ],
         ];
     }
 
@@ -255,6 +247,61 @@ class InstitutionController extends Controller
                 ...$block,
                 'is_html' => false,
             ]);
+    }
+
+    /**
+     * @return array{
+     *     title: string,
+     *     summary: string|null,
+     *     url: string
+     * }|null
+     */
+    private function resolveInstitutionDocumentResource(string $pageKey): ?array
+    {
+        if (! $this->canQueryTable('settings') || ! $this->canQueryTable('documents')) {
+            return null;
+        }
+
+        $documentColumn = match ($pageKey) {
+            'pei' => 'pei_document_id',
+            'manual-convivencia' => 'manual_convivencia_document_id',
+            default => null,
+        };
+
+        if (! $documentColumn || ! $this->canQueryColumn('settings', $documentColumn)) {
+            return null;
+        }
+
+        $settings = Setting::singleton();
+        $documentId = (int) data_get($settings, $documentColumn, 0);
+
+        if ($documentId <= 0) {
+            return null;
+        }
+
+        /** @var Document|null $document */
+        $document = Document::query()
+            ->whereKey($documentId)
+            ->where('status', 'published')
+            ->first();
+
+        if (! $document) {
+            return null;
+        }
+
+        $documentUrl = filled($document->external_url)
+            ? (string) $document->external_url
+            : $this->resolveMediaUrl($document->file_path);
+
+        if (! filled($documentUrl)) {
+            return null;
+        }
+
+        return [
+            'title' => $document->title,
+            'summary' => $document->summary,
+            'url' => $documentUrl,
+        ];
     }
 
     /**

@@ -167,6 +167,34 @@ class SettingForm
                                     ->preload()
                                     ->placeholder('Selecciona un documento SIEE')
                                     ->columnSpan(12),
+                                Select::make('pei_document_id')
+                                    ->label('PEI (documento)')
+                                    ->relationship(
+                                        name: 'peiDocument',
+                                        titleAttribute: 'title',
+                                        modifyQueryUsing: fn (Builder $query): Builder => $query
+                                            ->where('status', 'published')
+                                            ->orderByDesc('published_at')
+                                            ->orderBy('title'),
+                                    )
+                                    ->searchable()
+                                    ->preload()
+                                    ->placeholder('Selecciona el documento PEI')
+                                    ->columnSpan(12),
+                                Select::make('manual_convivencia_document_id')
+                                    ->label('Manual de convivencia (documento)')
+                                    ->relationship(
+                                        name: 'manualConvivenciaDocument',
+                                        titleAttribute: 'title',
+                                        modifyQueryUsing: fn (Builder $query): Builder => $query
+                                            ->where('status', 'published')
+                                            ->orderByDesc('published_at')
+                                            ->orderBy('title'),
+                                    )
+                                    ->searchable()
+                                    ->preload()
+                                    ->placeholder('Selecciona el manual de convivencia')
+                                    ->columnSpan(12),
                                 Select::make('contracting_manual_document_id')
                                     ->label('Manual de contratacion (documento)')
                                     ->relationship(

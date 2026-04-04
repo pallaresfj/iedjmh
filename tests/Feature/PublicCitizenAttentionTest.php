@@ -153,7 +153,8 @@ test('procedures page filters by search', function () {
 test('sitemap page loads', function () {
     $this->get(route('atencion.mapa-sitio'))
         ->assertOk()
-        ->assertSee('Mapa del sitio');
+        ->assertSee('Mapa del sitio')
+        ->assertDontSee('Directorio');
 });
 
 test('participation page loads', function () {
