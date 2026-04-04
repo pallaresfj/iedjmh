@@ -189,9 +189,9 @@
         --public-surface-high: color-mix(in srgb, var(--color-ied-gray-900) 58%, black);
         --public-border: color-mix(in srgb, var(--color-ied-gray-200) 36%, transparent);
         --public-border-strong: color-mix(in srgb, var(--color-ied-gray-200) 52%, transparent);
-        --public-heading: color-mix(in srgb, var(--color-ied-gray-100) 84%, white);
-        --public-text: color-mix(in srgb, var(--color-ied-gray-200) 80%, white);
-        --public-muted: color-mix(in srgb, var(--color-ied-gray-200) 66%, var(--color-ied-gray-700));
+        --public-heading: color-mix(in srgb, white 92%, var(--color-ied-gray-100));
+        --public-text: color-mix(in srgb, white 82%, var(--color-ied-gray-200));
+        --public-muted: color-mix(in srgb, white 68%, var(--color-ied-gray-600));
         --public-topbar-bg: color-mix(in srgb, var(--public-surface-base) 88%, black);
         --public-topbar-text: color-mix(in srgb, var(--public-heading) 92%, white);
         --public-header-bg: color-mix(in srgb, var(--public-surface-base) 94%, transparent);
@@ -316,6 +316,12 @@
         --home-footer-bg: var(--public-footer-bg);
         --home-card-shadow: var(--public-card-shadow);
         --home-card-shadow-hover: var(--public-card-shadow-hover);
+    }
+
+    html[data-public-theme='dark'] .public-site h1,
+    html[data-public-theme='dark'] .public-site h2,
+    html[data-public-theme='dark'] .public-site h3 {
+        color: var(--public-heading);
     }
 
     .public-site {
