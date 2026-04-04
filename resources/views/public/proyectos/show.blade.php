@@ -28,7 +28,7 @@
             ->values();
     @endphp
 
-    <x-public.internal-page :title="$project['title']" :lead="$project['summary']" :banner="$banner" section-key="academico" :force-banner-title-style="true">
+    <x-public.internal-page :title="$project['title']" :lead="$project['summary']" section-key="academico" :force-banner-title-style="true">
         <x-slot:sidebar>
             <x-public.academico.sidebar :pages="$academicPages" />
 

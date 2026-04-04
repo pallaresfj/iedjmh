@@ -1,7 +1,6 @@
 @props([
     'title',
     'lead' => null,
-    'banner' => null,
     'sectionKey' => null,
     'replaceHeaderWithBanner' => false,
     'forceBannerTitleStyle' => false,
@@ -10,12 +9,11 @@
 ])
 
 @php($primaryNav = config('institution.navigation.primary', []))
-@php($hasBanner = is_array($banner))
 @php($forceBannerTitleStyle = (bool) $forceBannerTitleStyle)
 @php($withoutSidebar = (bool) $withoutSidebar)
-@php($effectiveBanner = $banner)
+@php($effectiveBanner = null)
 
-@if ($forceBannerTitleStyle && ! $hasBanner)
+@if ($forceBannerTitleStyle)
     @php($effectiveBanner = [
         'title' => $title,
         'subtitle' => null,
@@ -29,7 +27,7 @@
 @endif
 
 @php($hasEffectiveBanner = is_array($effectiveBanner))
-@php($hideClassicHeader = $forceBannerTitleStyle || ($replaceHeaderWithBanner && $hasBanner))
+@php($hideClassicHeader = $forceBannerTitleStyle)
 
 @if (! $hideClassicHeader)
     <section class="border-b border-ied-gray-200 bg-white">

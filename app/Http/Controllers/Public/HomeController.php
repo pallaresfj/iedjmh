@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Public\Concerns\ResolvesPublicContent;
-use App\Models\Banner;
 use App\Models\Event;
 use App\Models\Post;
 use App\Models\Project;
@@ -49,69 +48,24 @@ class HomeController extends Controller
         $settingsImageUrl = is_string($settingsImagePath)
             ? PublicSettings::mediaUrl($settingsImagePath)
             : null;
-        $homeBanner = $this->resolveHomeBanner();
-        $cta = $this->resolveHeroCta($fallback, $homeBanner);
+        $cta = $this->resolveHeroCta($fallback);
 
         return [
-            'eyebrow' => trim((string) PublicSettings::get('home_hero_eyebrow', '')) ?: ($homeBanner['eyebrow'] ?? $fallback['eyebrow']),
-            'title' => trim((string) PublicSettings::get('home_hero_title', '')) ?: ($homeBanner['title'] ?? $fallback['title']),
-            'description' => trim((string) PublicSettings::get('home_hero_description', '')) ?: ($homeBanner['description'] ?? $fallback['description']),
+            'eyebrow' => trim((string) PublicSettings::get('home_hero_eyebrow', '')) ?: $fallback['eyebrow'],
+            'title' => trim((string) PublicSettings::get('home_hero_title', '')) ?: $fallback['title'],
+            'description' => trim((string) PublicSettings::get('home_hero_description', '')) ?: $fallback['description'],
             'cta_label' => $cta['cta_label'],
             'cta_url' => $cta['cta_url'],
             'cta_target' => $cta['cta_target'],
-            'image_url' => $settingsImageUrl ?: ($homeBanner['image_url'] ?? $fallback['image_url']),
-        ];
-    }
-
-    /**
-     * @return array<string, string>|null
-     */
-    private function resolveHomeBanner(): ?array
-    {
-        if (! $this->canQueryTable('banners')) {
-            return null;
-        }
-
-        /** @var Banner|null $banner */
-        $bannerQuery = Banner::query()
-            ->where('status', 'published')
-            ->where(function ($query): void {
-                $query->whereNull('starts_at')->orWhere('starts_at', '<=', now());
-            })
-            ->where(function ($query): void {
-                $query->whereNull('ends_at')->orWhere('ends_at', '>=', now());
-            })
-            ->orderByDesc('starts_at')
-            ->orderByDesc('id');
-
-        if ($this->canQueryColumn('banners', 'page_id')) {
-            $bannerQuery->whereNull('page_id');
-        }
-
-        /** @var Banner|null $banner */
-        $banner = $bannerQuery->first();
-
-        if (! $banner) {
-            return null;
-        }
-
-        return [
-            'eyebrow' => (string) ($banner->subtitle ?? ''),
-            'title' => (string) ($banner->title ?? ''),
-            'description' => (string) ($banner->description ?? ''),
-            'cta_label' => (string) ($banner->cta_label ?? ''),
-            'cta_url' => (string) ($banner->cta_url ?? ''),
-            'cta_target' => $this->normalizeLinkTarget($banner->target),
-            'image_url' => (string) ($this->resolveMediaUrl($banner->image_path) ?? ''),
+            'image_url' => $settingsImageUrl ?: $fallback['image_url'],
         ];
     }
 
     /**
      * @param  array<string, string>  $fallback
-     * @param  array<string, string>|null  $homeBanner
      * @return array{cta_label: string, cta_url: string, cta_target: string}
      */
-    private function resolveHeroCta(array $fallback, ?array $homeBanner): array
+    private function resolveHeroCta(array $fallback): array
     {
         $settingsLabel = trim((string) PublicSettings::get('home_hero_cta_label', ''));
         $settingsUrl = trim((string) PublicSettings::get('home_hero_cta_url', ''));
@@ -121,17 +75,6 @@ class HomeController extends Controller
                 'cta_label' => $settingsLabel,
                 'cta_url' => $settingsUrl,
                 'cta_target' => $this->normalizeLinkTarget(PublicSettings::get('home_hero_cta_target', '_self')),
-            ];
-        }
-
-        $bannerLabel = trim((string) ($homeBanner['cta_label'] ?? ''));
-        $bannerUrl = trim((string) ($homeBanner['cta_url'] ?? ''));
-
-        if ($bannerLabel !== '' && $bannerUrl !== '') {
-            return [
-                'cta_label' => $bannerLabel,
-                'cta_url' => $bannerUrl,
-                'cta_target' => $this->normalizeLinkTarget($homeBanner['cta_target'] ?? '_self'),
             ];
         }
 

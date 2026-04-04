@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Public\Concerns;
 
-use App\Models\Banner;
 use App\Models\Page;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Collection;
@@ -142,71 +141,6 @@ trait ResolvesPublicContent
         }
 
         return $this->publishedPageBySlug($fallbackSlug);
-    }
-
-    /**
-     * @return array{
-     *     title: string,
-     *     subtitle: string|null,
-     *     description: string|null,
-     *     image_url: string|null,
-     *     cta_label: string|null,
-     *     cta_url: string|null,
-     *     target: string
-     * }|null
-     */
-    protected function resolvePageBanner(?Page $page, ?string $canonicalSlug = null): ?array
-    {
-        if (! $this->canQueryTable('banners')) {
-            return null;
-        }
-
-        $activeBannersQuery = static fn () => Banner::query()
-            ->where('status', 'published')
-            ->where(function ($query): void {
-                $query->whereNull('starts_at')->orWhere('starts_at', '<=', now());
-            })
-            ->where(function ($query): void {
-                $query->whereNull('ends_at')->orWhere('ends_at', '>=', now());
-            });
-
-        /** @var Banner|null $banner */
-        $banner = null;
-
-        if ($page && $this->canQueryColumn('banners', 'page_id')) {
-            $banner = $activeBannersQuery()
-                ->where('page_id', $page->id)
-                ->orderByDesc('starts_at')
-                ->orderByDesc('id')
-                ->first();
-        }
-
-        $normalizedCanonicalSlug = trim((string) $canonicalSlug);
-
-        if (! $banner && $normalizedCanonicalSlug !== '' && $this->canQueryColumn('banners', 'slug')) {
-            $banner = $activeBannersQuery()
-                ->whereNull('page_id')
-                ->where('slug', $normalizedCanonicalSlug)
-                ->orderByDesc('starts_at')
-                ->orderByDesc('id')
-                ->first();
-        }
-
-        if (! $banner) {
-            return null;
-        }
-
-        $target = $banner->target === '_blank' ? '_blank' : '_self';
-
-        return [
-            'title' => $banner->title,
-            'subtitle' => $banner->subtitle,
-            'description' => $banner->description,
-            'image_url' => $this->resolveMediaUrl($banner->image_path),
-            'cta_label' => $banner->cta_label,
-            'cta_url' => $banner->cta_url,
-            'target' => $target,
-        ];
     }
 
     protected function resolveMediaUrl(?string $path): ?string

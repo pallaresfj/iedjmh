@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\AreaPlan;
-use App\Models\Banner;
 use App\Models\Campus;
 use App\Models\Category;
 use App\Models\Contract;
@@ -35,7 +34,6 @@ class DemoContentSeeder extends Seeder
         $this->seedSettings();
         $this->seedCategories();
         $this->seedPages($admin);
-        $this->seedBanners($admin);
         $this->seedCampuses($admin);
         $this->seedStaffMembers($admin);
         $this->seedPosts($admin);
@@ -95,23 +93,6 @@ class DemoContentSeeder extends Seeder
                 ],
             );
         }
-    }
-
-    private function seedBanners(User $admin): void
-    {
-        Banner::query()->firstOrCreate(
-            ['slug' => 'hero-principal'],
-            [
-                'title' => 'Bienvenidos a la IED Agropecuaria Jose Maria Herrera',
-                'slug' => 'hero-principal',
-                'subtitle' => 'Formando lideres del campo con valores y conocimiento',
-                'description' => 'Institucion educativa comprometida con la excelencia academica y el desarrollo rural.',
-                'cta_label' => 'Conoce nuestra historia',
-                'cta_url' => '/institucion/historia',
-                'status' => 'published',
-                'created_by' => $admin->id,
-            ],
-        );
     }
 
     private function seedCampuses(User $admin): void

@@ -1,14 +1,16 @@
 <?php
 
-use App\Models\Banner;
 use App\Models\Setting;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
 
 uses(RefreshDatabase::class);
 
-test('zona academica route is active and legacy standalone route returns 404', function () {
-    $this->get('/academico/zona-academica')->assertOk();
+test('zona academica route redirects permanently to academico and legacy standalone route returns 404', function () {
+    $this->get('/academico/zona-academica')
+        ->assertRedirect(route('academico.index'))
+        ->assertStatus(301);
+
     $this->get('/zona-academica')->assertNotFound();
 });
 
@@ -353,7 +355,7 @@ test('invalid theme color value falls back to safe default', function () {
         ->assertSee('--color-ied-primary-rgb: 46, 125, 50;', false);
 });
 
-test('home hero prioritizes settings content over home banner', function () {
+test('home hero prioritizes settings content over internal defaults', function () {
     Setting::query()->create([
         'institution_name' => 'IED Hero Settings',
         'home_hero_eyebrow' => 'Hero desde settings',
@@ -366,17 +368,6 @@ test('home hero prioritizes settings content over home banner', function () {
         'singleton' => 1,
     ]);
 
-    Banner::query()->create([
-        'title' => 'Titulo hero desde banner',
-        'slug' => 'hero-banner-home',
-        'subtitle' => 'Subtitulo banner',
-        'description' => 'Descripcion banner',
-        'cta_label' => 'CTA Banner',
-        'cta_url' => 'https://banner-hero.example.edu',
-        'target' => '_self',
-        'status' => 'published',
-    ]);
-
     $response = $this->get(route('home'));
 
     $response
@@ -385,44 +376,29 @@ test('home hero prioritizes settings content over home banner', function () {
         ->assertSee('Titulo hero configurado')
         ->assertSee('Descripcion del hero configurable.')
         ->assertSee('href="https://settings-hero.example.edu"', false)
-        ->assertSee('src="/storage/settings/home/hero-settings.jpg"', false)
-        ->assertDontSee('Titulo hero desde banner');
+        ->assertSee('src="/storage/settings/home/hero-settings.jpg"', false);
 
     expect($response->getContent())
         ->toMatch('/href="https:\/\/settings-hero\.example\.edu"[^>]*target="_blank"[^>]*rel="noopener noreferrer"/');
 });
 
-test('home hero falls back to home banner when settings are empty', function () {
+test('home hero falls back to built in defaults when hero settings are empty', function () {
     Setting::query()->create([
-        'institution_name' => 'IED Hero Banner',
+        'institution_name' => 'IED Hero Defaults',
         'singleton' => 1,
-    ]);
-
-    Banner::query()->create([
-        'title' => 'Hero principal desde banner',
-        'slug' => 'hero-principal-banner',
-        'subtitle' => 'Subtitulo banner home',
-        'description' => 'Contenido principal desde banner vigente.',
-        'cta_label' => 'Conocer mas',
-        'cta_url' => 'https://banner-home.example.edu',
-        'target' => '_blank',
-        'status' => 'published',
     ]);
 
     $response = $this->get(route('home'));
 
     $response
         ->assertOk()
-        ->assertSee('Subtitulo banner home')
-        ->assertSee('Hero principal desde banner')
-        ->assertSee('Contenido principal desde banner vigente.')
-        ->assertSee('href="https://banner-home.example.edu"', false);
-
-    expect($response->getContent())
-        ->toMatch('/href="https:\/\/banner-home\.example\.edu"[^>]*target="_blank"[^>]*rel="noopener noreferrer"/');
+        ->assertSee('IED Hero Defaults')
+        ->assertSee('Formando lideres para el agro y la vida')
+        ->assertSee('Conoce nuestra matricula 2026')
+        ->assertSee('href="'.route('matricula.index').'"', false);
 });
 
-test('home hero falls back to built in defaults when no settings and no banners exist', function () {
+test('home hero falls back to built in defaults when no settings exist', function () {
     $this->get(route('home'))
         ->assertOk()
         ->assertSee('Formando lideres para el agro y la vida')

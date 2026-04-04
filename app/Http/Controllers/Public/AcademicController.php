@@ -56,7 +56,6 @@ class AcademicController extends Controller
         return view('public.academico.index', [
             'title' => $landingPage?->title ?: 'Académico',
             'lead' => $landingPage?->summary ?: 'Información curricular, recursos pedagógicos y servicios académicos para estudiantes y familias.',
-            'banner' => $this->resolvePageBanner($landingPage, 'academico'),
             'academicPages' => $this->navigationItems($definitions),
             'cards' => $cards,
         ]);
@@ -88,11 +87,9 @@ class AcademicController extends Controller
             'pageKey' => $pageKey,
             'title' => $cmsPage?->title ?: $definition['title'],
             'lead' => $cmsPage?->summary ?: $definition['summary'],
-            'banner' => $this->resolvePageBanner($cmsPage, (string) ($definition['slug'] ?? '')),
             'blocks' => $this->resolveBlocks($cmsPage, $definition),
             'academicPages' => $this->navigationItems($definitions),
             'plans' => $pageKey === 'planes-area' ? $this->resolveAreaPlans() : collect(),
-            'academicZone' => $pageKey === 'zona-academica' ? $this->resolveAcademicZoneResources() : ['platforms' => collect(), 'documents' => collect()],
             'calendarEvents' => $calendar['events'],
             'calendarMonths' => $calendar['months'],
             'calendarFilters' => $calendar['filters'],
@@ -189,20 +186,6 @@ class AcademicController extends Controller
                 'summary' => 'Fechas institucionales relevantes, períodos académicos y actividades programadas.',
                 'blocks' => [],
             ],
-            'zona-academica' => [
-                'title' => 'Zona Académica',
-                'route' => 'academico.zona-academica',
-                'slug' => 'academico-zona-academica',
-                'menu_binding' => null,
-                'icon' => 'devices',
-                'summary' => 'Plataformas, recursos y herramientas digitales para estudiantes y docentes.',
-                'blocks' => [
-                    [
-                        'title' => 'Recursos académicos en línea',
-                        'body' => 'Accede a las plataformas institucionales, recursos descargables y herramientas digitales disponibles para la comunidad educativa.',
-                    ],
-                ],
-            ],
         ];
     }
 
@@ -297,55 +280,6 @@ class AcademicController extends Controller
         }
 
         return collect();
-    }
-
-    /**
-     * @return array{
-     *     platforms: Collection<int, array{label: string, url: string, icon: string}>,
-     *     documents: Collection<int, array{title: string, summary: string|null, url: string|null}>
-     * }
-     */
-    private function resolveAcademicZoneResources(): array
-    {
-        $platforms = collect();
-
-        if ($this->canQueryTable('settings')) {
-            $settings = Setting::singleton();
-
-            if (filled($settings->siee)) {
-                $platforms->push(['label' => 'SIEE', 'url' => $settings->siee, 'icon' => 'school']);
-            }
-
-            if (filled($settings->aula_virtual)) {
-                $platforms->push(['label' => 'Aula Virtual', 'url' => $settings->aula_virtual, 'icon' => 'computer']);
-            }
-        }
-
-        $documents = collect();
-
-        if ($this->canQueryTable('documents')) {
-            $documents = Document::query()
-                ->where('status', 'published')
-                ->whereHas('categories', function ($query): void {
-                    $query->whereIn('slug', ['zona-academica', 'academico-zona-academica']);
-                })
-                ->orderByDesc('published_at')
-                ->orderByDesc('document_date')
-                ->limit(8)
-                ->get()
-                ->map(function (Document $document): array {
-                    return [
-                        'title' => $document->title,
-                        'summary' => $document->summary ?: Str::limit(strip_tags((string) $document->description), 140),
-                        'url' => $this->resolveDocumentUrl($document),
-                    ];
-                });
-        }
-
-        return [
-            'platforms' => $platforms,
-            'documents' => $documents,
-        ];
     }
 
     /**

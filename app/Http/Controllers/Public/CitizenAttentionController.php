@@ -41,7 +41,6 @@ class CitizenAttentionController extends Controller
         return view('public.atencion.index', [
             'title' => $page?->title ?: 'Atención al Ciudadano',
             'lead' => $page?->summary ?: 'Canales institucionales de contacto, PQRS, trámites, participación y orientación ciudadana.',
-            'banner' => $this->resolvePageBanner($page),
             'content' => $page?->content,
             'attentionPages' => $this->attentionPages(),
             'cards' => $cards,
@@ -57,7 +56,6 @@ class CitizenAttentionController extends Controller
         return view('public.atencion.contacto', [
             'title' => $page?->title ?: 'Contáctenos',
             'lead' => $page?->summary ?: 'Consulta nuestros canales de atención institucional y horarios de servicio.',
-            'banner' => $this->resolvePageBanner($page),
             'content' => $page?->content,
             'attentionPages' => $this->attentionPages(),
             'contact' => PublicSettings::contact(),
@@ -71,7 +69,6 @@ class CitizenAttentionController extends Controller
         return view('public.atencion.pqrs', [
             'title' => $page?->title ?: 'PQRS',
             'lead' => $page?->summary ?: 'Radica peticiones, quejas, reclamos, sugerencias, felicitaciones o trámites.',
-            'banner' => $this->resolvePageBanner($page),
             'content' => $page?->content,
             'attentionPages' => $this->attentionPages(),
             'typeOptions' => [
@@ -155,7 +152,6 @@ class CitizenAttentionController extends Controller
         return view('public.atencion.pqrs-consulta', [
             'title' => 'Consulta PQRS',
             'lead' => 'Ingresa tu código de seguimiento para conocer el estado de tu solicitud.',
-            'banner' => $this->resolvePageBanner($page),
             'attentionPages' => $this->attentionPages(),
             'pqrs' => null,
             'messages' => collect(),
@@ -196,7 +192,6 @@ class CitizenAttentionController extends Controller
         return view('public.atencion.pqrs-consulta', [
             'title' => 'Consulta PQRS',
             'lead' => 'Ingresa tu código de seguimiento para conocer el estado de tu solicitud.',
-            'banner' => $this->resolvePageBanner($page),
             'attentionPages' => $this->attentionPages(),
             'pqrs' => $pqrs,
             'messages' => $messages,
@@ -278,7 +273,6 @@ class CitizenAttentionController extends Controller
         return view('public.atencion.tramites', [
             'title' => $page?->title ?: 'Trámites y Servicios',
             'lead' => $page?->summary ?: 'Consulta requisitos, costos, canales y tiempos de respuesta de trámites institucionales.',
-            'banner' => $this->resolvePageBanner($page),
             'content' => $page?->content,
             'attentionPages' => $this->attentionPages(),
             'categories' => $categories,
@@ -345,7 +339,6 @@ class CitizenAttentionController extends Controller
         return view('public.atencion.faq', [
             'title' => $page?->title ?: 'Preguntas Frecuentes',
             'lead' => $page?->summary ?: 'Respuestas rápidas a consultas comunes de estudiantes, familias y ciudadanos.',
-            'banner' => $this->resolvePageBanner($page),
             'content' => $page?->content,
             'attentionPages' => $this->attentionPages(),
             'categories' => $categories,
@@ -361,7 +354,6 @@ class CitizenAttentionController extends Controller
         return view('public.atencion.mapa-sitio', [
             'title' => $page?->title ?: 'Mapa del Sitio',
             'lead' => $page?->summary ?: 'Estructura de navegacion del portal institucional para consulta rapida.',
-            'banner' => $this->resolvePageBanner($page),
             'content' => $page?->content,
             'attentionPages' => $this->attentionPages(),
             'sitemap' => $this->sitemapSections(),
@@ -375,7 +367,6 @@ class CitizenAttentionController extends Controller
         return view('public.atencion.participacion', [
             'title' => $page?->title ?: 'Participacion',
             'lead' => $page?->summary ?: 'Canales de participacion ciudadana y mecanismos de interlocucion con la institucion.',
-            'banner' => $this->resolvePageBanner($page),
             'content' => $page?->content,
             'attentionPages' => $this->attentionPages(),
         ]);

@@ -3,7 +3,7 @@
 @section('title', $event['title'])
 
 @section('content')
-    <x-public.internal-page :title="$event['title']" :lead="$event['summary']" :banner="$banner" section-key="academico" :force-banner-title-style="true">
+    <x-public.internal-page :title="$event['title']" :lead="$event['summary']" section-key="academico" :force-banner-title-style="true">
         <x-slot:sidebar>
             <div class="public-surface p-4 sm:p-5">
                 <p class="public-heading text-sm font-semibold uppercase tracking-wide text-ied-gray-900">Volver</p>

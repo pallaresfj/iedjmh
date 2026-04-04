@@ -9,7 +9,7 @@
     @php($mapLabel = collect([$contact['location'] ?? null, $contact['address'] ?? null])->filter()->implode(', '))
     @php($googleMapsUrl = $hasLocationCoordinates ? 'https://www.google.com/maps?q='.$locationLatitude.','.$locationLongitude : (filled($mapLabel) ? 'https://www.google.com/maps/search/?api=1&query='.urlencode($mapLabel) : null))
 
-    <x-public.internal-page :title="$title" :lead="$lead" :banner="$banner" section-key="atencion" :replace-header-with-banner="true" :force-banner-title-style="true">
+    <x-public.internal-page :title="$title" :lead="$lead" section-key="atencion" :replace-header-with-banner="true" :force-banner-title-style="true">
         <x-slot:sidebar>
             <x-public.atencion.sidebar :pages="$attentionPages" />
         </x-slot:sidebar>

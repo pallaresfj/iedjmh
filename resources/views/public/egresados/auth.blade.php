@@ -6,7 +6,7 @@
     <x-public.internal-page
         :title="$title"
         :lead="$lead"
-        :banner="$banner ?? null"
+
         section-key="atencion"
         :replace-header-with-banner="true"
         :force-banner-title-style="true"

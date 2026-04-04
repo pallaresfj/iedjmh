@@ -93,7 +93,6 @@ class NewsController extends Controller
         return view('public.noticias.index', [
             'title' => $listingPage?->title ?: ($sectionConfig['title'] ?? 'Noticias'),
             'lead' => $listingPage?->summary ?: ($sectionConfig['description'] ?? 'Consulta novedades, comunicados y actualizaciones institucionales.'),
-            'banner' => $this->resolvePageBanner($listingPage),
             'content' => $listingPage?->content,
             'items' => $items,
             'filters' => $filters,
@@ -137,7 +136,6 @@ class NewsController extends Controller
         return view('public.noticias.show', [
             'news' => $this->mapPost($post, includeContent: true),
             'related' => $related,
-            'banner' => $this->resolvePageBanner($listingPage),
         ]);
     }
 

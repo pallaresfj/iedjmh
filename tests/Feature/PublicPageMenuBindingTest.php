@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Banner;
 use App\Models\Page;
 use App\Models\Post;
 use Illuminate\Database\QueryException;
@@ -40,7 +39,7 @@ test('institution page falls back to base content when bound page is not publish
 
     $this->get(route('institucion.historia'))
         ->assertOk()
-        ->assertSee('Resena historica')
+        ->assertSee('Trayectoria institucional al servicio de la educación en Pivijay, Magdalena.')
         ->assertDontSee('Contenido no publicado');
 });
 
@@ -93,225 +92,25 @@ test('menu binding is unique in pages table', function () {
     })->toThrow(QueryException::class);
 });
 
-test('linked page banner is rendered above institutional page content', function () {
-    $page = Page::query()->create([
-        'title' => 'Historia con banner',
-        'slug' => 'historia-banner',
+test('institution cms page renders fallback internal banner from title and summary', function () {
+    Page::query()->create([
+        'title' => 'Historia con encabezado visual',
+        'slug' => 'historia-encabezado-visual',
         'menu_binding' => 'institucion.historia',
         'status' => 'published',
-        'summary' => 'Resumen institucional visible',
-        'content' => '<p>Contenido principal de historia</p>',
-    ]);
-
-    Banner::query()->create([
-        'title' => 'Banner institucional de historia',
-        'slug' => 'banner-historia',
-        'page_id' => $page->id,
-        'subtitle' => 'Comunidad educativa',
-        'description' => 'Mensaje destacado para la pagina de historia.',
-        'cta_label' => 'Leer mas',
-        'cta_url' => 'https://example.com/historia',
-        'target' => '_blank',
-        'status' => 'published',
-        'starts_at' => now()->subDay(),
-        'ends_at' => now()->addDay(),
+        'summary' => 'Resumen institucional visible en encabezado.',
     ]);
 
     $this->get(route('institucion.historia'))
         ->assertOk()
-        ->assertSee('Resumen institucional visible')
         ->assertSee('public-internal-banner-section public-banner-full-bleed', false)
-        ->assertSee('Banner institucional de historia')
-        ->assertSee('Mensaje destacado para la pagina de historia.')
-        ->assertSee('href="https://example.com/historia"', false)
-        ->assertSee('target="_blank"', false);
-});
-
-test('home hero ignores banners linked to specific pages', function () {
-    $page = Page::query()->create([
-        'title' => 'Historia home check',
-        'slug' => 'historia-home-check',
-        'menu_binding' => 'institucion.historia',
-        'status' => 'published',
-    ]);
-
-    Banner::query()->create([
-        'title' => 'Banner exclusivo de pagina interna',
-        'slug' => 'banner-pagina-interna',
-        'page_id' => $page->id,
-        'status' => 'published',
-    ]);
-
-    $this->get(route('home'))
-        ->assertOk()
-        ->assertDontSee('Banner exclusivo de pagina interna');
-});
-
-test('citizen attention pages render linked banner for the mapped page slug', function () {
-    $page = Page::query()->create([
-        'title' => 'Contacto institucional',
-        'slug' => 'atencion-contactenos',
-        'status' => 'published',
-    ]);
-
-    Banner::query()->create([
-        'title' => 'Banner de atencion ciudadana',
-        'slug' => 'banner-atencion-contacto',
-        'page_id' => $page->id,
-        'description' => 'Informacion destacada para quienes necesitan canales de contacto.',
-        'status' => 'published',
-    ]);
-
-    $this->get(route('atencion.contactenos'))
-        ->assertOk()
-        ->assertSee('Banner de atencion ciudadana')
-        ->assertSee('Informacion destacada para quienes necesitan canales de contacto.');
-});
-
-test('symbols page renders linked banner content when available', function () {
-    $page = Page::query()->create([
-        'title' => 'Simbolos institucionales CMS',
-        'slug' => 'simbolos-institucionales-cms',
-        'menu_binding' => 'institucion.simbolos',
-        'status' => 'published',
-    ]);
-
-    Banner::query()->create([
-        'title' => 'Banner especial de simbolos',
-        'slug' => 'banner-simbolos',
-        'page_id' => $page->id,
-        'subtitle' => 'Identidad institucional',
-        'description' => 'Mensaje destacado de simbolos desde el banner.',
-        'cta_label' => 'Conocer simbolos',
-        'cta_url' => 'https://example.com/simbolos',
-        'target' => '_blank',
-        'status' => 'published',
-    ]);
-
-    $this->get(route('institucion.simbolos'))
-        ->assertOk()
-        ->assertSee('public-internal-banner-section public-banner-full-bleed', false)
-        ->assertSee('Identidad institucional')
-        ->assertSee('Banner especial de simbolos')
-        ->assertSee('Mensaje destacado de simbolos desde el banner.')
-        ->assertSee('Conocer simbolos')
-        ->assertSee('href="https://example.com/simbolos"', false)
-        ->assertSee('target="_blank"', false);
-});
-
-test('news listing page renders linked banner', function () {
-    $page = Page::query()->create([
-        'title' => 'Noticias CMS',
-        'slug' => 'noticias',
-        'status' => 'published',
-    ]);
-
-    Banner::query()->create([
-        'title' => 'Banner de noticias institucionales',
-        'slug' => 'banner-noticias-listado',
-        'page_id' => $page->id,
-        'status' => 'published',
-    ]);
-
-    $this->get(route('noticias.index'))
-        ->assertOk()
-        ->assertSee('Banner de noticias institucionales');
-});
-
-test('news detail page reuses linked listing banner', function () {
-    $page = Page::query()->create([
-        'title' => 'Noticias CMS detalle',
-        'slug' => 'noticias',
-        'status' => 'published',
-    ]);
-
-    Banner::query()->create([
-        'title' => 'Banner noticias detalle',
-        'slug' => 'banner-noticias-detalle',
-        'page_id' => $page->id,
-        'status' => 'published',
-    ]);
-
-    $post = Post::query()->create([
-        'title' => 'Noticia para detalle',
-        'slug' => 'noticia-para-detalle',
-        'status' => 'published',
-        'content' => '<p>Contenido de detalle</p>',
-        'published_at' => now(),
-    ]);
-
-    $this->get(route('noticias.show', ['slug' => $post->slug]))
-        ->assertOk()
-        ->assertSee('Banner noticias detalle')
-        ->assertSee('Noticia para detalle');
-});
-
-test('cms base page hides standard header when linked banner is present', function () {
-    $page = Page::query()->create([
-        'title' => 'Historia con reemplazo de encabezado',
-        'slug' => 'historia-con-banner-encabezado',
-        'menu_binding' => 'institucion.historia',
-        'status' => 'published',
-        'summary' => 'Resumen de historia',
-    ]);
-
-    Banner::query()->create([
-        'title' => 'Banner principal historia',
-        'slug' => 'banner-principal-historia',
-        'page_id' => $page->id,
-        'status' => 'published',
-    ]);
-
-    $this->get(route('institucion.historia'))
-        ->assertOk()
-        ->assertSee('Banner principal historia')
+        ->assertSee('public-internal-banner--fallback', false)
+        ->assertSee('Historia con encabezado visual')
+        ->assertSee('Resumen institucional visible en encabezado.')
         ->assertDontSee('Seccion institucional');
 });
 
-test('cms base page keeps standard header when no linked banner exists', function () {
-    Page::query()->create([
-        'title' => 'Historia sin banner',
-        'slug' => 'historia-sin-banner-encabezado',
-        'menu_binding' => 'institucion.historia',
-        'status' => 'published',
-    ]);
-
-    $this->get(route('institucion.historia'))
-        ->assertOk()
-        ->assertSee('Seccion institucional');
-});
-
-test('detail page hides standard header and keeps listing banner for non cms views', function () {
-    $listingPage = Page::query()->create([
-        'title' => 'Noticias CMS para detalle',
-        'slug' => 'noticias',
-        'status' => 'published',
-    ]);
-
-    Banner::query()->create([
-        'title' => 'Banner listado noticias',
-        'slug' => 'banner-listado-noticias',
-        'page_id' => $listingPage->id,
-        'status' => 'published',
-    ]);
-
-    $post = Post::query()->create([
-        'title' => 'Detalle noticia con encabezado',
-        'slug' => 'detalle-noticia-con-encabezado',
-        'status' => 'published',
-        'content' => '<p>Contenido detalle</p>',
-        'published_at' => now(),
-    ]);
-
-    $this->get(route('noticias.show', ['slug' => $post->slug]))
-        ->assertOk()
-        ->assertSee('public-internal-banner-section public-banner-full-bleed', false)
-        ->assertDontSee('Seccion institucional')
-        ->assertSee('Detalle noticia con encabezado')
-        ->assertSee('Banner listado noticias');
-});
-
-test('non cms detail page renders dark fallback banner when cms banner is missing', function () {
+test('news detail page renders fallback internal banner when no cms page is mapped', function () {
     $post = Post::query()->create([
         'title' => 'Noticia sin banner asociado',
         'slug' => 'noticia-sin-banner-asociado',
@@ -328,10 +127,11 @@ test('non cms detail page renders dark fallback banner when cms banner is missin
         ->assertSee('Noticia sin banner asociado');
 });
 
-test('selected academic cms routes force banner title style with fallback when cms banner is missing', function () {
+test('selected academic routes force fallback internal banner style', function () {
     $routes = [
         'academico.niveles-educativos',
         'academico.modalidad',
+        'academico.planes-area',
         'academico.sistema-evaluacion',
         'academico.proyectos-pedagogicos',
         'academico.calendario-academico',
@@ -346,15 +146,12 @@ test('selected academic cms routes force banner title style with fallback when c
     }
 });
 
-test('academic planes area keeps standard header when no linked banner exists', function () {
-    $this->get(route('academico.planes-area'))
-        ->assertOk()
-        ->assertSee('Seccion institucional')
-        ->assertDontSee('public-internal-banner--fallback', false);
-});
-
-test('selected institution non cms routes force banner title style with fallback when cms banner is missing', function () {
+test('selected institution routes force fallback internal banner style', function () {
     $routes = [
+        'institucion.historia',
+        'institucion.mision-vision',
+        'institucion.simbolos',
+        'institucion.equipo-institucional',
         'institucion.sedes',
         'institucion.pei',
         'institucion.manual-convivencia',
@@ -368,11 +165,4 @@ test('selected institution non cms routes force banner title style with fallback
             ->assertSee('public-internal-banner--fallback', false)
             ->assertDontSee('Seccion institucional');
     }
-});
-
-test('institution cms route outside forced list keeps standard header when no linked banner exists', function () {
-    $this->get(route('institucion.historia'))
-        ->assertOk()
-        ->assertSee('Seccion institucional')
-        ->assertDontSee('public-internal-banner--fallback', false);
 });

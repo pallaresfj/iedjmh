@@ -6,7 +6,7 @@
     <x-public.internal-page
         :title="$title"
         :lead="$lead"
-        :banner="$banner"
+
         section-key="academico"
         :replace-header-with-banner="true"
         :force-banner-title-style="true"
@@ -142,60 +142,6 @@
                             @endif
                         </div>
                     </form>
-                </section>
-            @endif
-
-            @if ($pageKey === 'zona-academica')
-                <section class="space-y-4 border-t border-ied-gray-200 pt-6">
-                    @if ($academicZone['platforms']->isNotEmpty())
-                        <h2 class="public-heading text-xl font-semibold text-ied-gray-900">Plataformas institucionales</h2>
-                        <div class="grid gap-4 sm:grid-cols-2">
-                            @foreach ($academicZone['platforms'] as $platform)
-                                <a
-                                    href="{{ $platform['url'] }}"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="flex items-center gap-3 rounded-xl border border-ied-gray-200 bg-white p-4 transition hover:border-ied-primary hover:shadow-sm"
-                                    data-academic-zone-platform
-                                >
-                                    <span class="material-symbols-outlined text-2xl text-ied-primary" aria-hidden="true">{{ $platform['icon'] }}</span>
-                                    <span class="text-sm font-semibold text-ied-gray-900">{{ $platform['label'] }}</span>
-                                    <svg class="ml-auto size-4 text-ied-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                        <path fill-rule="evenodd" d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z" clip-rule="evenodd" />
-                                    </svg>
-                                </a>
-                            @endforeach
-                        </div>
-                    @endif
-
-                    @if ($academicZone['documents']->isNotEmpty())
-                        <h2 class="public-heading text-xl font-semibold text-ied-gray-900 {{ $academicZone['platforms']->isNotEmpty() ? 'mt-6' : '' }}">Recursos descargables</h2>
-                        <div class="divide-y divide-ied-gray-200 rounded-xl border border-ied-gray-200 bg-white">
-                            @foreach ($academicZone['documents'] as $doc)
-                                <div class="flex items-start gap-3 p-4" data-academic-zone-document>
-                                    <span class="material-symbols-outlined mt-0.5 text-lg text-ied-primary" aria-hidden="true">description</span>
-                                    <div class="min-w-0 flex-1">
-                                        @if ($doc['url'])
-                                            <a href="{{ $doc['url'] }}" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-ied-gray-900 hover:text-ied-primary">
-                                                {{ $doc['title'] }}
-                                            </a>
-                                        @else
-                                            <p class="text-sm font-semibold text-ied-gray-900">{{ $doc['title'] }}</p>
-                                        @endif
-                                        @if ($doc['summary'])
-                                            <p class="mt-0.5 text-xs text-ied-gray-600">{{ $doc['summary'] }}</p>
-                                        @endif
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    @endif
-
-                    @if ($academicZone['platforms']->isEmpty() && $academicZone['documents']->isEmpty())
-                        <div class="rounded-xl border border-dashed border-ied-gray-200 bg-ied-gray-100 p-4 text-sm text-ied-gray-700">
-                            Proximamente se publicaran recursos y plataformas academicas en esta seccion.
-                        </div>
-                    @endif
                 </section>
             @endif
 

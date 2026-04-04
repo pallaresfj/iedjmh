@@ -60,7 +60,6 @@ class EventController extends Controller
                     ->values(),
             ],
             'relatedEvents' => $relatedEvents,
-            'banner' => $this->resolvePageBanner($calendarPage),
         ]);
     }
 }

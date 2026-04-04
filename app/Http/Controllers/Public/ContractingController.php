@@ -133,7 +133,6 @@ class ContractingController extends Controller
         return view('public.transparencia.contratacion.index', [
             'title' => $page?->title ?: 'Contratación y Transparencia',
             'lead' => $page?->summary ?: 'Consulta ofertas de contratos FSE, adjudicaciones, documentos soporte y directorio de contratistas adjudicados.',
-            'banner' => $this->resolvePageBanner($page),
             'categories' => $this->resolveDocumentCategories(),
             'manualDocument' => $this->resolveManualDocument(),
             'filters' => $filters,
@@ -181,7 +180,6 @@ class ContractingController extends Controller
 
         return view('public.transparencia.contratacion.show', [
             'title' => $contract->process_code,
-            'banner' => $this->resolvePageBanner($page),
             'categories' => $this->resolveDocumentCategories(),
             'contract' => $this->mapContractDetail($contract),
             'documentsByStage' => $documentsByStage,

@@ -82,7 +82,6 @@ class ProjectController extends Controller
         return view('public.proyectos.index', [
             'title' => $listingPage?->title ?: 'Proyectos Pedagógicos',
             'lead' => $listingPage?->summary ?: 'Iniciativas de aula y de institución para fortalecer aprendizaje significativo.',
-            'banner' => $this->resolvePageBanner($listingPage),
             'content' => $listingPage?->content,
             'featuredProject' => $featuredProject,
             'projects' => $projects,
@@ -117,7 +116,6 @@ class ProjectController extends Controller
         return view('public.proyectos.show', [
             'project' => $this->mapProject($project, includeDescription: true),
             'related' => $related,
-            'banner' => $this->resolvePageBanner($listingPage),
             'academicPages' => $this->academicNavigationItems(),
         ]);
     }

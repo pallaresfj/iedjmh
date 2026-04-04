@@ -31,7 +31,6 @@ class AuthController extends Controller
             'graduationYears' => range((int) now()->format('Y'), 1980),
             'title' => $cmsPage?->title ?: 'Portal de Egresados',
             'lead' => $cmsPage?->summary ?: 'Accede a tus documentos oficiales, actualiza tus datos y mantente conectado con la red institucional de egresados.',
-            'banner' => $this->resolvePageBanner($cmsPage),
         ]);
     }
 

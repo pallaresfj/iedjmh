@@ -54,7 +54,6 @@ class InstitutionController extends Controller
         return view('public.institucion.index', [
             'title' => $landingPage?->title ?: 'Institución',
             'lead' => $landingPage?->summary ?: 'Conoce nuestra historia, lineamientos institucionales, equipo de trabajo y servicios para la comunidad.',
-            'banner' => $this->resolvePageBanner($landingPage),
             'institutionPages' => $this->navigationItems($definitions),
             'cards' => $cards,
         ]);
@@ -84,7 +83,6 @@ class InstitutionController extends Controller
             'pageKey' => $pageKey,
             'title' => $title,
             'lead' => $lead,
-            'banner' => $this->resolvePageBanner($cmsPage),
             'blocks' => $this->resolveBlocks($cmsPage, $definition),
             'campuses' => $pageKey === 'sedes' ? $this->resolveCampuses() : collect(),
             'staffFilters' => $directiveDirectory['filters'],

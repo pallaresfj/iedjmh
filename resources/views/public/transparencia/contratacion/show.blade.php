@@ -3,7 +3,7 @@
 @section('title', $contract['process_code'])
 
 @section('content')
-    <x-public.internal-page :title="$contract['process_code']" :lead="$contract['object']" :banner="$banner" section-key="transparencia" :force-banner-title-style="true">
+    <x-public.internal-page :title="$contract['process_code']" :lead="$contract['object']" section-key="transparencia" :force-banner-title-style="true">
         <x-slot:sidebar>
             <x-public.transparencia.sidebar :categories="$categories" active-section="contratacion" />
 

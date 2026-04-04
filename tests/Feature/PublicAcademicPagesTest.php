@@ -16,8 +16,7 @@ test('academic landing page loads and shows navigation cards', function () {
         ->assertSee('Planes de Área')
         ->assertSee('Sistema de Evaluación')
         ->assertSee('Proyectos Pedagógicos')
-        ->assertSee('Calendario Académico')
-        ->assertSee('Zona Académica');
+        ->assertSee('Calendario Académico');
 });
 
 test('academic niveles educativos page loads', function () {

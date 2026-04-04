@@ -25,7 +25,6 @@ class ShieldRolesAndUsersSeeder extends Seeder
      */
     private const CONTENT_SUBJECTS = [
         'AreaPlan',
-        'Banner',
         'Category',
         'Campus',
         'Contract',
