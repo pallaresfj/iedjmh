@@ -37,9 +37,6 @@ trait HandlesContractValidationFeedback
                 }
 
                 $message = trim($message);
-                $statePath = str_starts_with($key, 'data.') ? $key : "data.{$key}";
-
-                $this->addError($statePath, $message);
                 $this->addError($key, $message);
             }
         }

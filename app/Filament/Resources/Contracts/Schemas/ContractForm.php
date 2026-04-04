@@ -398,6 +398,7 @@ class ContractForm
                             ->label('Documentos del proceso')
                             ->helperText(fn (Get $get): ?string => static::publicationRequirementsHint((string) ($get('process_status') ?? $get('../process_status'))))
                             ->relationship('documents')
+                            ->mutateRelationshipDataBeforeFillUsing(fn (array $data): array => static::normalizeDocumentRelationshipData($data))
                             ->mutateRelationshipDataBeforeCreateUsing(fn (array $data): array => static::normalizeDocumentRelationshipData($data))
                             ->mutateRelationshipDataBeforeSaveUsing(fn (array $data): array => static::normalizeDocumentRelationshipData($data))
                             ->extraAttributes(static function (Repeater $component): array {
@@ -458,13 +459,14 @@ class ContractForm
                                     ->options(ContractDocument::STAGE_OPTIONS)
                                     ->default('convocatoria')
                                     ->live()
-                                    ->afterStateUpdated(fn (Get $get, Set $set, ?string $state) => static::syncDocumentTypeFromStage($get, $set, $state))
+                                    ->afterStateHydrated(fn (Set $set, mixed $state) => $set('stage', static::normalizeDocumentStage($state)))
+                                    ->afterStateUpdated(fn (Get $get, Set $set, mixed $state) => static::syncDocumentTypeFromStage($get, $set, $state))
                                     ->required()
                                     ->native(false)
                                     ->columnSpan(['default' => 'full', 'lg' => 2]),
                                 Select::make('document_type')
                                     ->label('Tipo de documento')
-                                    ->options(fn (Get $get): array => ContractDocument::documentTypeOptionsForStage(static::normalizeStringValue($get('stage'))))
+                                    ->options(fn (Get $get): array => ContractDocument::documentTypeOptionsForStage(static::normalizeDocumentStage($get('stage'))))
                                     ->disabled(fn (Get $get): bool => static::normalizeStringValue($get('stage')) === '')
                                     ->helperText('Selecciona la etapa para cargar los tipos disponibles.')
                                     ->required()
@@ -531,15 +533,16 @@ class ContractForm
         $set('process_code', Contract::nextProcessCode($year));
     }
 
-    private static function syncDocumentTypeFromStage(Get $get, Set $set, ?string $stage): void
+    private static function syncDocumentTypeFromStage(Get $get, Set $set, mixed $stage): void
     {
         $documentType = static::normalizeStringValue($get('document_type'));
+        $normalizedStage = static::normalizeDocumentStage($stage);
 
         if ($documentType === '') {
             return;
         }
 
-        if (! ContractDocument::isDocumentTypeAllowedForStage($stage, $documentType)) {
+        if (! ContractDocument::isDocumentTypeAllowedForStage($normalizedStage, $documentType)) {
             $set('document_type', null);
         }
     }
@@ -905,8 +908,10 @@ class ContractForm
      */
     private static function normalizeDocumentRelationshipData(array $data): array
     {
+        $stage = static::normalizeDocumentStage($data['stage'] ?? null);
         $documentType = static::normalizeStringValue($data['document_type'] ?? null);
         $title = static::normalizeStringValue($data['title'] ?? null);
+        $data['stage'] = $stage;
 
         if ($documentType !== '' && $documentType !== 'otro' && $title === '') {
             $data['title'] = ContractDocument::labelForType($documentType);
@@ -917,5 +922,16 @@ class ContractForm
         $data['title'] = $title;
 
         return $data;
+    }
+
+    private static function normalizeDocumentStage(mixed $stage): string
+    {
+        $normalizedStage = static::normalizeStringValue($stage);
+
+        if (array_key_exists($normalizedStage, ContractDocument::STAGE_OPTIONS)) {
+            return $normalizedStage;
+        }
+
+        return 'convocatoria';
     }
 }
