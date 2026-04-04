@@ -107,8 +107,9 @@ class SearchController extends Controller
             return collect();
         }
 
-        return Document::query()
-            ->where('status', 'published')
+        return $this->applyGoogleDriveDocumentUrlFilter(
+            Document::query()->where('status', 'published')
+        )
             ->where(fn (Builder $q) => $q
                 ->whereRaw('title COLLATE utf8mb4_0900_ai_ci LIKE ?', [$term])
                 ->orWhereRaw('summary COLLATE utf8mb4_0900_ai_ci LIKE ?', [$term]))

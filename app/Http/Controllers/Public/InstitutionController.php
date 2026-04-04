@@ -289,9 +289,7 @@ class InstitutionController extends Controller
             return null;
         }
 
-        $documentUrl = filled($document->external_url)
-            ? (string) $document->external_url
-            : $this->resolveMediaUrl($document->file_path);
+        $documentUrl = $this->sanitizeGoogleDriveUrl($document->external_url);
 
         if (! filled($documentUrl)) {
             return null;

@@ -156,7 +156,7 @@ test('contracting page renders manual document from settings when available', fu
         'title' => 'Manual de Contratacion Vigente',
         'slug' => 'manual-contratacion-vigente',
         'status' => 'published',
-        'external_url' => 'https://example.com/manual.pdf',
+        'external_url' => 'https://drive.google.com/file/d/1manualcontratacionvigente/view?usp=sharing',
         'published_at' => now(),
     ]);
 
@@ -173,7 +173,7 @@ test('contracting page renders manual document from settings when available', fu
     $this->get(route('transparencia.contratacion.index'))
         ->assertOk()
         ->assertSee('Manual de Contratacion Vigente')
-        ->assertSee('https://example.com/manual.pdf', false)
+        ->assertSee('https://drive.google.com/file/d/1manualcontratacionvigente/view?usp=sharing', false)
         ->assertSee($contract->process_code);
 });
 

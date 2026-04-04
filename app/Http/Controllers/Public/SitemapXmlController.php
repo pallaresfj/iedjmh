@@ -86,8 +86,9 @@ class SitemapXmlController extends Controller
         }
 
         if ($this->canQueryTable('documents')) {
-            Document::query()
-                ->where('status', 'published')
+            $this->applyGoogleDriveDocumentUrlFilter(
+                Document::query()->where('status', 'published')
+            )
                 ->limit(200)
                 ->get(['slug', 'updated_at'])
                 ->each(function (Document $doc) use ($urls): void {

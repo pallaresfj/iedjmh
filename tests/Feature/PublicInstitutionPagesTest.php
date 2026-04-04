@@ -142,7 +142,7 @@ test('institution pei page shows configured document from settings', function ()
         'title' => 'PEI 2026',
         'slug' => 'pei-2026',
         'summary' => 'Documento institucional del PEI.',
-        'external_url' => 'https://example.com/pei-2026.pdf',
+        'external_url' => 'https://drive.google.com/file/d/1pei2026documento/view?usp=sharing',
         'status' => 'published',
         'published_at' => now(),
     ]);
@@ -157,16 +157,16 @@ test('institution pei page shows configured document from settings', function ()
         ->assertOk()
         ->assertSee('PEI 2026')
         ->assertSee('Documento institucional del PEI.')
-        ->assertSee('href="https://example.com/pei-2026.pdf"', false)
+        ->assertSee('href="https://drive.google.com/file/d/1pei2026documento/view?usp=sharing"', false)
         ->assertSee('target="_blank"', false);
 });
 
-test('institution manual convivencia page shows configured file document from settings', function () {
+test('institution manual convivencia page shows configured google docs document from settings', function () {
     $document = Document::query()->create([
         'title' => 'Manual de convivencia 2026',
         'slug' => 'manual-convivencia-2026',
         'summary' => 'Reglas institucionales vigentes.',
-        'file_path' => 'manuales/manual-convivencia-2026.pdf',
+        'external_url' => 'https://docs.google.com/document/d/1manualconvivencia2026/edit?usp=sharing',
         'status' => 'published',
         'published_at' => now(),
     ]);
@@ -181,7 +181,7 @@ test('institution manual convivencia page shows configured file document from se
         ->assertOk()
         ->assertSee('Manual de convivencia 2026')
         ->assertSee('Reglas institucionales vigentes.')
-        ->assertSee('href="/storage/manuales/manual-convivencia-2026.pdf"', false)
+        ->assertSee('href="https://docs.google.com/document/d/1manualconvivencia2026/edit?usp=sharing"', false)
         ->assertSee('target="_blank"', false);
 });
 

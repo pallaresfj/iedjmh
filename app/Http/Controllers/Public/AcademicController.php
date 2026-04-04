@@ -422,14 +422,6 @@ class AcademicController extends Controller
 
     private function resolveDocumentUrl(Document $document): ?string
     {
-        if ($document->external_url) {
-            return $document->external_url;
-        }
-
-        if (! $document->file_path) {
-            return null;
-        }
-
-        return $this->resolveMediaUrl($document->file_path);
+        return $this->sanitizeGoogleDriveUrl($document->external_url);
     }
 }

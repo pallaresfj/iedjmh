@@ -17,6 +17,7 @@ test('transparency landing shows recent published documents', function () {
         'title' => 'Informe de gestion 2025',
         'slug' => 'informe-gestion-2025',
         'summary' => 'Resumen del informe anual.',
+        'external_url' => 'https://drive.google.com/file/d/1informegestion2025/view?usp=sharing',
         'status' => 'published',
         'published_at' => now(),
     ]);
@@ -24,6 +25,7 @@ test('transparency landing shows recent published documents', function () {
     Document::query()->create([
         'title' => 'Documento borrador',
         'slug' => 'documento-borrador',
+        'external_url' => 'https://docs.google.com/document/d/1documentoborrador/edit?usp=sharing',
         'status' => 'draft',
     ]);
 
@@ -38,6 +40,7 @@ test('transparency documents page lists published documents with pagination', fu
         Document::query()->create([
             'title' => "Documento publico {$i}",
             'slug' => "documento-publico-{$i}",
+            'external_url' => "https://drive.google.com/file/d/1documentopublico{$i}/view?usp=sharing",
             'status' => 'published',
             'published_at' => now()->subDays($i),
         ]);
@@ -54,6 +57,7 @@ test('transparency documents filters by search', function () {
         'title' => 'Presupuesto 2026',
         'slug' => 'presupuesto-2026',
         'summary' => 'Proyeccion financiera anual.',
+        'external_url' => 'https://drive.google.com/file/d/1presupuesto2026/view?usp=sharing',
         'status' => 'published',
         'published_at' => now(),
     ]);
@@ -61,6 +65,7 @@ test('transparency documents filters by search', function () {
     Document::query()->create([
         'title' => 'Manual de funciones',
         'slug' => 'manual-funciones',
+        'external_url' => 'https://docs.google.com/document/d/1manualfunciones/edit?usp=sharing',
         'status' => 'published',
         'published_at' => now(),
     ]);
@@ -81,6 +86,7 @@ test('transparency documents filters by category', function () {
     $categorized = Document::query()->create([
         'title' => 'Balance financiero',
         'slug' => 'balance-financiero',
+        'external_url' => 'https://drive.google.com/file/d/1balancefinanciero/view?usp=sharing',
         'status' => 'published',
         'published_at' => now(),
     ]);
@@ -89,6 +95,7 @@ test('transparency documents filters by category', function () {
     $uncategorized = Document::query()->create([
         'title' => 'Otro documento',
         'slug' => 'otro-documento',
+        'external_url' => 'https://docs.google.com/document/d/1otrodocumento/edit?usp=sharing',
         'status' => 'published',
         'published_at' => now(),
     ]);
@@ -105,6 +112,7 @@ test('transparency document detail shows published document', function () {
         'slug' => 'rendicion-cuentas',
         'summary' => 'Informe de rendicion.',
         'description' => '<p>Contenido completo de la rendicion de cuentas.</p>',
+        'external_url' => 'https://drive.google.com/file/d/1rendicioncuentas/view?usp=sharing',
         'status' => 'published',
         'published_at' => now(),
     ]);
@@ -119,9 +127,27 @@ test('transparency document detail returns 404 for draft', function () {
     Document::query()->create([
         'title' => 'Borrador secreto',
         'slug' => 'borrador-secreto',
+        'external_url' => 'https://docs.google.com/document/d/1borradorsecreto/edit?usp=sharing',
         'status' => 'draft',
     ]);
 
     $this->get(route('transparencia.documento', ['slug' => 'borrador-secreto']))
+        ->assertNotFound();
+});
+
+test('transparency hides published documents with non google drive links', function () {
+    Document::query()->create([
+        'title' => 'Documento externo no permitido',
+        'slug' => 'documento-externo-no-permitido',
+        'external_url' => 'https://example.com/documento.pdf',
+        'status' => 'published',
+        'published_at' => now(),
+    ]);
+
+    $this->get(route('transparencia.documentos'))
+        ->assertOk()
+        ->assertDontSee('Documento externo no permitido');
+
+    $this->get(route('transparencia.documento', ['slug' => 'documento-externo-no-permitido']))
         ->assertNotFound();
 });

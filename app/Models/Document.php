@@ -17,8 +17,6 @@ class Document extends Model
         'slug',
         'summary',
         'description',
-        'file_path',
-        'file_disk',
         'external_url',
         'document_number',
         'document_date',

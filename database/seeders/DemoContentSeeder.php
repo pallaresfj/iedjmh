@@ -328,9 +328,21 @@ class DemoContentSeeder extends Seeder
         $category = Category::query()->where('slug', 'documentos-institucionales')->first();
 
         $docs = [
-            ['title' => 'Manual de Convivencia 2026', 'document_number' => 'DOC-0001'],
-            ['title' => 'Plan de Mejoramiento Institucional', 'document_number' => 'DOC-0002'],
-            ['title' => 'Informe de Gestion 2025', 'document_number' => 'DOC-0003'],
+            [
+                'title' => 'Manual de Convivencia 2026',
+                'document_number' => 'DOC-0001',
+                'external_url' => 'https://drive.google.com/file/d/1manualconvivencia2026/view?usp=sharing',
+            ],
+            [
+                'title' => 'Plan de Mejoramiento Institucional',
+                'document_number' => 'DOC-0002',
+                'external_url' => 'https://docs.google.com/document/d/1planmejoramientoinstitucional/edit?usp=sharing',
+            ],
+            [
+                'title' => 'Informe de Gestion 2025',
+                'document_number' => 'DOC-0003',
+                'external_url' => 'https://drive.google.com/file/d/1informegestion2025/view?usp=sharing',
+            ],
         ];
 
         foreach ($docs as $i => $doc) {

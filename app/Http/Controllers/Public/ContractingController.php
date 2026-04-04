@@ -441,10 +441,12 @@ class ContractingController extends Controller
             ->where('status', 'published')
             ->whereHas('documents', function (Builder $documentQuery): void {
                 $documentQuery->where('status', 'published');
+                $this->applyGoogleDriveDocumentUrlFilter($documentQuery);
             })
             ->withCount([
                 'documents as published_documents_count' => function (Builder $documentQuery): void {
                     $documentQuery->where('status', 'published');
+                    $this->applyGoogleDriveDocumentUrlFilter($documentQuery);
                 },
             ])
             ->orderBy('sort_order')
@@ -469,17 +471,7 @@ class ContractingController extends Controller
 
     private function resolveDocumentUrl(Document $document): ?string
     {
-        $external = $this->sanitizeReferenceUrl($document->external_url);
-
-        if ($external !== null) {
-            return $external;
-        }
-
-        if (! filled($document->file_path)) {
-            return null;
-        }
-
-        return $this->resolveMediaUrl((string) $document->file_path);
+        return $this->sanitizeGoogleDriveUrl($document->external_url);
     }
 
     private function sanitizeReferenceUrl(?string $url): ?string

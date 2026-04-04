@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Public\Concerns;
 
 use App\Models\Page;
 use Carbon\CarbonInterface;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
@@ -141,6 +142,45 @@ trait ResolvesPublicContent
         }
 
         return $this->publishedPageBySlug($fallbackSlug);
+    }
+
+    protected function sanitizeGoogleDriveUrl(?string $url): ?string
+    {
+        if (! is_string($url)) {
+            return null;
+        }
+
+        $normalized = trim($url);
+
+        if ($normalized === '' || ! filter_var($normalized, FILTER_VALIDATE_URL)) {
+            return null;
+        }
+
+        $scheme = strtolower((string) parse_url($normalized, PHP_URL_SCHEME));
+
+        if ($scheme !== 'https') {
+            return null;
+        }
+
+        $host = strtolower((string) parse_url($normalized, PHP_URL_HOST));
+        $host = preg_replace('/^www\./', '', $host) ?? $host;
+
+        if (! in_array($host, ['drive.google.com', 'docs.google.com'], true)) {
+            return null;
+        }
+
+        return $normalized;
+    }
+
+    protected function applyGoogleDriveDocumentUrlFilter(Builder $query, string $column = 'external_url'): Builder
+    {
+        return $query->where(function (Builder $urlQuery) use ($column): void {
+            $urlQuery
+                ->where($column, 'like', 'https://drive.google.com/%')
+                ->orWhere($column, 'like', 'https://docs.google.com/%')
+                ->orWhere($column, 'like', 'https://www.drive.google.com/%')
+                ->orWhere($column, 'like', 'https://www.docs.google.com/%');
+        });
     }
 
     protected function resolveMediaUrl(?string $path): ?string

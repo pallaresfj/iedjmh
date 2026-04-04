@@ -6,7 +6,6 @@ use App\Models\Document;
 use App\Support\Categories\CategoryScope;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -65,19 +64,35 @@ class DocumentForm
                                     ->rows(8)
                                     ->columnSpanFull(),
                             ]),
-                        Tab::make('Archivo y Publicacion')
+                        Tab::make('Enlace y Publicacion')
                             ->icon('heroicon-o-paper-clip')
                             ->columns(2)
                             ->schema([
-                                FileUpload::make('file_path')
-                                    ->label('Archivo')
-                                    ->directory('documents')
-                                    ->downloadable()
-                                    ->openable(),
                                 TextInput::make('external_url')
-                                    ->label('URL externa')
+                                    ->label('Enlace Google Drive')
+                                    ->helperText('Solo se permiten enlaces https://drive.google.com o https://docs.google.com')
+                                    ->required()
                                     ->url()
-                                    ->maxLength(255),
+                                    ->rule(function (): \Closure {
+                                        return function (string $attribute, mixed $value, \Closure $fail): void {
+                                            if (! is_string($value) || trim($value) === '') {
+                                                $fail('El enlace de Google Drive es obligatorio.');
+
+                                                return;
+                                            }
+
+                                            $normalized = trim($value);
+                                            $scheme = strtolower((string) parse_url($normalized, PHP_URL_SCHEME));
+                                            $host = strtolower((string) parse_url($normalized, PHP_URL_HOST));
+                                            $host = preg_replace('/^www\./', '', $host) ?? $host;
+
+                                            if ($scheme !== 'https' || ! in_array($host, ['drive.google.com', 'docs.google.com'], true)) {
+                                                $fail('El enlace debe ser HTTPS y pertenecer a Google Drive o Google Docs.');
+                                            }
+                                        };
+                                    })
+                                    ->maxLength(2048)
+                                    ->columnSpanFull(),
                                 TextInput::make('document_number')
                                     ->label('Numero de documento')
                                     ->maxLength(100),

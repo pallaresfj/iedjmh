@@ -193,10 +193,12 @@ class TransparencyController extends Controller
             ->where('status', 'published')
             ->whereHas('documents', function (Builder $documentQuery): void {
                 $documentQuery->where('status', 'published');
+                $this->applyGoogleDriveDocumentUrlFilter($documentQuery);
             })
             ->withCount([
                 'documents as published_documents_count' => function (Builder $documentQuery): void {
                     $documentQuery->where('status', 'published');
+                    $this->applyGoogleDriveDocumentUrlFilter($documentQuery);
                 },
             ])
             ->orderBy('sort_order')
@@ -216,7 +218,9 @@ class TransparencyController extends Controller
 
     private function documentsBaseQuery(): Builder
     {
-        return Document::query()->where('status', 'published');
+        return $this->applyGoogleDriveDocumentUrlFilter(
+            Document::query()->where('status', 'published')
+        );
     }
 
     /**
@@ -246,18 +250,6 @@ class TransparencyController extends Controller
 
     private function resolveDocumentUrl(Document $document): ?string
     {
-        if ($document->external_url) {
-            return $document->external_url;
-        }
-
-        if (! $document->file_path) {
-            return null;
-        }
-
-        if (Str::startsWith($document->file_path, ['http://', 'https://', '/'])) {
-            return $document->file_path;
-        }
-
-        return '/storage/'.ltrim($document->file_path, '/');
+        return $this->sanitizeGoogleDriveUrl($document->external_url);
     }
 }
