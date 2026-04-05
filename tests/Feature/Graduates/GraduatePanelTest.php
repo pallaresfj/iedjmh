@@ -3,6 +3,7 @@
 use App\Models\Graduate;
 use App\Models\GraduateDocument;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 
 uses(RefreshDatabase::class);
 
@@ -64,4 +65,51 @@ test('legacy certificates route redirects to documents route', function () {
 
     $this->get(route('egresados.panel.certificados'))
         ->assertRedirect(route('egresados.panel.documentos'));
+});
+
+test('graduate panel exposes authenticated route for local file documents', function () {
+    Storage::fake('local');
+
+    $graduate = Graduate::factory()->create(['status' => 'active']);
+    Storage::disk('local')->put('graduates/'.$graduate->id.'/identity-documents/identificacion.pdf', 'contenido');
+
+    $document = GraduateDocument::factory()->create([
+        'graduate_id' => $graduate->id,
+        'title' => 'Identificacion',
+        'drive_url' => null,
+        'file_path' => 'graduates/'.$graduate->id.'/identity-documents/identificacion.pdf',
+        'file_disk' => 'local',
+        'is_visible' => true,
+    ]);
+
+    $this->actingAs($graduate, 'graduate');
+
+    $this->get(route('egresados.panel.documentos'))
+        ->assertOk()
+        ->assertSee(route('egresados.panel.documentos.archivo', ['document' => $document]), false);
+
+    $this->get(route('egresados.panel.documentos.archivo', ['document' => $document]))
+        ->assertOk()
+        ->assertHeader('content-disposition');
+});
+
+test('graduate cannot access file document from another graduate', function () {
+    Storage::fake('local');
+
+    $graduate = Graduate::factory()->create(['status' => 'active']);
+    $otherGraduate = Graduate::factory()->create(['status' => 'active']);
+    Storage::disk('local')->put('graduates/'.$otherGraduate->id.'/identity-documents/identificacion.pdf', 'contenido');
+
+    $document = GraduateDocument::factory()->create([
+        'graduate_id' => $otherGraduate->id,
+        'drive_url' => null,
+        'file_path' => 'graduates/'.$otherGraduate->id.'/identity-documents/identificacion.pdf',
+        'file_disk' => 'local',
+        'is_visible' => true,
+    ]);
+
+    $this->actingAs($graduate, 'graduate');
+
+    $this->get(route('egresados.panel.documentos.archivo', ['document' => $document]))
+        ->assertNotFound();
 });

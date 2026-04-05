@@ -9,6 +9,7 @@ use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -136,6 +137,25 @@ class DocumentsRelationManager extends RelationManager
                     ->modalSubmitActionLabel('Crear documento'),
             ])
             ->recordActions([
+                Action::make('open_document')
+                    ->label('Ver documento')
+                    ->icon('heroicon-o-arrow-top-right-on-square')
+                    ->iconButton()
+                    ->tooltip('Ver documento')
+                    ->url(function (GraduateDocument $record): ?string {
+                        if (filled($record->drive_url)) {
+                            return $record->drive_url;
+                        }
+
+                        if (filled($record->file_path)) {
+                            return route('admin.graduates.documents.file.show', ['document' => $record]);
+                        }
+
+                        return null;
+                    })
+                    ->openUrlInNewTab()
+                    ->visible(fn (GraduateDocument $record): bool => filled($record->drive_url) || filled($record->file_path))
+                    ->iconSize(IconSize::Large),
                 EditAction::make()
                     ->iconButton()
                     ->tooltip('Editar')

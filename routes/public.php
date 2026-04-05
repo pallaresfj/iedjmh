@@ -49,6 +49,7 @@ Route::prefix('egresados')->name('egresados.')->group(function () {
             Route::get('/', fn () => redirect()->route('egresados.panel.resumen'))->name('index');
             Route::get('/resumen', [GraduatePanelController::class, 'summary'])->name('resumen');
             Route::get('/mis-documentos', [GraduatePanelController::class, 'certificates'])->name('documentos');
+            Route::get('/mis-documentos/{document}/archivo', [GraduatePanelController::class, 'showDocumentFile'])->name('documentos.archivo');
             Route::get('/mis-certificados', fn () => redirect()->route('egresados.panel.documentos'))->name('certificados');
             Route::get('/registro-academico', [GraduatePanelController::class, 'academicRecord'])->name('registro-academico');
             Route::get('/configuracion', [GraduatePanelController::class, 'settings'])->name('configuracion');

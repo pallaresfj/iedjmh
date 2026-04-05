@@ -9,7 +9,9 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Symfony\Component\HttpFoundation\Response;
 
 class PanelController extends Controller
 {
@@ -32,6 +34,33 @@ class PanelController extends Controller
 
         return $this->panelView($graduate, 'mis-documentos', [
             'documents' => $this->visibleDocuments($graduate),
+        ]);
+    }
+
+    public function showDocumentFile(Request $request, GraduateDocument $document): Response
+    {
+        /** @var Graduate $graduate */
+        $graduate = $request->user('graduate');
+
+        if (
+            $document->graduate_id !== $graduate->id
+            || ! $document->is_visible
+            || blank($document->file_path)
+        ) {
+            abort(404);
+        }
+
+        $disk = trim((string) ($document->file_disk ?: 'local'));
+        $path = trim((string) $document->file_path);
+
+        if (! Storage::disk($disk)->exists($path)) {
+            abort(404);
+        }
+
+        $fileName = basename($path);
+
+        return Storage::disk($disk)->response($path, $fileName, [
+            'Content-Disposition' => 'inline; filename="'.addslashes($fileName).'"',
         ]);
     }
 

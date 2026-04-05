@@ -94,7 +94,7 @@ class GraduateDocument extends Model
                 return null;
             }
 
-            return Storage::disk($disk)->temporaryUrl($this->file_path, now()->addMinutes(30));
+            return route('egresados.panel.documentos.archivo', ['document' => $this]);
         } catch (Throwable) {
             return null;
         }
