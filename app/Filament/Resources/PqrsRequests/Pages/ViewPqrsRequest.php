@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\PqrsRequests\Pages;
 
+use App\Models\PqrsMessage;
+use App\Notifications\PqrsResponseNotification;
 use App\Filament\Resources\PqrsRequests\PqrsRequestResource;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
@@ -11,6 +13,8 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class ViewPqrsRequest extends ViewRecord
 {
@@ -83,7 +87,7 @@ class ViewPqrsRequest extends ViewRecord
                         ]];
                     }
 
-                    $this->record->messages()->create([
+                    $responseMessage = $this->record->messages()->create([
                         'user_id' => auth()->id(),
                         'author_name' => auth()->user()?->name,
                         'author_email' => auth()->user()?->email,
@@ -94,12 +98,49 @@ class ViewPqrsRequest extends ViewRecord
                         'attachments' => $attachments,
                     ]);
 
+                    $mailWasSent = $this->sendResponseMailNotification($responseMessage);
+
                     Notification::make()
-                        ->title('Respuesta enviada correctamente.')
+                        ->title('Respuesta guardada correctamente.')
                         ->success()
                         ->send();
+
+                    if (! $mailWasSent) {
+                        Notification::make()
+                            ->title('La respuesta se guardo, pero no se pudo enviar el correo al ciudadano.')
+                            ->warning()
+                            ->send();
+                    }
                 }),
             EditAction::make(),
         ];
+    }
+
+    private function sendResponseMailNotification(PqrsMessage $responseMessage): bool
+    {
+        if (! filled($this->record->applicant_email)) {
+            Log::warning('pqrs_response_mail_not_sent_missing_email', [
+                'tracking_code' => $this->record->tracking_code,
+                'pqrs_message_id' => $responseMessage->id,
+            ]);
+
+            return false;
+        }
+
+        try {
+            $this->record->notify(new PqrsResponseNotification($this->record, $responseMessage));
+
+            return true;
+        } catch (Throwable $exception) {
+            Log::warning('pqrs_response_mail_failed', [
+                'tracking_code' => $this->record->tracking_code,
+                'pqrs_message_id' => $responseMessage->id,
+                'applicant_email' => $this->record->applicant_email,
+                'exception_class' => $exception::class,
+                'exception_message' => $exception->getMessage(),
+            ]);
+
+            return false;
+        }
     }
 }

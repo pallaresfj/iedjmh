@@ -10,6 +10,10 @@ use App\Models\PqrsMessage;
 use App\Models\PqrsRequest;
 use App\Models\User;
 use Filament\Facades\Filament;
+use Filament\Notifications\Notification as FilamentNotification;
+use App\Notifications\PqrsResponseNotification;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification as NotificationFacade;
 use Livewire\Livewire;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -196,6 +200,112 @@ test('user with update permission can respond multiple times from pqrs detail ac
         ->and($responses->first()?->subject)->toBe("Respuesta al {$record->tracking_code}")
         ->and($responses->first()?->is_internal)->toBeFalse()
         ->and($responses->last()?->subject)->toBe("Seguimiento al {$record->tracking_code}");
+});
+
+test('pqrs respond action sends exactly one notification when mail transport is available', function () {
+    NotificationFacade::fake();
+
+    $role = createRoleWithPqrsPermissions('gestor-pqrs-mail-ok', ['ViewAny', 'View', 'Update']);
+
+    $user = User::factory()->create([
+        'is_admin' => false,
+    ]);
+    $user->assignRole($role);
+
+    $record = PqrsRequest::query()->create([
+        'tracking_code' => 'PQRS-2026-RESP-MAIL-OK',
+        'type' => 'peticion',
+        'is_anonymous' => false,
+        'status' => 'received',
+        'priority' => 'medium',
+        'message' => str_repeat('Mensaje inicial para correo disponible. ', 3),
+        'applicant_name' => 'Solicitante mail ok',
+        'applicant_email' => 'mail-ok@example.test',
+        'submitted_at' => now()->subHour(),
+    ]);
+
+    $this->actingAs($user);
+
+    Livewire::test(ViewPqrsRequest::class, ['record' => $record->getKey()])
+        ->callAction('respond', data: [
+            'responded_at' => now(),
+            'subject' => "Respuesta al {$record->tracking_code}",
+            'message' => '<p>Respuesta con correo disponible.</p>',
+        ])
+        ->assertHasNoActionErrors();
+
+    $response = PqrsMessage::query()
+        ->where('pqrs_request_id', $record->id)
+        ->where('user_id', $user->id)
+        ->first();
+
+    expect($response)->not->toBeNull();
+
+    NotificationFacade::assertSentToTimes($record, PqrsResponseNotification::class, 1);
+    $mountedNotifications = new \Filament\Notifications\Livewire\Notifications;
+    $mountedNotifications->mount();
+    $notificationTitles = $mountedNotifications->notifications
+        ->map(fn (FilamentNotification $notification): ?string => $notification->getTitle())
+        ->all();
+
+    expect($notificationTitles)
+        ->toContain('Respuesta guardada correctamente.')
+        ->not->toContain('La respuesta se guardo, pero no se pudo enviar el correo al ciudadano.');
+});
+
+test('pqrs respond action keeps response and shows warning when notification cannot be sent', function () {
+    NotificationFacade::fake();
+    Log::spy();
+
+    $role = createRoleWithPqrsPermissions('gestor-pqrs-mail-fail', ['ViewAny', 'View', 'Update']);
+
+    $user = User::factory()->create([
+        'is_admin' => false,
+    ]);
+    $user->assignRole($role);
+
+    $record = PqrsRequest::query()->create([
+        'tracking_code' => 'PQRS-2026-RESP-MAIL-FAIL',
+        'type' => 'peticion',
+        'is_anonymous' => false,
+        'status' => 'received',
+        'priority' => 'medium',
+        'message' => str_repeat('Mensaje inicial para correo no disponible. ', 3),
+        'applicant_name' => 'Solicitante mail fail',
+        'applicant_email' => null,
+        'submitted_at' => now()->subHour(),
+    ]);
+
+    $this->actingAs($user);
+
+    Livewire::test(ViewPqrsRequest::class, ['record' => $record->getKey()])
+        ->callAction('respond', data: [
+            'responded_at' => now(),
+            'subject' => "Respuesta al {$record->tracking_code}",
+            'message' => '<p>Respuesta con mailer caido.</p>',
+        ])
+        ->assertHasNoActionErrors();
+
+    $response = PqrsMessage::query()
+        ->where('pqrs_request_id', $record->id)
+        ->where('user_id', $user->id)
+        ->first();
+
+    expect($response)->not->toBeNull();
+    $mountedNotifications = new \Filament\Notifications\Livewire\Notifications;
+    $mountedNotifications->mount();
+    $notificationTitles = $mountedNotifications->notifications
+        ->map(fn (FilamentNotification $notification): ?string => $notification->getTitle())
+        ->all();
+
+    expect($notificationTitles)->toContain('La respuesta se guardo, pero no se pudo enviar el correo al ciudadano.');
+    Log::shouldHaveReceived('warning')
+        ->withArgs(function (string $message, array $context) use ($record, $response): bool {
+            return $message === 'pqrs_response_mail_not_sent_missing_email'
+                && ($context['tracking_code'] ?? null) === $record->tracking_code
+                && ($context['pqrs_message_id'] ?? null) === $response->id;
+        })
+        ->once();
 });
 
 test('user without update permission cannot access pqrs respond action', function () {
