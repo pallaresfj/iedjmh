@@ -146,7 +146,7 @@
                                         @if (! empty($msg['reference_url']))
                                             <div class="mt-3">
                                                 <a href="{{ $msg['reference_url'] }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center rounded-full border border-ied-primary/25 px-3 py-1 text-xs font-semibold text-ied-primary-dark hover:border-ied-primary hover:text-ied-primary">
-                                                    Ver enlace de referencia
+                                                    Ver Respuesta
                                                 </a>
                                             </div>
                                         @endif
