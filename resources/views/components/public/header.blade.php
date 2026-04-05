@@ -98,8 +98,7 @@
                 <details class="group relative">
                     <summary class="public-header__mobile-summary inline-flex list-none items-center text-sm font-semibold" aria-label="Abrir menu principal">
                         <span class="sr-only">Menu principal</span>
-                        <span class="material-symbols-outlined public-header__mobile-summary-icon group-open:hidden" aria-hidden="true">menu</span>
-                        <span class="material-symbols-outlined public-header__mobile-summary-icon hidden group-open:inline-flex" aria-hidden="true">close</span>
+                        <span class="material-symbols-outlined public-header__mobile-summary-icon" aria-hidden="true">menu</span>
                     </summary>
                     <div class="public-header__mobile-panel mt-3 space-y-3 rounded-xl p-3 shadow-lg">
                         <x-public.nav :items="$menuItems" mobile />
