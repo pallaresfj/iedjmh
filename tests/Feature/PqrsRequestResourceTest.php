@@ -187,6 +187,7 @@ test('user with update permission can respond multiple times from pqrs detail ac
             'responded_at' => now(),
             'subject' => "Seguimiento al {$record->tracking_code}",
             'message' => '<p>Segunda respuesta institucional.</p>',
+            'reference_url' => 'https://example.test/pqrs/'.$record->tracking_code,
         ])
         ->assertHasNoActionErrors();
 
@@ -199,7 +200,8 @@ test('user with update permission can respond multiple times from pqrs detail ac
     expect($responses)->toHaveCount(2)
         ->and($responses->first()?->subject)->toBe("Respuesta al {$record->tracking_code}")
         ->and($responses->first()?->is_internal)->toBeFalse()
-        ->and($responses->last()?->subject)->toBe("Seguimiento al {$record->tracking_code}");
+        ->and($responses->last()?->subject)->toBe("Seguimiento al {$record->tracking_code}")
+        ->and($responses->last()?->reference_url)->toBe('https://example.test/pqrs/'.$record->tracking_code);
 });
 
 test('pqrs respond action sends exactly one notification when mail transport is available', function () {
@@ -400,6 +402,7 @@ test('pqrs admin responses relation lists only institutional responses and only 
         'author_email' => $user->email,
         'subject' => "Respuesta al {$record->tracking_code}",
         'message' => '<p>Respuesta institucional visible.</p>',
+        'reference_url' => 'https://example.test/soporte/'.$record->tracking_code,
         'responded_at' => now()->subHour(),
         'is_internal' => false,
     ]);
@@ -435,5 +438,6 @@ test('pqrs admin responses relation lists only institutional responses and only 
         'pageClass' => ViewPqrsRequest::class,
     ])
         ->assertCanSeeTableRecords([$institutionalResponse])
+        ->assertSee('example.test')
         ->assertCanNotSeeTableRecords([$citizenMessage, $internalMessage]);
 });

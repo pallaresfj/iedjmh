@@ -142,6 +142,14 @@
                                         @else
                                             <p class="mt-2 text-sm text-ied-gray-800">{{ $msg['message'] }}</p>
                                         @endif
+
+                                        @if (! empty($msg['reference_url']))
+                                            <div class="mt-3">
+                                                <a href="{{ $msg['reference_url'] }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center rounded-full border border-ied-primary/25 px-3 py-1 text-xs font-semibold text-ied-primary-dark hover:border-ied-primary hover:text-ied-primary">
+                                                    Ver enlace de referencia
+                                                </a>
+                                            </div>
+                                        @endif
                                     </div>
                                 @endforeach
                             </div>

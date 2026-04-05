@@ -63,6 +63,12 @@ class ViewPqrsRequest extends ViewRecord
                             'undo',
                             'redo',
                         ]),
+                    TextInput::make('reference_url')
+                        ->label('URL de referencia')
+                        ->placeholder('https://...')
+                        ->url()
+                        ->maxLength(2048)
+                        ->nullable(),
                 ])
                 ->action(function (array $data): void {
                     $responseMessage = $this->record->messages()->create([
@@ -71,6 +77,7 @@ class ViewPqrsRequest extends ViewRecord
                         'author_email' => auth()->user()?->email,
                         'subject' => $data['subject'],
                         'message' => $data['message'],
+                        'reference_url' => $data['reference_url'] ?? null,
                         'responded_at' => $data['responded_at'] ?? now(),
                         'is_internal' => false,
                     ]);

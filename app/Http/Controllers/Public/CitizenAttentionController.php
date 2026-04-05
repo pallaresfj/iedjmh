@@ -202,6 +202,7 @@ class CitizenAttentionController extends Controller
                         'author' => $msg->author_name ?? 'Institucion',
                         'subject' => $msg->subject,
                         'message' => $msg->message,
+                        'reference_url' => $msg->reference_url,
                         'is_rich' => $msg->user_id !== null,
                         'date' => ($msg->responded_at ?? $msg->created_at)?->translatedFormat('d M Y H:i'),
                     ]);

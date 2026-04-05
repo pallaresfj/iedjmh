@@ -60,6 +60,12 @@ class ResponsesRelationManager extends RelationManager
                     ->label('Extracto')
                     ->state(fn (PqrsMessage $record): string => Str::limit(Str::squish(strip_tags((string) $record->message)), 90))
                     ->wrap(),
+                TextColumn::make('reference_url')
+                    ->label('URL de referencia')
+                    ->placeholder('Sin URL')
+                    ->limit(45)
+                    ->url(fn (PqrsMessage $record): ?string => $record->reference_url)
+                    ->openUrlInNewTab(),
             ])
             ->recordActions([
                 Action::make('view_response')
@@ -85,6 +91,17 @@ class ResponsesRelationManager extends RelationManager
                         Placeholder::make('message')
                             ->label('Mensaje')
                             ->content(fn (PqrsMessage $record): HtmlString => new HtmlString((string) $record->message)),
+                        Placeholder::make('reference_url')
+                            ->label('URL de referencia')
+                            ->content(function (PqrsMessage $record): HtmlString|string {
+                                if (! filled($record->reference_url)) {
+                                    return 'Sin URL';
+                                }
+
+                                return new HtmlString(
+                                    '<a href="'.e((string) $record->reference_url).'" target="_blank" rel="noopener noreferrer" class="text-primary-600 underline">'.e((string) $record->reference_url).'</a>'
+                                );
+                            }),
                     ]),
             ])
             ->emptyStateHeading('Sin respuestas institucionales registradas.');

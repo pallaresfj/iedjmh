@@ -17,6 +17,7 @@ class PqrsMessage extends Model
         'author_email',
         'subject',
         'message',
+        'reference_url',
         'responded_at',
         'is_internal',
     ];

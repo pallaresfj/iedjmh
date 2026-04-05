@@ -58,7 +58,7 @@ test('pqrs tracking renders rich text only for panel responses and escapes citiz
         ->assertSee('&lt;strong&gt;Mensaje ciudadano&lt;/strong&gt;', false);
 });
 
-test('pqrs tracking does not render attachment chips in responses', function () {
+test('pqrs tracking shows reference url for institutional responses when available', function () {
     $pqrs = PqrsRequest::query()->create([
         'tracking_code' => 'PQRS-2026-TRACK-002',
         'type' => 'queja',
@@ -82,6 +82,7 @@ test('pqrs tracking does not render attachment chips in responses', function () 
         'author_email' => 'gestor@example.test',
         'subject' => 'Seguimiento institucional',
         'message' => '<p>Respuesta sin adjuntos.</p>',
+        'reference_url' => 'https://example.test/seguimiento/'.$pqrs->tracking_code,
         'responded_at' => now()->subHour(),
         'is_internal' => false,
     ]);
@@ -93,5 +94,7 @@ test('pqrs tracking does not render attachment chips in responses', function () 
         ->assertOk()
         ->assertSee('Seguimiento institucional')
         ->assertSee('Respuesta sin adjuntos.')
+        ->assertSee('Ver enlace de referencia')
+        ->assertSee('https://example.test/seguimiento/'.$pqrs->tracking_code)
         ->assertDontSee('Adjunto PDF');
 });

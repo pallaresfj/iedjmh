@@ -20,6 +20,7 @@ class PqrsMessageFactory extends Factory
             'author_email' => fake()->safeEmail(),
             'subject' => fake()->sentence(6),
             'message' => fake()->paragraph(),
+            'reference_url' => null,
             'responded_at' => now(),
             'is_internal' => false,
         ];
