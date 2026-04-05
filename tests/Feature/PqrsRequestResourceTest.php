@@ -4,8 +4,9 @@ use App\Filament\Resources\PqrsRequests\Pages\CreatePqrsRequest;
 use App\Filament\Resources\PqrsRequests\Pages\EditPqrsRequest;
 use App\Filament\Resources\PqrsRequests\Pages\ListPqrsRequests;
 use App\Filament\Resources\PqrsRequests\Pages\ViewPqrsRequest;
-use App\Models\PqrsMessage;
 use App\Filament\Resources\PqrsRequests\PqrsRequestResource;
+use App\Filament\Resources\PqrsRequests\RelationManagers\ResponsesRelationManager;
+use App\Models\PqrsMessage;
 use App\Models\PqrsRequest;
 use App\Models\User;
 use Filament\Facades\Filament;
@@ -221,4 +222,108 @@ test('user without update permission cannot access pqrs respond action', functio
 
     Livewire::test(ViewPqrsRequest::class, ['record' => $record->getKey()])
         ->assertActionHidden('respond');
+});
+
+test('pqrs request form is organized in tabs across create edit and view pages', function () {
+    $role = createRoleWithPqrsPermissions('gestor-pqrs-tabs', ['ViewAny', 'View', 'Create', 'Update']);
+
+    $user = User::factory()->create([
+        'is_admin' => false,
+    ]);
+    $user->assignRole($role);
+
+    $record = PqrsRequest::query()->create([
+        'tracking_code' => 'PQRS-2026-TABS-001',
+        'type' => 'peticion',
+        'is_anonymous' => false,
+        'status' => 'received',
+        'priority' => 'medium',
+        'message' => str_repeat('Mensaje para validar pestanas. ', 3),
+        'applicant_name' => 'Usuario tabs',
+        'applicant_email' => 'tabs@example.test',
+        'submitted_at' => now()->subHour(),
+    ]);
+
+    $this->actingAs($user);
+
+    Livewire::test(CreatePqrsRequest::class)
+        ->assertSee('Radicado y Estado')
+        ->assertSee('Solicitante y Solicitud')
+        ->assertSee('Gestion Interna');
+
+    Livewire::test(EditPqrsRequest::class, ['record' => $record->getKey()])
+        ->assertSee('Radicado y Estado')
+        ->assertSee('Solicitante y Solicitud')
+        ->assertSee('Gestion Interna');
+
+    Livewire::test(ViewPqrsRequest::class, ['record' => $record->getKey()])
+        ->assertSee('Radicado y Estado')
+        ->assertSee('Solicitante y Solicitud')
+        ->assertSee('Gestion Interna')
+        ->assertSee('Respuestas');
+});
+
+test('pqrs admin responses relation lists only institutional responses and only on detail page', function () {
+    $role = createRoleWithPqrsPermissions('gestor-pqrs-historial', ['ViewAny', 'View']);
+
+    $user = User::factory()->create([
+        'is_admin' => false,
+    ]);
+    $user->assignRole($role);
+
+    $record = PqrsRequest::query()->create([
+        'tracking_code' => 'PQRS-2026-HISTORY-001',
+        'type' => 'peticion',
+        'is_anonymous' => false,
+        'status' => 'received',
+        'priority' => 'medium',
+        'message' => str_repeat('Mensaje para historial en panel. ', 3),
+        'applicant_name' => 'Usuario historial',
+        'applicant_email' => 'historial-admin@example.test',
+        'submitted_at' => now()->subHours(2),
+    ]);
+
+    $institutionalResponse = PqrsMessage::query()->create([
+        'pqrs_request_id' => $record->id,
+        'user_id' => $user->id,
+        'author_name' => $user->name,
+        'author_email' => $user->email,
+        'subject' => "Respuesta al {$record->tracking_code}",
+        'message' => '<p>Respuesta institucional visible.</p>',
+        'responded_at' => now()->subHour(),
+        'is_internal' => false,
+    ]);
+
+    $citizenMessage = PqrsMessage::query()->create([
+        'pqrs_request_id' => $record->id,
+        'author_name' => 'Ciudadano',
+        'author_email' => $record->applicant_email,
+        'subject' => null,
+        'message' => 'Mensaje ciudadano que no debe salir en historial admin.',
+        'responded_at' => now()->subMinutes(50),
+        'is_internal' => false,
+    ]);
+
+    $internalMessage = PqrsMessage::query()->create([
+        'pqrs_request_id' => $record->id,
+        'user_id' => $user->id,
+        'author_name' => $user->name,
+        'author_email' => $user->email,
+        'subject' => 'Nota interna',
+        'message' => '<p>No visible por is_internal=true.</p>',
+        'responded_at' => now()->subMinutes(40),
+        'is_internal' => true,
+    ]);
+
+    $this->actingAs($user);
+
+    expect(ResponsesRelationManager::canViewForRecord($record, ViewPqrsRequest::class))->toBeTrue()
+        ->and(ResponsesRelationManager::canViewForRecord($record, EditPqrsRequest::class))->toBeFalse();
+
+    Livewire::test(ResponsesRelationManager::class, [
+        'ownerRecord' => $record,
+        'pageClass' => ViewPqrsRequest::class,
+    ])
+        ->assertCanSeeTableRecords([$institutionalResponse])
+        ->assertCanNotSeeTableRecords([$citizenMessage, $internalMessage]);
 });

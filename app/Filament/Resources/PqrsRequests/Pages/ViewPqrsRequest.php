@@ -16,6 +16,11 @@ class ViewPqrsRequest extends ViewRecord
 {
     protected static string $resource = PqrsRequestResource::class;
 
+    public function hasCombinedRelationManagerTabsWithContent(): bool
+    {
+        return true;
+    }
+
     protected function getActions(): array
     {
         return [

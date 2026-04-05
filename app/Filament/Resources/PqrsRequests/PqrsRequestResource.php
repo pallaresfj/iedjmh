@@ -6,6 +6,7 @@ use App\Filament\Resources\PqrsRequests\Pages\CreatePqrsRequest;
 use App\Filament\Resources\PqrsRequests\Pages\EditPqrsRequest;
 use App\Filament\Resources\PqrsRequests\Pages\ListPqrsRequests;
 use App\Filament\Resources\PqrsRequests\Pages\ViewPqrsRequest;
+use App\Filament\Resources\PqrsRequests\RelationManagers\ResponsesRelationManager;
 use App\Filament\Resources\PqrsRequests\Schemas\PqrsRequestForm;
 use App\Filament\Resources\PqrsRequests\Tables\PqrsRequestsTable;
 use App\Models\PqrsRequest;
@@ -43,7 +44,9 @@ class PqrsRequestResource extends Resource
 
     public static function getRelations(): array
     {
-        return [];
+        return [
+            ResponsesRelationManager::class,
+        ];
     }
 
     public static function getPages(): array
