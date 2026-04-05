@@ -61,6 +61,28 @@ test('contact form submission stores pqrs and redirects back to contact page', f
     Notification::assertSentTo($pqrs, PqrsReceivedNotification::class);
 });
 
+test('contact form submission does not fail when pqrs email notification mailer is unavailable', function () {
+    config()->set('mail.default', 'smtp');
+    config()->set('mail.mailers.smtp.host', '127.0.0.1');
+    config()->set('mail.mailers.smtp.port', 1);
+    config()->set('mail.mailers.smtp.timeout', 1);
+
+    $response = $this->post(route('atencion.pqrs.store'), [
+        'type' => 'peticion',
+        'origin' => 'contact',
+        'message' => 'Mensaje lo suficientemente largo para registrar la solicitud desde contacto.',
+        'applicant_name' => 'Paula Gomez',
+        'applicant_email' => 'paula@example.test',
+        'consent_habeas_data' => '1',
+    ]);
+
+    $response
+        ->assertRedirect(route('atencion.contactenos'))
+        ->assertSessionHas('pqrs_success');
+
+    expect(PqrsRequest::query()->count())->toBe(1);
+});
+
 test('public pqrs submission accepts tramite as type', function () {
     $response = $this->post(route('atencion.pqrs.store'), [
         'type' => 'tramite',

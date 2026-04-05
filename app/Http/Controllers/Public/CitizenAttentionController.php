@@ -17,8 +17,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Throwable;
 
 class CitizenAttentionController extends Controller
 {
@@ -106,6 +108,9 @@ class CitizenAttentionController extends Controller
         $isAnonymous = (bool) ($validated['is_anonymous'] ?? false);
         $trackingCode = $trackingCodeGenerator->generate();
         $attachmentPath = $request->file('attachment')?->store('pqrs-attachments', 'local');
+        $applicantPhone = data_get($validated, 'applicant_phone');
+        $applicantDocument = data_get($validated, 'applicant_document');
+        $applicantAddress = data_get($validated, 'applicant_address');
 
         $pqrs = PqrsRequest::query()->create([
             'tracking_code' => $trackingCode,
@@ -117,9 +122,9 @@ class CitizenAttentionController extends Controller
             'message' => $validated['message'],
             'applicant_name' => $isAnonymous ? null : ($validated['applicant_name'] ?? null),
             'applicant_email' => $validated['applicant_email'],
-            'applicant_phone' => $isAnonymous ? null : ($validated['applicant_phone'] ?? null),
-            'applicant_document' => $isAnonymous ? null : ($validated['applicant_document'] ?? null),
-            'applicant_address' => $isAnonymous ? null : ($validated['applicant_address'] ?? null),
+            'applicant_phone' => $isAnonymous ? null : $applicantPhone,
+            'applicant_document' => $isAnonymous ? null : $applicantDocument,
+            'applicant_address' => $isAnonymous ? null : $applicantAddress,
             'consent_habeas_data' => true,
             'submitted_at' => now(),
         ]);
@@ -134,7 +139,16 @@ class CitizenAttentionController extends Controller
             ]);
         }
 
-        $pqrs->notify(new PqrsReceivedNotification($pqrs));
+        try {
+            $pqrs->notify(new PqrsReceivedNotification($pqrs));
+        } catch (Throwable $exception) {
+            Log::warning('pqrs_notification_mail_failed', [
+                'tracking_code' => $pqrs->tracking_code,
+                'applicant_email' => $pqrs->applicant_email,
+                'exception_class' => $exception::class,
+                'exception_message' => $exception->getMessage(),
+            ]);
+        }
 
         $redirectRoute = ($validated['origin'] ?? null) === 'contact'
             ? 'atencion.contactenos'

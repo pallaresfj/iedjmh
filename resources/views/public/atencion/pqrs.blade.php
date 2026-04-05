@@ -117,7 +117,7 @@
                     </div>
                 </div>
 
-                <form action="{{ route('atencion.pqrs.store') }}" method="POST" enctype="multipart/form-data" class="mt-5 space-y-4" data-pqrs-form>
+                <form action="{{ route('atencion.pqrs.store') }}" method="POST" enctype="multipart/form-data" class="mt-5 space-y-4" data-pqrs-form data-file-dropzone-root>
                     @csrf
 
                     <div class="hidden" aria-hidden="true">
@@ -254,7 +254,11 @@
 
                         <div
                             class="public-pqrs-upload"
-                            data-pqrs-dropzone
+                            data-file-dropzone
+                            data-file-extensions="pdf,docx"
+                            data-file-max-bytes="2097152"
+                            data-file-max-label="2MB"
+                            data-file-formats-label="PDF, DOCX"
                             role="button"
                             tabindex="0"
                             aria-controls="pqrs-attachment-input"
@@ -266,16 +270,16 @@
                                 name="attachment"
                                 accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                                 class="sr-only"
-                                data-pqrs-file-input
+                                data-file-input
                             >
 
                             <span class="material-symbols-outlined public-pqrs-upload__icon" aria-hidden="true">cloud_upload</span>
                             <p class="public-pqrs-upload__lead">Haga clic para subir o arrastre sus archivos aquí</p>
                             <p id="pqrs-attachment-help" class="public-pqrs-upload__hint">Soporta PDF, DOCX (Máx. 2MB)</p>
-                            <p class="public-pqrs-upload__selected hidden" data-pqrs-file-selected aria-live="polite"></p>
+                            <p class="public-pqrs-upload__selected hidden" data-file-selected aria-live="polite"></p>
                         </div>
 
-                        <span id="pqrs-attachment-client-error" class="public-pqrs-upload__error hidden" data-pqrs-file-error aria-live="polite"></span>
+                        <span id="pqrs-attachment-client-error" class="public-pqrs-upload__error hidden" data-file-error aria-live="polite"></span>
                         @error('attachment')<span class="mt-1 block text-xs text-red-600">{{ $message }}</span>@enderror
                     </label>
 
@@ -316,194 +320,6 @@
             const contactGroup = form.querySelector('[data-anonymous-contact]');
             const phoneInput = form.querySelector('[data-anonymous-phone]');
             const addressInput = form.querySelector('[data-anonymous-address]');
-            const dropzone = form.querySelector('[data-pqrs-dropzone]');
-            const fileInput = form.querySelector('[data-pqrs-file-input]');
-            const fileError = form.querySelector('[data-pqrs-file-error]');
-            const fileSelected = form.querySelector('[data-pqrs-file-selected]');
-
-            const initAttachmentDropzone = () => {
-                if (!dropzone || !fileInput || !fileError || !fileSelected) {
-                    return;
-                }
-
-                const maxSizeBytes = 2 * 1024 * 1024;
-                const allowedExtensions = new Set(['pdf', 'docx']);
-                let dragDepth = 0;
-                let isPickerOpening = false;
-
-                const bytesToMb = (bytes) => (bytes / (1024 * 1024)).toFixed(2);
-
-                const resetFileSelection = () => {
-                    fileInput.value = '';
-                    fileSelected.textContent = '';
-                    fileSelected.classList.add('hidden');
-                    dropzone.classList.remove('has-file');
-                };
-
-                const showFileError = (message) => {
-                    fileError.textContent = message;
-                    fileError.classList.remove('hidden');
-                    dropzone.classList.add('has-error');
-                };
-
-                const clearFileError = () => {
-                    fileError.textContent = '';
-                    fileError.classList.add('hidden');
-                    dropzone.classList.remove('has-error');
-                };
-
-                const validateFile = (file) => {
-                    const extension = file.name.includes('.')
-                        ? file.name.split('.').pop().toLowerCase()
-                        : '';
-
-                    if (!allowedExtensions.has(extension)) {
-                        showFileError('Formato no permitido. Solo se aceptan archivos PDF o DOCX.');
-
-                        return false;
-                    }
-
-                    if (file.size > maxSizeBytes) {
-                        showFileError('El archivo supera el tamaño máximo permitido (2MB).');
-
-                        return false;
-                    }
-
-                    return true;
-                };
-
-                const syncSelectedFile = (file) => {
-                    fileSelected.textContent = `Archivo seleccionado: ${file.name} (${bytesToMb(file.size)} MB)`;
-                    fileSelected.classList.remove('hidden');
-                    dropzone.classList.add('has-file');
-                };
-
-                const assignFileToInput = (file) => {
-                    const transfer = new DataTransfer();
-                    transfer.items.add(file);
-                    fileInput.files = transfer.files;
-                };
-
-                const processFile = (file) => {
-                    clearFileError();
-
-                    if (!validateFile(file)) {
-                        resetFileSelection();
-
-                        return;
-                    }
-
-                    assignFileToInput(file);
-                    syncSelectedFile(file);
-                };
-
-                const openPicker = (event = null) => {
-                    if (fileInput.disabled || isPickerOpening) {
-                        return;
-                    }
-
-                    if (event?.target === fileInput) {
-                        return;
-                    }
-
-                    if (event?.target instanceof Element && event.target.closest('input[type="file"]')) {
-                        return;
-                    }
-
-                    isPickerOpening = true;
-                    fileInput.click();
-                    window.setTimeout(() => {
-                        isPickerOpening = false;
-                    }, 0);
-                };
-
-                const preventDefaults = (event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                };
-
-                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach((eventName) => {
-                    dropzone.addEventListener(eventName, preventDefaults);
-                });
-
-                dropzone.addEventListener('dragenter', () => {
-                    dragDepth += 1;
-                    dropzone.classList.add('is-dragover');
-                });
-
-                dropzone.addEventListener('dragover', () => {
-                    dropzone.classList.add('is-dragover');
-                });
-
-                dropzone.addEventListener('dragleave', () => {
-                    dragDepth = Math.max(0, dragDepth - 1);
-
-                    if (dragDepth === 0) {
-                        dropzone.classList.remove('is-dragover');
-                    }
-                });
-
-                dropzone.addEventListener('drop', (event) => {
-                    dragDepth = 0;
-                    dropzone.classList.remove('is-dragover');
-                    const droppedFiles = Array.from(event.dataTransfer?.files ?? []);
-
-                    if (droppedFiles.length !== 1) {
-                        showFileError('Solo se permite adjuntar un archivo.');
-                        resetFileSelection();
-
-                        return;
-                    }
-
-                    processFile(droppedFiles[0]);
-                });
-
-                dropzone.addEventListener('click', (event) => {
-                    event.preventDefault();
-                    openPicker(event);
-                });
-
-                dropzone.addEventListener('keydown', (event) => {
-                    if (event.key === 'Enter' || event.key === ' ') {
-                        event.preventDefault();
-                        openPicker();
-                    }
-                });
-
-                dropzone.addEventListener('focus', () => {
-                    dropzone.classList.add('is-focused');
-                });
-
-                dropzone.addEventListener('blur', () => {
-                    dropzone.classList.remove('is-focused');
-                });
-
-                fileInput.addEventListener('click', (event) => {
-                    event.stopPropagation();
-                });
-
-                fileInput.addEventListener('change', (event) => {
-                    event.stopPropagation();
-                    clearFileError();
-                    const selectedFile = fileInput.files?.[0];
-
-                    if (!selectedFile) {
-                        resetFileSelection();
-
-                        return;
-                    }
-
-                    if (!validateFile(selectedFile)) {
-                        resetFileSelection();
-
-                        return;
-                    }
-
-                    syncSelectedFile(selectedFile);
-                });
-            };
-
-            initAttachmentDropzone();
 
             if (!anonymousToggle || !identityGroup || !nameInput || !documentInput || !contactGroup || !phoneInput || !addressInput) {
                 return;

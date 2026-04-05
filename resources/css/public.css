@@ -464,14 +464,13 @@
         height: 2.5rem;
         justify-content: center;
         border-radius: 9999px;
-        border: 1px solid var(--color-ied-gray-200);
-        background-color: #ffffff;
+        border: 0;
+        background-color: transparent;
         color: var(--color-ied-gray-700);
         padding: 0;
     }
 
     .public-header__mobile-summary:hover {
-        border-color: rgba(var(--color-ied-primary-rgb), 0.42);
         background-color: rgba(var(--color-ied-primary-rgb), 0.08);
         color: var(--color-ied-primary-dark);
     }
@@ -761,7 +760,6 @@
 
     html[data-public-theme='dark'] .public-site .public-header__mobile-summary:hover {
         background-color: var(--public-accent-soft-bg);
-        border-color: var(--public-header-action-border-hover);
         color: var(--public-nav-link-hover);
     }
 
@@ -1696,6 +1694,41 @@
     .public-graduates-banner__cta:focus-visible {
         outline: 2px solid rgba(255, 255, 255, 0.92);
         outline-offset: 3px;
+    }
+
+    .public-graduate-preregister__submit {
+        border: 1px solid rgba(var(--color-ied-primary-rgb), 0.64);
+        color: #ffffff;
+        background: linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--color-ied-primary-light) 22%, var(--color-ied-primary)) 0%,
+            var(--color-ied-primary) 58%,
+            var(--color-ied-primary-dark) 100%
+        );
+        box-shadow: 0 10px 22px rgba(var(--color-ied-primary-dark-rgb), 0.24);
+    }
+
+    .public-graduate-preregister__submit:hover,
+    .public-graduate-preregister__submit:focus-visible {
+        border-color: rgba(var(--color-ied-primary-light-rgb), 0.72);
+        filter: brightness(1.06);
+        box-shadow: 0 12px 26px rgba(var(--color-ied-primary-dark-rgb), 0.32);
+    }
+
+    .public-graduate-preregister__submit:focus-visible {
+        outline: 2px solid var(--public-focus-outline);
+        outline-offset: 3px;
+    }
+
+    html[data-public-theme='dark'] .public-graduate-preregister__submit {
+        border-color: color-mix(in srgb, var(--public-nav-link-active) 72%, transparent);
+        background: linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--color-ied-primary-light) 34%, var(--color-ied-primary)) 0%,
+            color-mix(in srgb, var(--color-ied-primary) 92%, black) 55%,
+            color-mix(in srgb, var(--color-ied-primary-dark) 88%, black) 100%
+        );
+        color: #ffffff;
     }
 
     .public-symbols-card {

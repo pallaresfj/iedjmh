@@ -85,7 +85,7 @@
 
                 <p class="mb-5 text-sm leading-relaxed text-ied-gray-700">Verificaremos tus datos con los registros institucionales cargados por la institucion.</p>
 
-                <form method="POST" action="{{ route('egresados.preregister') }}" enctype="multipart/form-data" class="space-y-4">
+                <form method="POST" action="{{ route('egresados.preregister') }}" enctype="multipart/form-data" class="space-y-4" data-file-dropzone-root>
                     @csrf
                     <div class="grid gap-4 sm:grid-cols-2">
                         <div class="sm:col-span-2">
@@ -144,8 +144,35 @@
                         </div>
                         <div class="sm:col-span-2">
                             <label for="identity-document" class="mb-1 block text-xs font-bold uppercase tracking-[0.14em] text-ied-gray-600">Documento de identidad (PDF o imagen)</label>
-                            <input id="identity-document" type="file" name="identity_document" accept=".pdf,image/jpeg,image/png,image/webp" required class="w-full rounded-xl border border-ied-gray-200 bg-white px-4 py-3 text-sm text-ied-gray-900 file:mr-4 file:rounded-lg file:border-0 file:bg-ied-primary/15 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-ied-primary-dark hover:file:bg-ied-primary/25 focus:border-ied-primary focus:outline-none focus:ring-2 focus:ring-ied-primary/20" />
-                            <p class="mt-1 text-xs text-ied-gray-600">Tamano maximo: 1 MB.</p>
+                            <div
+                                class="public-pqrs-upload"
+                                data-file-dropzone
+                                data-file-extensions="pdf,jpg,jpeg,png,webp"
+                                data-file-max-bytes="1048576"
+                                data-file-max-label="1MB"
+                                data-file-formats-label="PDF, JPG, JPEG, PNG, WEBP"
+                                role="button"
+                                tabindex="0"
+                                aria-controls="identity-document"
+                                aria-describedby="identity-document-help identity-document-client-error"
+                            >
+                                <input
+                                    id="identity-document"
+                                    type="file"
+                                    name="identity_document"
+                                    accept=".pdf,image/jpeg,image/png,image/webp"
+                                    required
+                                    class="sr-only"
+                                    data-file-input
+                                />
+
+                                <span class="material-symbols-outlined public-pqrs-upload__icon" aria-hidden="true">cloud_upload</span>
+                                <p class="public-pqrs-upload__lead">Haz clic para subir o arrastra tu documento aquí</p>
+                                <p id="identity-document-help" class="public-pqrs-upload__hint">Soporta PDF, JPG, JPEG, PNG y WEBP (Máx. 1MB)</p>
+                                <p class="public-pqrs-upload__selected hidden" data-file-selected aria-live="polite"></p>
+                            </div>
+
+                            <span id="identity-document-client-error" class="public-pqrs-upload__error hidden" data-file-error aria-live="polite"></span>
                             @error('identity_document') <p class="mt-1 text-xs font-medium text-rose-600">{{ $message }}</p> @enderror
                         </div>
                     </div>
@@ -156,8 +183,8 @@
                     </label>
                     @error('data_processing_consent') <p class="text-xs font-medium text-rose-600">{{ $message }}</p> @enderror
 
-                    <button type="submit" class="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-ied-primary bg-white px-5 py-3 text-sm font-bold text-ied-primary-dark transition hover:bg-ied-primary/10">
-                        Iniciar Verificacion de Datos
+                    <button type="submit" class="public-graduate-preregister__submit inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold transition">
+                        Iniciar Verificación de Datos
                     </button>
                 </form>
             </section>

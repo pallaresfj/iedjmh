@@ -191,6 +191,226 @@ const initAutoFilters = () => {
     });
 };
 
+const bindPublicFileDropzone = (rootElement) => {
+    if (!(rootElement instanceof Element)) {
+        return;
+    }
+
+    const dropzone = rootElement.querySelector('[data-file-dropzone]');
+    const fileInput = rootElement.querySelector('[data-file-input]');
+    const fileError = rootElement.querySelector('[data-file-error]');
+    const fileSelected = rootElement.querySelector('[data-file-selected]');
+
+    if (!(dropzone instanceof HTMLElement) || !(fileInput instanceof HTMLInputElement) || !(fileError instanceof HTMLElement) || !(fileSelected instanceof HTMLElement)) {
+        return;
+    }
+
+    if (dropzone.dataset.dropzoneInitialized === '1') {
+        return;
+    }
+
+    dropzone.dataset.dropzoneInitialized = '1';
+
+    const maxSizeBytes = Number.parseInt(dropzone.dataset.fileMaxBytes ?? '0', 10);
+    const normalizedMaxBytes = Number.isFinite(maxSizeBytes) && maxSizeBytes > 0 ? maxSizeBytes : 2 * 1024 * 1024;
+    const maxSizeLabel = dropzone.dataset.fileMaxLabel?.trim() || `${Math.round(normalizedMaxBytes / (1024 * 1024))}MB`;
+    const allowedExtensions = new Set(
+        (dropzone.dataset.fileExtensions ?? '')
+            .split(',')
+            .map((value) => value.trim().toLowerCase())
+            .filter((value) => value !== ''),
+    );
+    const formatLabel = dropzone.dataset.fileFormatsLabel?.trim() || Array.from(allowedExtensions).map((value) => value.toUpperCase()).join(', ');
+    const sizeInMb = (bytes) => (bytes / (1024 * 1024)).toFixed(2);
+    let dragDepth = 0;
+    let isPickerOpening = false;
+
+    const resetSelection = () => {
+        fileInput.value = '';
+        fileSelected.textContent = '';
+        fileSelected.classList.add('hidden');
+        dropzone.classList.remove('has-file');
+    };
+
+    const showError = (message) => {
+        fileError.textContent = message;
+        fileError.classList.remove('hidden');
+        dropzone.classList.add('has-error');
+    };
+
+    const clearError = () => {
+        fileError.textContent = '';
+        fileError.classList.add('hidden');
+        dropzone.classList.remove('has-error');
+    };
+
+    const isExtensionAllowed = (fileName) => {
+        if (allowedExtensions.size === 0) {
+            return true;
+        }
+
+        const extension = fileName.includes('.')
+            ? fileName.split('.').pop()?.toLowerCase() ?? ''
+            : '';
+
+        return allowedExtensions.has(extension);
+    };
+
+    const validateFile = (file) => {
+        if (!isExtensionAllowed(file.name)) {
+            showError(`Formato no permitido. Solo se aceptan archivos ${formatLabel}.`);
+
+            return false;
+        }
+
+        if (file.size > normalizedMaxBytes) {
+            showError(`El archivo supera el tamaño máximo permitido (${maxSizeLabel}).`);
+
+            return false;
+        }
+
+        return true;
+    };
+
+    const syncSelectedFile = (file) => {
+        fileSelected.textContent = `Archivo seleccionado: ${file.name} (${sizeInMb(file.size)} MB)`;
+        fileSelected.classList.remove('hidden');
+        dropzone.classList.add('has-file');
+    };
+
+    const assignFileToInput = (file) => {
+        const transfer = new DataTransfer();
+        transfer.items.add(file);
+        fileInput.files = transfer.files;
+    };
+
+    const processFile = (file) => {
+        clearError();
+
+        if (!validateFile(file)) {
+            resetSelection();
+
+            return;
+        }
+
+        assignFileToInput(file);
+        syncSelectedFile(file);
+    };
+
+    const openPicker = (event = null) => {
+        if (fileInput.disabled || isPickerOpening) {
+            return;
+        }
+
+        if (event?.target === fileInput) {
+            return;
+        }
+
+        if (event?.target instanceof Element && event.target.closest('input[type="file"]')) {
+            return;
+        }
+
+        isPickerOpening = true;
+        fileInput.click();
+        window.setTimeout(() => {
+            isPickerOpening = false;
+        }, 0);
+    };
+
+    const preventDefaults = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+    };
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach((eventName) => {
+        dropzone.addEventListener(eventName, preventDefaults);
+    });
+
+    dropzone.addEventListener('dragenter', () => {
+        dragDepth += 1;
+        dropzone.classList.add('is-dragover');
+    });
+
+    dropzone.addEventListener('dragover', () => {
+        dropzone.classList.add('is-dragover');
+    });
+
+    dropzone.addEventListener('dragleave', () => {
+        dragDepth = Math.max(0, dragDepth - 1);
+
+        if (dragDepth === 0) {
+            dropzone.classList.remove('is-dragover');
+        }
+    });
+
+    dropzone.addEventListener('drop', (event) => {
+        dragDepth = 0;
+        dropzone.classList.remove('is-dragover');
+        const droppedFiles = Array.from(event.dataTransfer?.files ?? []);
+
+        if (droppedFiles.length !== 1) {
+            showError('Solo se permite adjuntar un archivo.');
+            resetSelection();
+
+            return;
+        }
+
+        processFile(droppedFiles[0]);
+    });
+
+    dropzone.addEventListener('click', (event) => {
+        event.preventDefault();
+        openPicker(event);
+    });
+
+    dropzone.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            openPicker();
+        }
+    });
+
+    dropzone.addEventListener('focus', () => {
+        dropzone.classList.add('is-focused');
+    });
+
+    dropzone.addEventListener('blur', () => {
+        dropzone.classList.remove('is-focused');
+    });
+
+    fileInput.addEventListener('click', (event) => {
+        event.stopPropagation();
+    });
+
+    fileInput.addEventListener('change', (event) => {
+        event.stopPropagation();
+        clearError();
+        const selectedFile = fileInput.files?.[0];
+
+        if (!selectedFile) {
+            resetSelection();
+
+            return;
+        }
+
+        if (!validateFile(selectedFile)) {
+            resetSelection();
+
+            return;
+        }
+
+        syncSelectedFile(selectedFile);
+    });
+};
+
+const initPublicFileDropzones = () => {
+    document.querySelectorAll('[data-file-dropzone-root]').forEach((rootElement) => {
+        bindPublicFileDropzone(rootElement);
+    });
+};
+
+window.bindPublicFileDropzone = bindPublicFileDropzone;
+
 const PUBLIC_THEME_STORAGE_KEY = 'ied_public_theme';
 const LEGACY_HOME_THEME_STORAGE_KEY = 'ied_public_home_theme';
 
@@ -458,11 +678,13 @@ const initLocationMapModal = () => {
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
         initAutoFilters();
+        initPublicFileDropzones();
         initPublicThemeToggle();
         initLocationMapModal();
     }, { once: true });
 } else {
     initAutoFilters();
+    initPublicFileDropzones();
     initPublicThemeToggle();
     initLocationMapModal();
 }
