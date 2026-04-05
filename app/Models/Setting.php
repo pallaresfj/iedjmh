@@ -77,6 +77,15 @@ class Setting extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::creating(function (self $setting): void {
+            if (blank($setting->institution_name)) {
+                $setting->institution_name = (string) config('institution.display_name', config('institution.name'));
+            }
+        });
+    }
+
     public function contractingManualDocument(): BelongsTo
     {
         return $this->belongsTo(Document::class, 'contracting_manual_document_id');

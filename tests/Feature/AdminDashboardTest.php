@@ -467,9 +467,13 @@ test('dashboard hides moderation alert for users without moderation permissions'
 
 function adminDashboardUser(): User
 {
-    return User::factory()->create([
+    $user = User::factory()->create([
         'is_admin' => true,
     ]);
+
+    $user->assignRole(Role::findOrCreate('super_admin', 'web'));
+
+    return $user;
 }
 
 /**

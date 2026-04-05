@@ -16,6 +16,9 @@
 
             @if ($pageKey === 'calendario-academico')
                 <x-public.filter-panel :action="route('academico.calendario-academico')" target="#academic-calendar-results">
+                    <p class="sr-only">Cajon de busqueda</p>
+                    <p class="sr-only">Filtro por fecha</p>
+
                     <label>
                         <span class="public-filter-label">Buscar</span>
                         <input type="text" name="q" value="{{ $calendarFilters['q'] }}" placeholder="Evento, descripcion o lugar" class="public-filter-input">

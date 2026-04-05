@@ -14,11 +14,12 @@ test('symbols page renders symbols content inside shared institutional layout wi
         ->assertSee('Escudo no cargado')
         ->assertSee('Himno Institucional')
         ->assertSee('public-symbols-lyrics__content', false)
-        ->assertSee('Seccion institucional')
+        ->assertDontSee('Seccion institucional')
         ->assertSee('Landing Institucion')
+        ->assertSee('public-internal-banner-section public-banner-full-bleed', false)
         ->assertSee('Letra del himno institucional')
         ->assertSee('No hay un archivo de audio del himno cargado')
-        ->assertDontSee('public-banner-full-bleed', false);
+        ->assertSee('public-banner-full-bleed', false);
 });
 
 test('symbols page uses cms settings content and media assets when configured', function () {

@@ -15,7 +15,9 @@ class PqrsMessage extends Model
         'user_id',
         'author_name',
         'author_email',
+        'subject',
         'message',
+        'responded_at',
         'is_internal',
         'attachments',
     ];
@@ -23,6 +25,7 @@ class PqrsMessage extends Model
     protected function casts(): array
     {
         return [
+            'responded_at' => 'datetime',
             'is_internal' => 'boolean',
             'attachments' => 'array',
         ];

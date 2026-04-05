@@ -53,7 +53,16 @@
 
                 @if (! empty($document['description']))
                     <div class="mt-5 border-t border-ied-gray-200 pt-4 text-sm leading-relaxed text-ied-gray-700 sm:text-base">
-                        {!! nl2br(e($document['description'])) !!}
+                        @php
+                            $description = (string) $document['description'];
+                            $containsHtml = $description !== strip_tags($description);
+                        @endphp
+
+                        @if ($containsHtml)
+                            {!! $description !!}
+                        @else
+                            {!! nl2br(e($description)) !!}
+                        @endif
                     </div>
                 @endif
 

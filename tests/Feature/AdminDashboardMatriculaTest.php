@@ -3,6 +3,7 @@
 use App\Models\Campus;
 use App\Models\MatriculaRequest;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
 
 test('admin dashboard shows matricula widget empty state', function () {
     $this->actingAs(matriculaDashboardAdmin());
@@ -57,7 +58,11 @@ test('admin dashboard shows pending matricula kpi and recent matricula items', f
 
 function matriculaDashboardAdmin(): User
 {
-    return User::factory()->create([
+    $user = User::factory()->create([
         'is_admin' => true,
     ]);
+
+    $user->assignRole(Role::findOrCreate('super_admin', 'web'));
+
+    return $user;
 }

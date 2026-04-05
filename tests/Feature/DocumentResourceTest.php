@@ -48,6 +48,7 @@ test('document resource enforces google drive link validation', function () {
         ->fillForm([
             'title' => 'Documento Drive Valido',
             'slug' => 'documento-drive-valido',
+            'description' => '<p><strong>Descripcion</strong> enriquecida.</p>',
             'external_url' => 'https://drive.google.com/file/d/1documentovalido/view?usp=sharing',
             'status' => 'published',
             'published_at' => now(),
@@ -57,7 +58,38 @@ test('document resource enforces google drive link validation', function () {
         ->assertHasNoFormErrors()
         ->assertRedirect();
 
-    expect(Document::query()->where('slug', 'documento-drive-valido')->exists())->toBeTrue();
+    $created = Document::query()->where('slug', 'documento-drive-valido')->firstOrFail();
+
+    expect($created->document_number)->toBe('DOC - 0001')
+        ->and($created->description)->toContain('<strong>Descripcion</strong>');
+});
+
+test('document resource allows overriding suggested document number', function () {
+    $role = createRoleWithDocumentPermissions('administrador-document-number', ['ViewAny', 'View', 'Create', 'Update', 'Delete']);
+
+    $user = User::factory()->create([
+        'is_admin' => false,
+    ]);
+    $user->assignRole($role);
+
+    $this->actingAs($user);
+
+    Livewire::test(CreateDocument::class)
+        ->fillForm([
+            'title' => 'Documento con numero manual',
+            'slug' => 'documento-numero-manual',
+            'external_url' => 'https://drive.google.com/file/d/1manualnumber/view?usp=sharing',
+            'document_number' => 'DOC - 0099',
+            'status' => 'draft',
+            'sort_order' => 0,
+        ])
+        ->call('create')
+        ->assertHasNoFormErrors()
+        ->assertRedirect();
+
+    $created = Document::query()->where('slug', 'documento-numero-manual')->firstOrFail();
+
+    expect($created->document_number)->toBe('DOC - 0099');
 });
 
 /**

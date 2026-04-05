@@ -3,6 +3,8 @@
 use App\Filament\Resources\PqrsRequests\Pages\CreatePqrsRequest;
 use App\Filament\Resources\PqrsRequests\Pages\EditPqrsRequest;
 use App\Filament\Resources\PqrsRequests\Pages\ListPqrsRequests;
+use App\Filament\Resources\PqrsRequests\Pages\ViewPqrsRequest;
+use App\Models\PqrsMessage;
 use App\Filament\Resources\PqrsRequests\PqrsRequestResource;
 use App\Models\PqrsRequest;
 use App\Models\User;
@@ -145,3 +147,78 @@ function createRoleWithPqrsPermissions(string $roleName, array $abilities): Role
 
     return $role;
 }
+
+test('user with update permission can respond multiple times from pqrs detail action', function () {
+    $role = createRoleWithPqrsPermissions('gestor-pqrs-respuestas', ['ViewAny', 'View', 'Update']);
+
+    $user = User::factory()->create([
+        'is_admin' => false,
+    ]);
+    $user->assignRole($role);
+
+    $record = PqrsRequest::query()->create([
+        'tracking_code' => 'PQRS-2026-RESP-001',
+        'type' => 'peticion',
+        'is_anonymous' => false,
+        'status' => 'received',
+        'priority' => 'medium',
+        'message' => str_repeat('Mensaje inicial para historial. ', 3),
+        'applicant_name' => 'Solicitante historial',
+        'applicant_email' => 'historial@example.test',
+        'submitted_at' => now()->subHours(3),
+    ]);
+
+    $this->actingAs($user);
+
+    Livewire::test(ViewPqrsRequest::class, ['record' => $record->getKey()])
+        ->assertActionVisible('respond')
+        ->callAction('respond', data: [
+            'responded_at' => now()->subHour(),
+            'subject' => "Respuesta al ID del PQRSF {$record->id}",
+            'message' => '<p>Primera respuesta institucional.</p>',
+        ])
+        ->assertHasNoActionErrors()
+        ->callAction('respond', data: [
+            'responded_at' => now(),
+            'subject' => "Seguimiento al ID del PQRSF {$record->id}",
+            'message' => '<p>Segunda respuesta institucional.</p>',
+        ])
+        ->assertHasNoActionErrors();
+
+    $responses = PqrsMessage::query()
+        ->where('pqrs_request_id', $record->id)
+        ->where('user_id', $user->id)
+        ->orderBy('responded_at')
+        ->get();
+
+    expect($responses)->toHaveCount(2)
+        ->and($responses->first()?->subject)->toBe("Respuesta al ID del PQRSF {$record->id}")
+        ->and($responses->first()?->is_internal)->toBeFalse()
+        ->and($responses->last()?->subject)->toBe("Seguimiento al ID del PQRSF {$record->id}");
+});
+
+test('user without update permission cannot access pqrs respond action', function () {
+    $role = createRoleWithPqrsPermissions('lector-pqrs-respuestas', ['ViewAny', 'View']);
+
+    $user = User::factory()->create([
+        'is_admin' => false,
+    ]);
+    $user->assignRole($role);
+
+    $record = PqrsRequest::query()->create([
+        'tracking_code' => 'PQRS-2026-RESP-002',
+        'type' => 'peticion',
+        'is_anonymous' => false,
+        'status' => 'received',
+        'priority' => 'medium',
+        'message' => str_repeat('Mensaje para validar permisos. ', 3),
+        'applicant_name' => 'Usuario lector',
+        'applicant_email' => 'lector@example.test',
+        'submitted_at' => now()->subHour(),
+    ]);
+
+    $this->actingAs($user);
+
+    Livewire::test(ViewPqrsRequest::class, ['record' => $record->getKey()])
+        ->assertActionHidden('respond');
+});

@@ -6,6 +6,7 @@ use App\Models\Document;
 use App\Support\Categories\CategoryScope;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -59,9 +60,22 @@ class DocumentForm
                                     ->label('Resumen')
                                     ->rows(3)
                                     ->columnSpanFull(),
-                                Textarea::make('description')
+                                RichEditor::make('description')
                                     ->label('Descripcion')
-                                    ->rows(8)
+                                    ->toolbarButtons([
+                                        'bold',
+                                        'italic',
+                                        'underline',
+                                        'strike',
+                                        'h2',
+                                        'h3',
+                                        'bulletList',
+                                        'orderedList',
+                                        'blockquote',
+                                        'link',
+                                        'undo',
+                                        'redo',
+                                    ])
                                     ->columnSpanFull(),
                             ]),
                         Tab::make('Enlace y Publicacion')
@@ -95,6 +109,8 @@ class DocumentForm
                                     ->columnSpanFull(),
                                 TextInput::make('document_number')
                                     ->label('Numero de documento')
+                                    ->default(fn (): string => static::nextDocumentNumber())
+                                    ->helperText('Se sugiere automaticamente con formato DOC - XXXX. Puedes editarlo.')
                                     ->maxLength(100),
                                 DatePicker::make('document_date')
                                     ->label('Fecha del documento'),
@@ -131,5 +147,23 @@ class DocumentForm
         }
 
         $set('slug', Str::slug((string) $state));
+    }
+
+    private static function nextDocumentNumber(): string
+    {
+        $maxConsecutive = Document::query()
+            ->whereNotNull('document_number')
+            ->pluck('document_number')
+            ->reduce(function (int $max, mixed $value): int {
+                $number = trim((string) $value);
+
+                if (preg_match('/^DOC\\s*-\\s*(\\d+)$/i', $number, $matches) !== 1) {
+                    return $max;
+                }
+
+                return max($max, (int) $matches[1]);
+            }, 0);
+
+        return sprintf('DOC - %04d', $maxConsecutive + 1);
     }
 }

@@ -18,7 +18,9 @@ class PqrsMessageFactory extends Factory
             'user_id' => null,
             'author_name' => fake()->name(),
             'author_email' => fake()->safeEmail(),
+            'subject' => fake()->sentence(6),
             'message' => fake()->paragraph(),
+            'responded_at' => now(),
             'is_internal' => false,
             'attachments' => [],
         ];

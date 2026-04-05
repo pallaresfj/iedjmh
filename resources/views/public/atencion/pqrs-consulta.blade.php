@@ -133,7 +133,31 @@
                                             <span class="font-semibold text-ied-gray-700">{{ $msg['author'] }}</span>
                                             <time>{{ $msg['date'] }}</time>
                                         </div>
-                                        <p class="mt-2 text-sm text-ied-gray-800">{{ $msg['message'] }}</p>
+                                        @if (! empty($msg['subject']))
+                                            <p class="mt-2 text-xs font-semibold uppercase tracking-wide text-ied-primary-dark">{{ $msg['subject'] }}</p>
+                                        @endif
+
+                                        @if (($msg['is_rich'] ?? false) === true)
+                                            <div class="prose prose-sm mt-2 max-w-none text-ied-gray-800">{!! $msg['message'] !!}</div>
+                                        @else
+                                            <p class="mt-2 text-sm text-ied-gray-800">{{ $msg['message'] }}</p>
+                                        @endif
+
+                                        @if (! empty($msg['attachments']) && is_array($msg['attachments']))
+                                            <div class="mt-3 flex flex-wrap gap-2">
+                                                @foreach ($msg['attachments'] as $attachment)
+                                                    @if (! empty($attachment['url']))
+                                                        <a href="{{ $attachment['url'] }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center rounded-full border border-ied-primary/25 px-3 py-1 text-xs font-semibold text-ied-primary-dark hover:border-ied-primary hover:text-ied-primary">
+                                                            {{ $attachment['name'] ?? 'Adjunto PDF' }}
+                                                        </a>
+                                                    @else
+                                                        <span class="inline-flex items-center rounded-full border border-ied-gray-300 px-3 py-1 text-xs font-semibold text-ied-gray-700">
+                                                            {{ $attachment['name'] ?? 'Adjunto PDF' }}
+                                                        </span>
+                                                    @endif
+                                                @endforeach
+                                            </div>
+                                        @endif
                                     </div>
                                 @endforeach
                             </div>
