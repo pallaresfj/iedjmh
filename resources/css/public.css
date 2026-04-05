@@ -96,6 +96,11 @@
         --public-accent-contrast-strong: var(--color-ied-primary-dark);
         --public-accent-soft-bg: color-mix(in srgb, var(--color-ied-primary-light) 18%, transparent);
         --public-accent-soft-bg-strong: color-mix(in srgb, var(--color-ied-primary-light) 24%, transparent);
+        --public-rich-link: color-mix(in srgb, var(--color-ied-primary-dark) 88%, black);
+        --public-rich-link-hover: var(--color-ied-primary);
+        --public-rich-blockquote-bg: color-mix(in srgb, var(--color-ied-primary) 8%, var(--public-surface));
+        --public-rich-blockquote-border: color-mix(in srgb, var(--color-ied-primary) 42%, transparent);
+        --public-rich-blockquote-text: var(--public-text);
         --public-header-action-bg: color-mix(in srgb, var(--public-surface-high) 84%, transparent);
         --public-header-action-border: color-mix(in srgb, var(--public-border-strong) 88%, transparent);
         --public-header-action-border-hover: color-mix(in srgb, var(--color-ied-primary-light) 42%, transparent);
@@ -234,6 +239,11 @@
         --public-accent-contrast-strong: color-mix(in srgb, var(--public-nav-link-active) 88%, white);
         --public-accent-soft-bg: color-mix(in srgb, var(--public-nav-link-active) 18%, transparent);
         --public-accent-soft-bg-strong: color-mix(in srgb, var(--public-nav-link-active) 24%, transparent);
+        --public-rich-link: color-mix(in srgb, var(--public-nav-link-active) 86%, white);
+        --public-rich-link-hover: color-mix(in srgb, var(--public-nav-link-active) 96%, white);
+        --public-rich-blockquote-bg: color-mix(in srgb, var(--public-nav-link-active) 16%, transparent);
+        --public-rich-blockquote-border: color-mix(in srgb, var(--public-nav-link-active) 46%, transparent);
+        --public-rich-blockquote-text: color-mix(in srgb, var(--public-text) 94%, white);
         --public-header-action-bg: color-mix(in srgb, var(--public-surface-high) 70%, transparent);
         --public-header-action-border: color-mix(in srgb, var(--public-border-strong) 74%, transparent);
         --public-header-action-border-hover: color-mix(in srgb, var(--public-nav-link-active) 56%, transparent);
@@ -450,9 +460,24 @@
     }
 
     .public-header__mobile-summary {
+        width: 2.75rem;
+        height: 2.75rem;
+        justify-content: center;
+        border-radius: 9999px;
         border: 1px solid var(--color-ied-gray-200);
         background-color: #ffffff;
         color: var(--color-ied-gray-700);
+        padding: 0;
+    }
+
+    .public-header__mobile-summary:hover {
+        border-color: rgba(var(--color-ied-primary-rgb), 0.42);
+        background-color: rgba(var(--color-ied-primary-rgb), 0.08);
+        color: var(--color-ied-primary-dark);
+    }
+
+    .public-header__mobile-summary-icon {
+        font-size: 1.35rem;
     }
 
     .public-header__mobile-panel {
@@ -732,6 +757,12 @@
         background-color: var(--public-nav-dropdown-bg);
         border-color: var(--public-nav-dropdown-border);
         color: var(--public-heading);
+    }
+
+    html[data-public-theme='dark'] .public-site .public-header__mobile-summary:hover {
+        background-color: var(--public-accent-soft-bg);
+        border-color: var(--public-header-action-border-hover);
+        color: var(--public-nav-link-hover);
     }
 
     html[data-public-theme='dark'] .public-site .public-nav--mobile .public-nav__mobile-group {
@@ -1515,7 +1546,8 @@
     }
 
     .public-rich-content {
-        @apply text-sm leading-relaxed text-ied-gray-700 sm:text-base;
+        @apply text-sm leading-relaxed sm:text-base;
+        color: var(--public-text);
     }
 
     .public-rich-content > * + * {
@@ -1528,7 +1560,7 @@
     .public-rich-content h4 {
         font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
         letter-spacing: -0.015em;
-        @apply text-ied-gray-900;
+        color: var(--public-heading);
     }
 
     .public-rich-content h1 {
@@ -1560,11 +1592,19 @@
     }
 
     .public-rich-content a {
-        @apply font-medium text-ied-primary underline underline-offset-4 hover:text-ied-primary-dark;
+        @apply font-medium underline underline-offset-4;
+        color: var(--public-rich-link);
+    }
+
+    .public-rich-content a:hover {
+        color: var(--public-rich-link-hover);
     }
 
     .public-rich-content blockquote {
-        @apply rounded-r-lg border-l-4 border-ied-primary/40 bg-ied-primary/5 px-4 py-3 italic text-ied-gray-700;
+        @apply rounded-r-lg border-l-4 px-4 py-3 italic;
+        border-left-color: var(--public-rich-blockquote-border);
+        background-color: var(--public-rich-blockquote-bg);
+        color: var(--public-rich-blockquote-text);
     }
 
     .public-rich-content img {
@@ -1572,16 +1612,90 @@
     }
 
     .public-rich-content table {
-        @apply w-full border-collapse overflow-hidden rounded-xl border border-ied-gray-200 text-left text-sm;
+        @apply w-full border-collapse overflow-hidden rounded-xl border text-left text-sm;
+        border-color: var(--public-table-border);
     }
 
     .public-rich-content th,
     .public-rich-content td {
-        @apply border border-ied-gray-200 px-3 py-2 align-top;
+        @apply border px-3 py-2 align-top;
+        border-color: var(--public-table-border);
     }
 
     .public-rich-content th {
-        @apply bg-ied-gray-100 font-semibold text-ied-gray-900;
+        @apply font-semibold;
+        background-color: var(--public-table-head-bg);
+        color: var(--public-heading);
+    }
+
+    .public-rich-content td {
+        background-color: var(--public-table-row-bg);
+        color: var(--public-text);
+    }
+
+    html[data-public-theme='dark'] .public-rich-content,
+    html[data-public-theme='dark'] .public-rich-content p,
+    html[data-public-theme='dark'] .public-rich-content li {
+        color: var(--public-text);
+    }
+
+    html[data-public-theme='dark'] .public-rich-content h1,
+    html[data-public-theme='dark'] .public-rich-content h2,
+    html[data-public-theme='dark'] .public-rich-content h3,
+    html[data-public-theme='dark'] .public-rich-content h4 {
+        color: var(--public-heading);
+    }
+
+    html[data-public-theme='dark'] .public-rich-content a {
+        color: var(--public-rich-link);
+    }
+
+    html[data-public-theme='dark'] .public-rich-content a:hover {
+        color: var(--public-rich-link-hover);
+    }
+
+    html[data-public-theme='dark'] .public-rich-content blockquote {
+        border-left-color: var(--public-rich-blockquote-border);
+        background-color: var(--public-rich-blockquote-bg);
+        color: var(--public-rich-blockquote-text);
+    }
+
+    .public-graduates-banner {
+        background: linear-gradient(
+            130deg,
+            color-mix(in srgb, var(--color-ied-primary-dark) 88%, black) 0%,
+            color-mix(in srgb, var(--color-ied-primary-dark) 70%, var(--color-ied-primary)) 58%,
+            color-mix(in srgb, var(--color-ied-primary) 76%, var(--color-ied-primary-light)) 100%
+        );
+    }
+
+    .public-graduates-banner__cta {
+        color: color-mix(in srgb, var(--color-ied-primary-dark) 86%, black);
+        background: linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--color-ied-primary-light) 76%, white) 0%,
+            color-mix(in srgb, var(--color-ied-primary) 66%, white) 100%
+        );
+        border: 1px solid rgba(255, 255, 255, 0.68);
+        box-shadow: 0 10px 22px rgba(0, 0, 0, 0.22);
+    }
+
+    .public-graduates-banner__cta:hover,
+    .public-graduates-banner__cta:focus-visible {
+        color: #ffffff;
+        background: linear-gradient(
+            135deg,
+            var(--color-ied-primary-light) 0%,
+            var(--color-ied-primary) 60%,
+            var(--color-ied-primary-dark) 100%
+        );
+        border-color: rgba(var(--color-ied-primary-light-rgb), 0.72);
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.3);
+    }
+
+    .public-graduates-banner__cta:focus-visible {
+        outline: 2px solid rgba(255, 255, 255, 0.92);
+        outline-offset: 3px;
     }
 
     .public-symbols-card {

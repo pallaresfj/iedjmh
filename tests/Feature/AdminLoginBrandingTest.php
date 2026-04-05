@@ -27,6 +27,7 @@ test('admin login renders institutional branding from settings', function () {
         ->assertSee('Ingresa con tu correo institucional')
         ->assertDontSee('fi-simple-header', false)
         ->assertSee('src="/storage/settings/logo-admin.png"', false)
+        ->assertSee('rel="icon" href="/storage/settings/logo-admin.png"', false)
         ->assertSee('/storage/settings/home/hero-admin.jpg', false)
         ->assertSee('AS&amp;Servicios.com', false)
         ->assertSee('href="https://asyservicios.com"', false);
@@ -47,6 +48,7 @@ test('admin login uses shared home hero fallback when hero image setting is empt
     $this->get('/admin/login')
         ->assertOk()
         ->assertSee('IED Fallback Login')
+        ->assertSee('rel="icon" href="/favicon.ico"', false)
         ->assertSee(PublicSettings::homeHeroFallbackImageUrl(), false);
 });
 

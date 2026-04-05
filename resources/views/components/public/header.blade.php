@@ -96,9 +96,10 @@
         <div class="public-container py-3">
             <div class="public-shell">
                 <details class="group relative">
-                    <summary class="public-header__mobile-summary inline-flex list-none items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold">
-                        <span>Menu</span>
-                        <span class="material-symbols-outlined !text-[18px] transition group-open:rotate-180">expand_more</span>
+                    <summary class="public-header__mobile-summary inline-flex list-none items-center text-sm font-semibold" aria-label="Abrir menu principal">
+                        <span class="sr-only">Menu principal</span>
+                        <span class="material-symbols-outlined public-header__mobile-summary-icon group-open:hidden" aria-hidden="true">menu</span>
+                        <span class="material-symbols-outlined public-header__mobile-summary-icon hidden group-open:inline-flex" aria-hidden="true">close</span>
                     </summary>
                     <div class="public-header__mobile-panel mt-3 space-y-3 rounded-xl p-3 shadow-lg">
                         <x-public.nav :items="$menuItems" mobile />

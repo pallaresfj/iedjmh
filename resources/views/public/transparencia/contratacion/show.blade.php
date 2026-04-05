@@ -105,7 +105,42 @@
 
                 @php($participants = $contract['participants'] ?? collect())
                 @if ($participants->isNotEmpty())
-                    <div class="mt-5 overflow-x-auto rounded-xl border border-ied-gray-200">
+                    <div class="mt-5 space-y-3 md:hidden" data-contract-participants-mobile>
+                        @foreach ($participants as $participant)
+                            <article class="rounded-xl border border-ied-gray-200 bg-white p-4">
+                                <dl class="space-y-3 text-sm">
+                                    <div>
+                                        <dt class="text-[11px] font-semibold uppercase tracking-wide text-ied-gray-600">Participante</dt>
+                                        <dd class="mt-1 font-semibold text-ied-gray-900 break-words">{{ $participant['name'] }}</dd>
+                                    </div>
+                                    <div>
+                                        <dt class="text-[11px] font-semibold uppercase tracking-wide text-ied-gray-600">NIT</dt>
+                                        <dd class="mt-1 text-ied-gray-700 break-words">{{ $participant['nit'] ?: 'No registrado' }}</dd>
+                                    </div>
+                                    <div>
+                                        <dt class="text-[11px] font-semibold uppercase tracking-wide text-ied-gray-600">Objeto social</dt>
+                                        <dd class="mt-1 whitespace-normal break-words text-ied-gray-700">{{ $participant['social_object'] ?: 'No registrado' }}</dd>
+                                    </div>
+                                    <div>
+                                        <dt class="text-[11px] font-semibold uppercase tracking-wide text-ied-gray-600">Puntaje</dt>
+                                        <dd class="mt-1 text-ied-gray-700">{{ $participant['evaluation_score'] !== null ? number_format($participant['evaluation_score'], 2, ',', '.') : 'No registrado' }}</dd>
+                                    </div>
+                                    <div>
+                                        <dt class="text-[11px] font-semibold uppercase tracking-wide text-ied-gray-600">Resultado</dt>
+                                        <dd class="mt-1">
+                                            @if ($participant['is_awarded'])
+                                                <span class="inline-flex rounded-full bg-ied-primary/10 px-2.5 py-1 text-xs font-semibold text-ied-primary-dark">Adjudicado</span>
+                                            @else
+                                                <span class="text-xs text-ied-gray-600">No adjudicado</span>
+                                            @endif
+                                        </dd>
+                                    </div>
+                                </dl>
+                            </article>
+                        @endforeach
+                    </div>
+
+                    <div class="mt-5 hidden overflow-x-auto rounded-xl border border-ied-gray-200 md:block" data-contract-participants-table>
                         <table class="min-w-full divide-y divide-ied-gray-200 text-sm">
                             <thead class="bg-ied-gray-100 text-left text-xs font-semibold uppercase tracking-wide text-ied-gray-700">
                                 <tr>
@@ -119,9 +154,9 @@
                             <tbody class="divide-y divide-ied-gray-200 bg-white text-ied-gray-700">
                                 @foreach ($participants as $participant)
                                     <tr>
-                                        <td class="px-4 py-3 font-medium text-ied-gray-900">{{ $participant['name'] }}</td>
-                                        <td class="px-4 py-3">{{ $participant['nit'] ?: 'No registrado' }}</td>
-                                        <td class="px-4 py-3">{{ $participant['social_object'] ?: 'No registrado' }}</td>
+                                        <td class="px-4 py-3 font-medium text-ied-gray-900 whitespace-normal break-words">{{ $participant['name'] }}</td>
+                                        <td class="px-4 py-3 whitespace-normal break-words">{{ $participant['nit'] ?: 'No registrado' }}</td>
+                                        <td class="px-4 py-3 whitespace-normal break-words">{{ $participant['social_object'] ?: 'No registrado' }}</td>
                                         <td class="px-4 py-3">{{ $participant['evaluation_score'] !== null ? number_format($participant['evaluation_score'], 2, ',', '.') : 'No registrado' }}</td>
                                         <td class="px-4 py-3">
                                             @if ($participant['is_awarded'])

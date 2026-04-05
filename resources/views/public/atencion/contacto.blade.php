@@ -223,7 +223,7 @@
         </div>
     </x-public.internal-page>
 
-    <section class="bg-ied-primary-dark py-16 sm:py-20">
+    <section class="public-graduates-banner py-16 sm:py-20">
         <div class="public-container">
             <div class="public-content-shell">
                 <div class="flex flex-col items-start gap-8 sm:flex-row sm:items-center sm:justify-between">
@@ -234,7 +234,7 @@
 
                     <a
                         href="{{ route('egresados.index') }}"
-                        class="inline-flex shrink-0 items-center rounded-full bg-ied-primary-light px-8 py-4 text-sm font-bold uppercase tracking-widest text-ied-primary-dark transition hover:brightness-110"
+                        class="public-graduates-banner__cta inline-flex shrink-0 items-center rounded-full px-8 py-4 text-sm font-bold uppercase tracking-widest transition"
                     >
                         Actualizar datos
                     </a>

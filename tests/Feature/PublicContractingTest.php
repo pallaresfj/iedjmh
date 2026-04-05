@@ -255,7 +255,9 @@ test('contracting detail shows participants list and awarded marker', function (
         ->assertSee('Proveedor Ganador SAS')
         ->assertSee('95,25')
         ->assertSee('Adjudicado')
-        ->assertSee('Proveedor Alterno SAS');
+        ->assertSee('Proveedor Alterno SAS')
+        ->assertSee('data-contract-participants-mobile', false)
+        ->assertSee('data-contract-participants-table', false);
 });
 
 test('contracting directory prioritizes awarded participant over legacy contract fields', function () {
