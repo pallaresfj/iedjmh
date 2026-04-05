@@ -39,7 +39,7 @@ test('pqrs tracking renders rich text only for panel responses and escapes citiz
         'user_id' => $staffUser->id,
         'author_name' => 'Gestor PQRS',
         'author_email' => 'gestor@example.test',
-        'subject' => 'Respuesta al ID del PQRSF '.$pqrs->id,
+        'subject' => 'Respuesta al Código completo del radicado '.$pqrs->tracking_code,
         'message' => '<p><strong>Respuesta institucional</strong> con formato enriquecido.</p>',
         'responded_at' => now()->subHours(2),
         'is_internal' => false,
@@ -52,7 +52,7 @@ test('pqrs tracking renders rich text only for panel responses and escapes citiz
 
     $response
         ->assertOk()
-        ->assertSee('Respuesta al ID del PQRSF '.$pqrs->id)
+        ->assertSee('Respuesta al Código completo del radicado '.$pqrs->tracking_code)
         ->assertSee('<strong>Respuesta institucional</strong>', false)
         ->assertDontSee('<strong>Mensaje ciudadano</strong>', false)
         ->assertSee('&lt;strong&gt;Mensaje ciudadano&lt;/strong&gt;', false);
