@@ -174,13 +174,13 @@ test('user with update permission can respond multiple times from pqrs detail ac
         ->assertActionVisible('respond')
         ->callAction('respond', data: [
             'responded_at' => now()->subHour(),
-            'subject' => "Respuesta al Código completo del radicado {$record->tracking_code}",
+            'subject' => "Respuesta al {$record->tracking_code}",
             'message' => '<p>Primera respuesta institucional.</p>',
         ])
         ->assertHasNoActionErrors()
         ->callAction('respond', data: [
             'responded_at' => now(),
-            'subject' => "Seguimiento al Código completo del radicado {$record->tracking_code}",
+            'subject' => "Seguimiento al {$record->tracking_code}",
             'message' => '<p>Segunda respuesta institucional.</p>',
         ])
         ->assertHasNoActionErrors();
@@ -192,9 +192,9 @@ test('user with update permission can respond multiple times from pqrs detail ac
         ->get();
 
     expect($responses)->toHaveCount(2)
-        ->and($responses->first()?->subject)->toBe("Respuesta al Código completo del radicado {$record->tracking_code}")
+        ->and($responses->first()?->subject)->toBe("Respuesta al {$record->tracking_code}")
         ->and($responses->first()?->is_internal)->toBeFalse()
-        ->and($responses->last()?->subject)->toBe("Seguimiento al Código completo del radicado {$record->tracking_code}");
+        ->and($responses->last()?->subject)->toBe("Seguimiento al {$record->tracking_code}");
 });
 
 test('user without update permission cannot access pqrs respond action', function () {

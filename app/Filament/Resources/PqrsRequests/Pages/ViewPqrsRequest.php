@@ -35,7 +35,7 @@ class ViewPqrsRequest extends ViewRecord
                         ->required(),
                     TextInput::make('subject')
                         ->label('Asunto')
-                        ->default(fn (): string => "Respuesta al Código completo del radicado {$this->record->tracking_code}")
+                        ->default(fn (): string => "Respuesta al {$this->record->tracking_code}")
                         ->required()
                         ->maxLength(255),
                     RichEditor::make('message')
