@@ -19,7 +19,6 @@ class PqrsMessage extends Model
         'message',
         'responded_at',
         'is_internal',
-        'attachments',
     ];
 
     protected function casts(): array
@@ -27,7 +26,6 @@ class PqrsMessage extends Model
         return [
             'responded_at' => 'datetime',
             'is_internal' => 'boolean',
-            'attachments' => 'array',
         ];
     }
 

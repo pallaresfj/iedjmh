@@ -22,7 +22,6 @@ class PqrsMessageFactory extends Factory
             'message' => fake()->paragraph(),
             'responded_at' => now(),
             'is_internal' => false,
-            'attachments' => [],
         ];
     }
 

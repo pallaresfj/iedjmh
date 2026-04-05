@@ -162,6 +162,45 @@
             rgba(var(--color-ied-primary-rgb), 0.03) 55%,
             color-mix(in srgb, var(--public-surface) 90%, transparent) 100%
         );
+        --matricula-section-bg: color-mix(in srgb, var(--public-surface-base) 92%, var(--public-surface));
+        --matricula-title: color-mix(in srgb, var(--color-ied-primary-dark) 84%, var(--public-heading));
+        --matricula-subtitle: color-mix(in srgb, var(--public-muted) 88%, var(--public-text));
+        --matricula-card-bg: var(--public-surface);
+        --matricula-card-border: color-mix(in srgb, var(--public-border) 88%, transparent);
+        --matricula-card-shadow: 0 2px 7px color-mix(in srgb, black 8%, transparent);
+        --matricula-card-emphasis-bg: color-mix(in srgb, var(--color-ied-primary-dark) 84%, var(--color-ied-primary));
+        --matricula-card-emphasis-border: color-mix(in srgb, var(--color-ied-primary-dark) 84%, var(--color-ied-primary));
+        --matricula-icon-bg: color-mix(in srgb, var(--color-ied-primary-light) 20%, var(--public-surface));
+        --matricula-icon-color: color-mix(in srgb, var(--color-ied-primary) 90%, var(--color-ied-primary-dark));
+        --matricula-icon-emphasis-bg: color-mix(in srgb, white 14%, transparent);
+        --matricula-icon-emphasis-color: white;
+        --matricula-card-title: color-mix(in srgb, var(--public-heading) 90%, black);
+        --matricula-card-description: color-mix(in srgb, var(--public-muted) 88%, var(--public-text));
+        --matricula-card-description-emphasis: color-mix(in srgb, white 86%, transparent);
+        --matricula-form-bg: var(--public-surface);
+        --matricula-form-border: color-mix(in srgb, var(--public-border) 92%, transparent);
+        --matricula-form-shadow: 0 8px 16px color-mix(in srgb, black 8%, transparent);
+        --matricula-label: color-mix(in srgb, var(--public-muted) 86%, var(--public-text));
+        --matricula-input-bg: color-mix(in srgb, var(--public-surface-low) 82%, var(--public-surface));
+        --matricula-input-border: color-mix(in srgb, var(--public-form-border) 90%, transparent);
+        --matricula-input-text: var(--public-form-text);
+        --matricula-input-focus-border: var(--color-ied-primary);
+        --matricula-input-focus-ring: color-mix(in srgb, var(--color-ied-primary) 22%, transparent);
+        --matricula-dropzone-bg: color-mix(in srgb, var(--public-surface-low) 86%, var(--public-surface));
+        --matricula-dropzone-border: color-mix(in srgb, var(--public-border-strong) 68%, transparent);
+        --matricula-dropzone-icon: color-mix(in srgb, var(--public-muted) 72%, var(--public-text));
+        --matricula-dropzone-lead: color-mix(in srgb, var(--public-heading) 86%, var(--public-text));
+        --matricula-dropzone-hint: color-mix(in srgb, var(--public-muted) 90%, var(--public-text));
+        --matricula-dropzone-selected: color-mix(in srgb, var(--color-ied-primary-dark) 86%, var(--color-ied-primary));
+        --matricula-dropzone-drag-border: var(--color-ied-primary);
+        --matricula-dropzone-drag-bg: color-mix(in srgb, var(--color-ied-primary) 8%, var(--matricula-dropzone-bg));
+        --matricula-dropzone-file-border: color-mix(in srgb, var(--color-ied-primary) 42%, transparent);
+        --matricula-dropzone-file-bg: color-mix(in srgb, var(--color-ied-primary) 5%, var(--matricula-dropzone-bg));
+        --matricula-error: color-mix(in srgb, var(--color-ied-danger) 86%, black);
+        --matricula-submit-bg: var(--color-ied-primary);
+        --matricula-submit-bg-hover: color-mix(in srgb, var(--color-ied-primary-dark) 76%, var(--color-ied-primary));
+        --matricula-submit-text: white;
+        --matricula-footnote: color-mix(in srgb, var(--public-muted) 84%, var(--public-text));
 
         /* Backward-compatible aliases for existing home component styles */
         --home-surface-base: var(--public-surface-base);
@@ -304,6 +343,45 @@
             color-mix(in srgb, var(--color-ied-primary-dark) 72%, black) 0%,
             color-mix(in srgb, var(--color-ied-primary) 56%, black) 100%
         );
+        --matricula-section-bg: color-mix(in srgb, var(--public-surface-base) 90%, var(--public-surface-low));
+        --matricula-title: color-mix(in srgb, var(--public-heading) 94%, white);
+        --matricula-subtitle: color-mix(in srgb, var(--public-muted) 84%, white);
+        --matricula-card-bg: color-mix(in srgb, var(--public-surface) 90%, var(--public-surface-high));
+        --matricula-card-border: color-mix(in srgb, var(--public-border-strong) 90%, transparent);
+        --matricula-card-shadow: 0 4px 12px color-mix(in srgb, black 22%, transparent);
+        --matricula-card-emphasis-bg: color-mix(in srgb, var(--color-ied-primary-dark) 78%, black);
+        --matricula-card-emphasis-border: color-mix(in srgb, var(--color-ied-primary-dark) 70%, black);
+        --matricula-icon-bg: color-mix(in srgb, var(--color-ied-primary-light) 16%, transparent);
+        --matricula-icon-color: color-mix(in srgb, var(--color-ied-primary-light) 84%, white);
+        --matricula-icon-emphasis-bg: color-mix(in srgb, white 16%, transparent);
+        --matricula-icon-emphasis-color: color-mix(in srgb, white 92%, var(--public-heading));
+        --matricula-card-title: color-mix(in srgb, var(--public-heading) 92%, white);
+        --matricula-card-description: color-mix(in srgb, var(--public-text) 90%, white);
+        --matricula-card-description-emphasis: color-mix(in srgb, white 90%, transparent);
+        --matricula-form-bg: color-mix(in srgb, var(--public-surface) 88%, var(--public-surface-high));
+        --matricula-form-border: color-mix(in srgb, var(--public-border-strong) 88%, transparent);
+        --matricula-form-shadow: 0 12px 22px color-mix(in srgb, black 24%, transparent);
+        --matricula-label: color-mix(in srgb, var(--public-muted) 90%, white);
+        --matricula-input-bg: color-mix(in srgb, var(--public-surface-low) 80%, var(--public-surface));
+        --matricula-input-border: color-mix(in srgb, var(--public-form-border) 95%, transparent);
+        --matricula-input-text: var(--public-form-text);
+        --matricula-input-focus-border: color-mix(in srgb, var(--color-ied-primary-light) 74%, white);
+        --matricula-input-focus-ring: color-mix(in srgb, var(--color-ied-primary-light) 30%, transparent);
+        --matricula-dropzone-bg: color-mix(in srgb, var(--public-surface-low) 82%, var(--public-surface));
+        --matricula-dropzone-border: color-mix(in srgb, var(--public-border-strong) 84%, transparent);
+        --matricula-dropzone-icon: color-mix(in srgb, var(--public-muted) 82%, white);
+        --matricula-dropzone-lead: color-mix(in srgb, var(--public-heading) 90%, white);
+        --matricula-dropzone-hint: color-mix(in srgb, var(--public-text) 82%, white);
+        --matricula-dropzone-selected: color-mix(in srgb, var(--color-ied-primary-light) 84%, white);
+        --matricula-dropzone-drag-border: color-mix(in srgb, var(--color-ied-primary-light) 80%, white);
+        --matricula-dropzone-drag-bg: color-mix(in srgb, var(--color-ied-primary-light) 14%, var(--matricula-dropzone-bg));
+        --matricula-dropzone-file-border: color-mix(in srgb, var(--color-ied-primary-light) 60%, transparent);
+        --matricula-dropzone-file-bg: color-mix(in srgb, var(--color-ied-primary-light) 12%, var(--matricula-dropzone-bg));
+        --matricula-error: color-mix(in srgb, var(--color-ied-danger) 82%, white);
+        --matricula-submit-bg: color-mix(in srgb, var(--color-ied-primary) 82%, black);
+        --matricula-submit-bg-hover: color-mix(in srgb, var(--color-ied-primary-light) 58%, var(--color-ied-primary));
+        --matricula-submit-text: color-mix(in srgb, white 96%, var(--public-heading));
+        --matricula-footnote: color-mix(in srgb, var(--public-muted) 88%, white);
 
         --home-surface-base: var(--public-surface-base);
         --home-surface-low: var(--public-surface-low);
@@ -819,6 +897,16 @@
         border-color: color-mix(in srgb, var(--color-ied-primary) 36%, transparent);
         background-color: color-mix(in srgb, var(--color-ied-primary-light) 18%, var(--public-surface));
         color: var(--public-accent-contrast);
+    }
+
+    .public-alert--warning {
+        border-color: color-mix(in srgb, var(--color-ied-warning, var(--color-ied-accent)) 36%, transparent);
+        background-color: color-mix(in srgb, var(--color-ied-warning, var(--color-ied-accent)) 16%, var(--public-surface));
+        color: color-mix(in srgb, var(--color-ied-warning, var(--color-ied-accent)) 78%, black);
+    }
+
+    html[data-public-theme='dark'] .public-site .public-alert--warning {
+        color: color-mix(in srgb, var(--color-ied-warning, var(--color-ied-accent)) 86%, white);
     }
 
     .public-alert__link {
@@ -2036,7 +2124,7 @@
 
     .matricula-section--requirements,
     .matricula-section--form {
-        background-color: #f1f3f2;
+        background-color: var(--matricula-section-bg);
     }
 
     .matricula-header {
@@ -2045,7 +2133,7 @@
     }
 
     .matricula-title {
-        color: #174f35;
+        color: var(--matricula-title);
         font-size: clamp(1.45rem, 2vw, 2rem);
         font-weight: 900;
         letter-spacing: -0.02em;
@@ -2053,7 +2141,7 @@
 
     .matricula-subtitle {
         margin-top: 0.45rem;
-        color: #5f6f67;
+        color: var(--matricula-subtitle);
         font-size: 0.75rem;
         font-weight: 700;
         letter-spacing: 0.1em;
@@ -2068,16 +2156,16 @@
 
     .matricula-requirement-card {
         border-radius: 0.8rem;
-        border: 1px solid #d9e0dc;
-        background-color: #ffffff;
-        box-shadow: 0 2px 7px rgba(16, 24, 40, 0.08);
+        border: 1px solid var(--matricula-card-border);
+        background-color: var(--matricula-card-bg);
+        box-shadow: var(--matricula-card-shadow);
         padding: 1rem;
         min-height: 8.6rem;
     }
 
     .matricula-requirement-card--emphasized {
-        background-color: #174f35;
-        border-color: #174f35;
+        background-color: var(--matricula-card-emphasis-bg);
+        border-color: var(--matricula-card-emphasis-border);
     }
 
     .matricula-requirement-card__icon {
@@ -2087,13 +2175,13 @@
         width: 1.7rem;
         height: 1.7rem;
         border-radius: 0.35rem;
-        background-color: #e8f4eb;
-        color: #2e7d32;
+        background-color: var(--matricula-icon-bg);
+        color: var(--matricula-icon-color);
     }
 
     .matricula-requirement-card--emphasized .matricula-requirement-card__icon {
-        background-color: rgba(255, 255, 255, 0.14);
-        color: #ffffff;
+        background-color: var(--matricula-icon-emphasis-bg);
+        color: var(--matricula-icon-emphasis-color);
     }
 
     .matricula-requirement-card__icon .material-symbols-outlined {
@@ -2102,33 +2190,33 @@
 
     .matricula-requirement-card__title {
         margin-top: 0.75rem;
-        color: #172824;
+        color: var(--matricula-card-title);
         font-size: 0.95rem;
         font-weight: 800;
         letter-spacing: -0.01em;
     }
 
     .matricula-requirement-card--emphasized .matricula-requirement-card__title {
-        color: #ffffff;
+        color: var(--matricula-icon-emphasis-color);
     }
 
     .matricula-requirement-card__description {
         margin-top: 0.35rem;
-        color: #5f6f67;
+        color: var(--matricula-card-description);
         font-size: 0.76rem;
         line-height: 1.4;
         font-weight: 550;
     }
 
     .matricula-requirement-card--emphasized .matricula-requirement-card__description {
-        color: rgba(255, 255, 255, 0.86);
+        color: var(--matricula-card-description-emphasis);
     }
 
     .matricula-form-card {
-        border: 1px solid #dce3df;
+        border: 1px solid var(--matricula-form-border);
         border-radius: 0.75rem;
-        background-color: #ffffff;
-        box-shadow: 0 8px 16px rgba(16, 24, 40, 0.08);
+        background-color: var(--matricula-form-bg);
+        box-shadow: var(--matricula-form-shadow);
         padding: 1.1rem;
     }
 
@@ -2139,7 +2227,7 @@
     .matricula-field__label {
         display: block;
         margin-bottom: 0.45rem;
-        color: #5e6f69;
+        color: var(--matricula-label);
         font-size: 0.64rem;
         font-weight: 800;
         text-transform: uppercase;
@@ -2150,9 +2238,9 @@
         display: block;
         width: 100%;
         border-radius: 0.45rem;
-        border: 1px solid #d7dfdb;
-        background-color: #f7f9f8;
-        color: #1e2c28;
+        border: 1px solid var(--matricula-input-border);
+        background-color: var(--matricula-input-bg);
+        color: var(--matricula-input-text);
         font-size: 0.84rem;
         font-weight: 500;
         padding: 0.56rem 0.78rem;
@@ -2160,8 +2248,8 @@
 
     .matricula-field__control:focus-visible {
         outline: 0;
-        border-color: #2e7d32;
-        box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.2);
+        border-color: var(--matricula-input-focus-border);
+        box-shadow: 0 0 0 3px var(--matricula-input-focus-ring);
     }
 
     .matricula-field__control:disabled {
@@ -2174,9 +2262,9 @@
         place-content: center;
         gap: 0.35rem;
         min-height: 10rem;
-        border: 2px dashed #b4c1ba;
+        border: 2px dashed var(--matricula-dropzone-border);
         border-radius: 0.75rem;
-        background-color: #f3f6f4;
+        background-color: var(--matricula-dropzone-bg);
         padding: 1.2rem;
         text-align: center;
         cursor: pointer;
@@ -2185,55 +2273,55 @@
 
     .matricula-dropzone__icon {
         font-size: 2.4rem;
-        color: #97a69f;
+        color: var(--matricula-dropzone-icon);
     }
 
     .matricula-dropzone__lead {
-        color: #2a3f35;
+        color: var(--matricula-dropzone-lead);
         font-size: 0.86rem;
         font-weight: 700;
         line-height: 1.3;
     }
 
     .matricula-dropzone__hint {
-        color: #60716a;
+        color: var(--matricula-dropzone-hint);
         font-size: 0.72rem;
         font-weight: 550;
     }
 
     .matricula-dropzone__selected {
         margin-top: 0.25rem;
-        color: #1f5e28;
+        color: var(--matricula-dropzone-selected);
         font-size: 0.76rem;
         font-weight: 700;
         word-break: break-word;
     }
 
     .matricula-dropzone.is-dragover {
-        border-color: #2e7d32;
-        background-color: rgba(46, 125, 50, 0.08);
+        border-color: var(--matricula-dropzone-drag-border);
+        background-color: var(--matricula-dropzone-drag-bg);
     }
 
     .matricula-dropzone.has-file {
         border-style: solid;
-        border-color: rgba(46, 125, 50, 0.42);
-        background-color: rgba(46, 125, 50, 0.05);
+        border-color: var(--matricula-dropzone-file-border);
+        background-color: var(--matricula-dropzone-file-bg);
     }
 
     .matricula-dropzone.has-error {
-        border-color: #b42318;
+        border-color: var(--matricula-error);
     }
 
     .matricula-field__hint {
         margin-top: 0.35rem;
-        color: #61716b;
+        color: var(--matricula-dropzone-hint);
         font-size: 0.72rem;
     }
 
     .matricula-field__error {
         margin-top: 0.3rem;
         display: block;
-        color: #b42318;
+        color: var(--matricula-error);
         font-size: 0.74rem;
         font-weight: 600;
     }
@@ -2245,8 +2333,8 @@
         width: 100%;
         border-radius: 0.55rem;
         border: 0;
-        background-color: #2e7d32;
-        color: #ffffff;
+        background-color: var(--matricula-submit-bg);
+        color: var(--matricula-submit-text);
         font-size: 0.88rem;
         font-weight: 800;
         padding: 0.72rem 1rem;
@@ -2254,7 +2342,7 @@
     }
 
     .matricula-submit-btn:hover {
-        background-color: #226027;
+        background-color: var(--matricula-submit-bg-hover);
     }
 
     .matricula-submit-btn:disabled {
@@ -2264,7 +2352,7 @@
 
     .matricula-form-footnote {
         text-align: center;
-        color: #667771;
+        color: var(--matricula-footnote);
         font-size: 0.67rem;
         line-height: 1.45;
         margin-top: 0.45rem;

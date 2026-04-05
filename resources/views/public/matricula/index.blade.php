@@ -44,7 +44,7 @@
                 @endif
 
                 @if (! $hasCampuses)
-                    <section class="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+                    <section class="public-alert public-alert--warning mb-6" role="status">
                         Actualmente no hay sedes disponibles para recibir solicitudes. Por favor intente mas tarde.
                     </section>
                 @endif

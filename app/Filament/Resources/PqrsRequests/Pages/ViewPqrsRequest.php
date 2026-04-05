@@ -8,7 +8,6 @@ use App\Filament\Resources\PqrsRequests\PqrsRequestResource;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
@@ -64,29 +63,8 @@ class ViewPqrsRequest extends ViewRecord
                             'undo',
                             'redo',
                         ]),
-                    FileUpload::make('attachment_pdf')
-                        ->label('Adjuntar PDF')
-                        ->disk('local')
-                        ->directory('pqrs-responses')
-                        ->acceptedFileTypes(['application/pdf'])
-                        ->maxSize(2048)
-                        ->nullable(),
                 ])
                 ->action(function (array $data): void {
-                    $attachmentPath = $data['attachment_pdf'] ?? null;
-                    $attachments = null;
-
-                    if (filled($attachmentPath)) {
-                        $path = (string) $attachmentPath;
-
-                        $attachments = [[
-                            'disk' => 'local',
-                            'path' => $path,
-                            'name' => basename($path),
-                            'mime' => 'application/pdf',
-                        ]];
-                    }
-
                     $responseMessage = $this->record->messages()->create([
                         'user_id' => auth()->id(),
                         'author_name' => auth()->user()?->name,
@@ -95,7 +73,6 @@ class ViewPqrsRequest extends ViewRecord
                         'message' => $data['message'],
                         'responded_at' => $data['responded_at'] ?? now(),
                         'is_internal' => false,
-                        'attachments' => $attachments,
                     ]);
 
                     $mailWasSent = $this->sendResponseMailNotification($responseMessage);

@@ -18,7 +18,6 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Throwable;
@@ -204,7 +203,6 @@ class CitizenAttentionController extends Controller
                         'subject' => $msg->subject,
                         'message' => $msg->message,
                         'is_rich' => $msg->user_id !== null,
-                        'attachments' => $this->formatPqrsMessageAttachments($msg),
                         'date' => ($msg->responded_at ?? $msg->created_at)?->translatedFormat('d M Y H:i'),
                     ]);
             }
@@ -487,46 +485,6 @@ class CitizenAttentionController extends Controller
                 'question' => $faq->question,
                 'answer' => Str::limit(strip_tags((string) $faq->answer), 180),
             ]);
-    }
-
-    /**
-     * @return array<int, array{name: string, url: string|null}>
-     */
-    private function formatPqrsMessageAttachments(PqrsMessage $message): array
-    {
-        $attachments = collect($message->attachments ?? [])
-            ->filter(fn (mixed $attachment): bool => is_array($attachment) && filled($attachment['path'] ?? null))
-            ->map(function (array $attachment): array {
-                $path = trim((string) $attachment['path']);
-
-                return [
-                    'name' => trim((string) ($attachment['name'] ?? basename($path))) !== ''
-                        ? trim((string) ($attachment['name'] ?? basename($path)))
-                        : 'Adjunto PDF',
-                    'url' => $this->buildLocalTemporaryUrl($path),
-                ];
-            })
-            ->values()
-            ->all();
-
-        return $attachments;
-    }
-
-    private function buildLocalTemporaryUrl(string $path): ?string
-    {
-        if ($path === '') {
-            return null;
-        }
-
-        try {
-            if (Storage::disk('local')->exists($path)) {
-                return Storage::disk('local')->temporaryUrl($path, now()->addMinutes(30));
-            }
-        } catch (Throwable) {
-            return null;
-        }
-
-        return null;
     }
 
     /**

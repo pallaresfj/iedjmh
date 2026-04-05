@@ -127,3 +127,13 @@ test('public cta links for matricula route are present on home', function () {
         ->assertSee(route('matricula.index'), false)
         ->assertSee('Conoce nuestra matricula 2026');
 });
+
+test('public matricula page uses semantic warning alert styles when no campuses are available', function () {
+    $this->get(route('matricula.index'))
+        ->assertOk()
+        ->assertSee('Actualmente no hay sedes disponibles para recibir solicitudes. Por favor intente mas tarde.')
+        ->assertSee('public-alert--warning', false)
+        ->assertDontSee('border-amber-', false)
+        ->assertDontSee('bg-amber-', false)
+        ->assertDontSee('text-amber-', false);
+});
