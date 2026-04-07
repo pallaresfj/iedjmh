@@ -99,8 +99,8 @@ test('logo fallback icon uses safe default when academic modality icon is invali
     $response = $this->get(route('home'))->assertOk();
 
     expect($response->getContent())
-        ->toMatch('/public-header__icon-fallback[^>]*>agriculture<\/span>/')
-        ->toMatch('/public-footer__icon-fallback[^>]*>agriculture<\/span>/');
+        ->toMatch('/public-header__icon-fallback[^>]*>help<\/span>/')
+        ->toMatch('/public-footer__icon-fallback[^>]*>help<\/span>/');
 });
 
 test('logo fallback icon is not rendered when logo image is configured', function () {

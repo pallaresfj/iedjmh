@@ -18,7 +18,7 @@
                             'matricula-requirement-card--emphasized' => $requirement['emphasized'],
                         ])>
                             <span class="matricula-requirement-card__icon">
-                                <span class="material-symbols-outlined" aria-hidden="true">{{ $requirement['icon'] }}</span>
+                                <x-public.icon :icon="$requirement['icon']" />
                             </span>
                             <h2 class="matricula-requirement-card__title">{{ $requirement['title'] }}</h2>
                             <p class="matricula-requirement-card__description">{{ $requirement['description'] }}</p>

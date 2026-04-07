@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Settings\Schemas;
 
+use App\Support\PublicIcon;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
@@ -62,9 +63,10 @@ class SettingForm
                                     ->columnSpan(6),
                                 TextInput::make('academic_modality_icon')
                                     ->label('Icono Modalidad')
-                                    ->helperText('Nombre de icono Material Symbols. Ejemplo: agriculture.')
+                                    ->helperText('Formatos: ms:agriculture, fa:solid:leaf. Legacy Material (agriculture) permitido temporalmente.')
                                     ->maxLength(60)
-                                    ->placeholder('agriculture')
+                                    ->placeholder('ms:agriculture')
+                                    ->rule('regex:'.PublicIcon::validationRegex())
                                     ->columnSpan(6),
                                 FileUpload::make('logo_path')
                                     ->label('Logo institucional')
@@ -342,10 +344,11 @@ class SettingForm
                                                     ->required()
                                                     ->maxLength(120),
                                                 TextInput::make('icon')
-                                                    ->label('Icono Material')
+                                                    ->label('Icono')
                                                     ->required()
-                                                    ->placeholder('agriculture')
-                                                    ->maxLength(60),
+                                                    ->placeholder('ms:agriculture')
+                                                    ->maxLength(60)
+                                                    ->rule('regex:'.PublicIcon::validationRegex()),
                                                 Textarea::make('description')
                                                     ->label('Descripcion')
                                                     ->required()

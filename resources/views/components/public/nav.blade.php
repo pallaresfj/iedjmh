@@ -26,7 +26,7 @@
                                     'public-nav__mobile-link--active' => $childActive,
                                 ])
                             >
-                                <span class="material-symbols-outlined !text-[18px]" aria-hidden="true">{{ $child['icon'] ?? 'chevron_right' }}</span>
+                                <x-public.icon :icon="$child['icon'] ?? 'chevron_right'" class="!text-[18px]" />
                                 <span>{{ $child['label'] }}</span>
                             </a>
                         @endforeach
@@ -78,7 +78,7 @@
                                         'public-nav__dropdown-link--active' => $childActive,
                                     ])
                                 >
-                                    <span class="material-symbols-outlined !text-[19px]" aria-hidden="true">{{ $child['icon'] ?? 'chevron_right' }}</span>
+                                    <x-public.icon :icon="$child['icon'] ?? 'chevron_right'" class="!text-[19px]" />
                                     <span>{{ $child['label'] }}</span>
                                 </a>
                             </li>

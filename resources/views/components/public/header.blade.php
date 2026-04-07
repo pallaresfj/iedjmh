@@ -50,7 +50,7 @@
                     </span>
                 @else
                     <span class="grid size-12 shrink-0 place-items-center rounded-xl bg-ied-primary text-white">
-                        <span class="public-header__icon-fallback material-symbols-outlined !text-[30px]" aria-hidden="true">{{ $logoFallbackIcon }}</span>
+                        <x-public.icon :icon="$logoFallbackIcon" class="public-header__icon-fallback !text-[30px]" />
                     </span>
                 @endif
                 <span class="min-w-0">

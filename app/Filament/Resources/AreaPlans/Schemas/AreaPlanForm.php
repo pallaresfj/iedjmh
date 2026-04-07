@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\AreaPlans\Schemas;
 
 use App\Models\AreaPlan;
+use App\Support\PublicIcon;
 use Closure;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
@@ -24,12 +25,12 @@ class AreaPlanForm
                     ->required()
                     ->maxLength(255),
                 TextInput::make('icon')
-                    ->label('Icono (Material Symbols)')
+                    ->label('Icono (MS / Font Awesome)')
                     ->required()
-                    ->default('menu_book')
+                    ->default('ms:menu_book')
                     ->maxLength(80)
-                    ->rule('regex:/^[a-z0-9_]+$/')
-                    ->helperText('Usa nombres de Material Symbols en minuscula. Ejemplo: calculate, science, agriculture.'),
+                    ->rule('regex:'.PublicIcon::validationRegex())
+                    ->helperText('Formatos: ms:menu_book, fa:solid:house. Legacy Material (menu_book) permitido temporalmente.'),
                 Select::make('responsibleTeachers')
                     ->label('Docentes responsables')
                     ->required()

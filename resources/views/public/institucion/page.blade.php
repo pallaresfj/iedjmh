@@ -173,7 +173,7 @@
                                     @foreach ($symbols['shield_items'] as $item)
                                         <article class="public-symbols-shield-item">
                                             <div class="public-symbols-shield-item__heading">
-                                                <span class="material-symbols-outlined" aria-hidden="true">{{ $item['icon'] }}</span>
+                                                <x-public.icon :icon="$item['icon']" />
                                                 <p class="text-sm font-semibold text-ied-primary-dark">{{ $item['title'] }}</p>
                                             </div>
                                             <p class="mt-1 text-xs leading-relaxed text-ied-gray-700">{{ $item['description'] }}</p>

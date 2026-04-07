@@ -22,7 +22,7 @@
                             <img src="{{ $logoUrl }}" alt="Logo institucional footer" class="public-footer__logo size-full object-contain p-1.5" />
                         </span>
                     @else
-                        <span class="public-footer__icon-fallback material-symbols-outlined text-ied-primary-light !text-[28px]" aria-hidden="true">{{ $logoFallbackIcon }}</span>
+                        <x-public.icon :icon="$logoFallbackIcon" class="public-footer__icon-fallback text-ied-primary-light !text-[28px]" />
                     @endif
                     <p class="public-heading text-lg font-bold text-white">{{ $institutionName }}</p>
                 </div>

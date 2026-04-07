@@ -20,7 +20,7 @@
                     <article class="rounded-2xl border border-ied-gray-200 bg-white p-5 sm:p-6">
                         <div class="flex items-start gap-4">
                             <span class="inline-flex size-12 shrink-0 items-center justify-center rounded-xl bg-ied-primary-light/30">
-                                <span class="material-symbols-outlined text-2xl text-ied-primary" aria-hidden="true">{{ $section['icon'] ?? 'article' }}</span>
+                                <x-public.icon :icon="$section['icon'] ?? 'article'" class="text-2xl text-ied-primary" />
                             </span>
 
                             <div class="min-w-0">

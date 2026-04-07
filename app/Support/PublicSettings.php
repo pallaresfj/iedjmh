@@ -232,11 +232,9 @@ class PublicSettings
     public static function academicModality(): array
     {
         $label = static::nullableString(static::get('academic_modality_label', 'Modalidad')) ?? 'Modalidad';
-        $icon = static::nullableString(static::get('academic_modality_icon', 'agriculture')) ?? 'agriculture';
-
-        if (! preg_match('/^[a-z0-9_]+$/', $icon)) {
-            $icon = 'agriculture';
-        }
+        $icon = PublicIcon::normalize(
+            static::nullableString(static::get('academic_modality_icon', 'agriculture')) ?? 'agriculture'
+        );
 
         return [
             'label' => $label,
@@ -598,14 +596,10 @@ class PublicSettings
 
             $title = trim((string) ($item['title'] ?? ''));
             $description = trim((string) ($item['description'] ?? ''));
-            $icon = trim((string) ($item['icon'] ?? 'shield'));
+            $icon = PublicIcon::normalize(trim((string) ($item['icon'] ?? 'shield')));
 
             if ($title === '' || $description === '') {
                 continue;
-            }
-
-            if (! preg_match('/^[a-z0-9_]+$/', $icon)) {
-                $icon = 'shield';
             }
 
             $normalized[] = [

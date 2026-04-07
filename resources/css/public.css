@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import '@fortawesome/fontawesome-free/css/all.min.css';
 
 @source '../views/public/**/*.blade.php';
 @source '../views/components/public/**/*.blade.php';
@@ -39,6 +40,11 @@
 
     .material-symbols-outlined {
         font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+        font-size: 1.25rem;
+        line-height: 1;
+    }
+
+    .public-icon--fa {
         font-size: 1.25rem;
         line-height: 1;
     }
@@ -1827,7 +1833,8 @@
         @apply flex items-center gap-2 text-2xl font-extrabold tracking-tight text-ied-gray-900;
     }
 
-    .public-symbols-card__title .material-symbols-outlined {
+    .public-symbols-card__title .material-symbols-outlined,
+    .public-symbols-card__title .public-icon--fa {
         @apply !text-[1.75rem] text-ied-primary;
     }
 
@@ -1873,7 +1880,8 @@
         @apply flex items-center gap-2;
     }
 
-    .public-symbols-shield-item__heading .material-symbols-outlined {
+    .public-symbols-shield-item__heading .material-symbols-outlined,
+    .public-symbols-shield-item__heading .public-icon--fa {
         @apply !text-[1.1rem] text-ied-primary-dark;
     }
 
@@ -2184,7 +2192,8 @@
         color: var(--matricula-icon-emphasis-color);
     }
 
-    .matricula-requirement-card__icon .material-symbols-outlined {
+    .matricula-requirement-card__icon .material-symbols-outlined,
+    .matricula-requirement-card__icon .public-icon--fa {
         font-size: 1.1rem;
     }
 

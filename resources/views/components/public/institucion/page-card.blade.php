@@ -7,7 +7,7 @@
 
 <a href="{{ route($route) }}" class="group flex flex-col rounded-2xl border border-ied-gray-200 bg-white p-6 transition hover:-translate-y-0.5 hover:shadow-md">
     <span class="inline-flex size-12 items-center justify-center rounded-xl bg-ied-primary-light/30">
-        <span class="material-symbols-outlined text-2xl text-ied-primary" aria-hidden="true">{{ $icon }}</span>
+        <x-public.icon :icon="$icon" class="text-2xl text-ied-primary" />
     </span>
 
     <p class="mt-4 text-lg font-bold text-ied-gray-900">{{ $title }}</p>

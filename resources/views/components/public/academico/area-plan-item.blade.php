@@ -9,7 +9,7 @@
                 class="inline-flex size-12 shrink-0 items-center justify-center rounded-xl border text-ied-primary-dark sm:size-14 sm:rounded-2xl"
                 style="background-color: rgba(var(--color-ied-primary-light-rgb), 0.34); border-color: rgba(var(--color-ied-primary-rgb), 0.22);"
             >
-                <span class="material-symbols-outlined !text-[23px] sm:!text-[25px]" aria-hidden="true">{{ $item['icon'] }}</span>
+                <x-public.icon :icon="$item['icon']" class="!text-[23px] sm:!text-[25px]" />
             </div>
 
             <div class="min-w-0">

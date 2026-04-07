@@ -19,7 +19,7 @@
         'bg-ied-primary/10 text-ied-primary group-hover:bg-ied-primary group-hover:text-white' => $tone !== 'home',
         'public-home-quick-link__icon' => $tone === 'home',
     ])>
-        <span class="material-symbols-outlined !text-[24px]" aria-hidden="true">{{ $icon }}</span>
+        <x-public.icon :icon="$icon" class="!text-[24px]" />
     </span>
 
     <div>

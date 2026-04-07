@@ -61,7 +61,7 @@ Cada `children` item tiene:
 |-------|------|-------------|
 | `label` | string | Texto visible |
 | `route` | string | Nombre de ruta Laravel |
-| `icon` | string | Nombre de icono Material Symbols |
+| `icon` | string | Icono en formato canonico (`ms:*` o `fa:*:*`) |
 
 ### Navegacion del footer (`navigation.footer`)
 
@@ -80,7 +80,15 @@ Mapa de secciones del sitio con metadata:
 | `label` | string | Nombre de la seccion |
 | `route` | string | Ruta principal de la seccion |
 | `description` | string | Descripcion breve |
-| `icon` | string | Icono Material Symbols |
+| `icon` | string | Icono en formato canonico (`ms:*` o `fa:*:*`) |
+
+## Formato de iconos
+
+- Formato canonico Material Symbols: `ms:agriculture`
+- Formato canonico Font Awesome: `fa:solid:house`
+- Estilos FA soportados: `solid`, `regular`, `brands`
+- Compatibilidad legacy: valores Material sin prefijo (`agriculture`) siguen funcionando de forma temporal.
+- Fallback seguro: cuando el valor es invalido, el sistema renderiza `ms:help`.
 
 ## Relacion con el CMS
 
